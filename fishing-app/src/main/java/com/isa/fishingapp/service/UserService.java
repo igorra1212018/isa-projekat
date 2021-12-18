@@ -1,5 +1,7 @@
 package com.isa.fishingapp.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +29,10 @@ public class UserService {
 	public User authenticate(String email, String password)
 	{
 		return userRepository.findByEmailAndPassword(email, password).orElse(null);
+	}
+	
+	public List<User> getAllUsers()
+	{
+		return userRepository.findAll();
 	}
 }
