@@ -9,8 +9,10 @@
 </template>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap');
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -28,5 +30,17 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+body, html {
+  height:100vh;
+  min-height:550px;
+  margin: 0;
+  background-image: url("resources/FishingBackground.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  font-family: 'Roboto', sans-serif;
 }
 </style>

@@ -4,11 +4,14 @@ import java.awt.SystemColor;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,10 +52,12 @@ public class UserController {
 	}
 	
 	@PostMapping("/register")
-	public String register(@ModelAttribute User user)
+	public ResponseEntity<String> register(@RequestBody User user)
 	{
-		User registeredUser = userService.registerUser(user.getEmail(), user.getPassword());
-		return "redirect:/login";
+		userService.registerUser(user);
+		return new ResponseEntity<>(
+			      "Registration successful!", 
+			      HttpStatus.OK);
 	}
 	
 	@PostMapping("/login")

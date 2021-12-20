@@ -14,16 +14,9 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public User registerUser(String email, String password)
+	public User registerUser(User user)
 	{
-		if(email != null && password != null)
-		{
-			User user = new User();
-			user.setEmail(email);
-			user.setPassword(password);
-			return userRepository.save(user);
-		}
-		else return null;
+		return userRepository.save(user);
 	}
 
 	public User authenticate(String email, String password)
