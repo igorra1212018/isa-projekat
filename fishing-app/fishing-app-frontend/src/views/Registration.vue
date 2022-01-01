@@ -73,19 +73,19 @@
                 <div class="row d-flex mt-4">
                     <div class="col-md-4">
                         <label class="input_label">
-                            <input type="text" name="residence-address" v-model="user.residenceAddress" required="required">
+                            <input type="text" name="residence-address" v-model="user.address" required="required">
                             <span class="keep_hovered">Address</span>
                         </label>
                     </div>
                     <div class="col-md-4">
                         <label class="input_label">
-                            <input type="text" name="residence-city" v-model="user.residenceCity" required="required">
+                            <input type="text" name="residence-city" v-model="user.city" required="required">
                             <span class="keep_hovered">City</span>
                         </label>
                     </div>
                     <div class="col-md-4">
                         <label class="input_label">
-                            <input type="text" name="residence-country" v-model="user.residenceCountry" required="required">
+                            <input type="text" name="residence-country" v-model="user.country" required="required">
                             <span class="keep_hovered">Country</span>
                         </label>
                     </div>

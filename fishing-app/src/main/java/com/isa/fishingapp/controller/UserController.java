@@ -1,6 +1,5 @@
 package com.isa.fishingapp.controller;
 
-import java.awt.SystemColor;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.service.UserService;
 
@@ -29,11 +29,6 @@ public class UserController {
 	@GetMapping("/users")
 	public List<User> getUsers(Model model)
 	{
-		List<User> users = userService.getAllUsers();
-		for(User u : users)
-		{
-			System.out.println(u.getEmail());
-		}
 		return userService.getAllUsers();
 	}
 	
@@ -52,9 +47,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<String> register(@RequestBody User user)
+	public ResponseEntity<String> register(@RequestBody UserDTO user)
 	{
-		userService.registerUser(user);
+		userService.registerUser(new User(user));
 		return new ResponseEntity<>(
 			      "Registration successful!", 
 			      HttpStatus.OK);

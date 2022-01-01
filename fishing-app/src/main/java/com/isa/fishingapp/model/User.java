@@ -1,13 +1,21 @@
 package com.isa.fishingapp.model;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.isa.fishingapp.dto.UserDTO;
+
 @Entity
-@Table(name = "user_table")
+@Table(name = "Users")
+@AttributeOverride( name = "address", column = @Column(name = "residence_address"))
+@AttributeOverride( name = "city", column = @Column(name = "residence_city"))
+@AttributeOverride( name = "country", column = @Column(name = "residence_country"))
 public class User {
 
 	@Id
@@ -18,13 +26,23 @@ public class User {
 	String password;
 	String firstName;
 	String lastName;
-	String residenceAddress;
-	String residenceCity;
-	String residenceCountry;
+	@Embedded
+	Location residence;
 	String contactPhone;
 	
 	boolean activated;
+	
+	public User() { }
 
+	public User(UserDTO user) {
+		this.email = user.getEmail();
+		this.password = user.getPassword();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+		this.residence = new Location(user.getAddress(), user.getCity(), user.getCountry());
+		this.contactPhone = user.getContactPhone();
+	}
+	
 	public Integer getId() {
 		return id;
 	}
@@ -65,28 +83,12 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public String getResidenceAddress() {
-		return residenceAddress;
+	public Location getResidence() {
+		return residence;
 	}
 
-	public void setResidenceAddress(String residenceAddress) {
-		this.residenceAddress = residenceAddress;
-	}
-
-	public String getResidenceCity() {
-		return residenceCity;
-	}
-
-	public void setResidenceCity(String residenceCity) {
-		this.residenceCity = residenceCity;
-	}
-
-	public String getResidenceCountry() {
-		return residenceCountry;
-	}
-
-	public void setResidenceCountry(String residenceCountry) {
-		this.residenceCountry = residenceCountry;
+	public void setResidence(Location residence) {
+		this.residence = residence;
 	}
 
 	public String getContactPhone() {
@@ -116,9 +118,7 @@ public class User {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((residenceAddress == null) ? 0 : residenceAddress.hashCode());
-		result = prime * result + ((residenceCity == null) ? 0 : residenceCity.hashCode());
-		result = prime * result + ((residenceCountry == null) ? 0 : residenceCountry.hashCode());
+		result = prime * result + ((residence == null) ? 0 : residence.hashCode());
 		return result;
 	}
 
@@ -163,20 +163,10 @@ public class User {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (residenceAddress == null) {
-			if (other.residenceAddress != null)
+		if (residence == null) {
+			if (other.residence != null)
 				return false;
-		} else if (!residenceAddress.equals(other.residenceAddress))
-			return false;
-		if (residenceCity == null) {
-			if (other.residenceCity != null)
-				return false;
-		} else if (!residenceCity.equals(other.residenceCity))
-			return false;
-		if (residenceCountry == null) {
-			if (other.residenceCountry != null)
-				return false;
-		} else if (!residenceCountry.equals(other.residenceCountry))
+		} else if (!residence.equals(other.residence))
 			return false;
 		return true;
 	}
@@ -184,8 +174,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", residenceAddress=" + residenceAddress + ", residenceCity=" + residenceCity + ", residenceCountry="
-				+ residenceCountry + ", contactPhone=" + contactPhone + ", activated=" + activated + "]";
+				+ ", residence=" + residence + ", contactPhone=" + contactPhone + ", activated=" + activated + "]";
 	}
 	
 }
