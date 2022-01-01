@@ -112,9 +112,6 @@ export default {
         registerUser(){
             UserService.registerUser(this.user);
         }
-    },
-    created() {
-
     }
 }
 

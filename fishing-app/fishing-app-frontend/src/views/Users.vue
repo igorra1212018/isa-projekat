@@ -4,8 +4,8 @@
         <table class = "table table-striped">
             <thead>
                 <tr>
-                    <th> User Id</th>
-                    <th> User Email</th>
+                    <th scope="col"> User Id</th>
+                    <th scope="col"> User Email</th>
                 </tr>
             </thead>
             <tbody>
