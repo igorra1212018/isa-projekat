@@ -19,7 +19,7 @@ public class Lodging {
 	
 	private String name;
 	@Embedded
-	private Location residence;
+	private Location address;
 	
 	@ManyToOne
     @JoinColumn(name = "owner_id")
@@ -33,8 +33,8 @@ public class Lodging {
 		return name;
 	}
 
-	public Location getResidence() {
-		return residence;
+	public Location getAddress() {
+		return address;
 	}
 
 	public User getOwner() {

@@ -41,21 +41,20 @@
       </div>
     </div>
     <div class="d-flex justify-content-center" style="margin-top:20px">
-      <div class="row row-cols-1 row-cols-md-2" style = "width: 85%;">
+      <div class="row row-cols-1 row-cols-md-2" style = "width: 85%;" v-for="l in lodgings" :key="l.id">
         <div class="col">
           <article class="restaurant_card">
             <figure class="card-image">
-              
+              <img src="../resources/DefaultLodgingIcon.jpg" alt="" />
             </figure>   
             <div class="card-content">
               <header class="card-header-restaurant">
-              <h2>Name</h2>
-              <span>Type</span>
+              <h2>{{l.name}}</h2>
               <br />
               <span>Status</span>   
                 <address style="margin-top:10px">
                   <span class="icon-pin" aria-hidden="true"></span>
-                  Location
+                  {{getFullAddress(l.address)}}
                 </address>
               </header>
             </div>    
@@ -113,6 +112,8 @@
 
 <script>
 
+import LodgingService from '../services/LodgingService';
+
 export default {
   name: 'Home',
   components: {
@@ -120,7 +121,7 @@ export default {
   },
   data: function () {
     return {
-      restaurants: {},
+      lodgings: {},
       currentUser: null,
       name: '',
       type: '',
@@ -132,7 +133,17 @@ export default {
       filterCity: "",
       currentSort:'status',
       currentSortDir:'desc',
-      filterRatingFrom: '',
+      filterRatingFrom: ''
+    }
+  },
+  mounted: function() {
+    LodgingService.getLodgings().then(res => {
+      this.lodgings = res.data
+    });
+  },
+  methods: {
+    getFullAddress: function (address) {
+       return address.address + " " + address.city + " " + address.country;
     }
   }
 }
@@ -224,16 +235,16 @@ export default {
     font-size: 1em;
     font-weight: 700;
     white-space: nowrap;
-    background-image: linear-gradient(to right,rgba(236, 48, 20) 0%,rgba(250, 30, 20, 0.9) 100%);
+    background: rgba(0,95,255,1);
     border-radius: 1.5em;
     box-shadow: 0 .5em 1em 0 #000000;
     cursor: pointer;
   }
   .card-button:hover, .card-button:focus {
-    background: red;
+    background: rgba(0,95,255,1);
   }
   .card-button:active {
-    background: red;
+    background: rgba(0,95,255,1);
   }
   .form {
     position: fixed;
