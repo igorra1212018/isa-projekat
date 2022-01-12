@@ -1,47 +1,47 @@
 <template>
   <div>
-    <div class="row mb-3" style="margin-top: 20px">
-      <div class="col-lg-4 mx-auto">
-        <div class="bg-white p-3 rounded shadow">
-          <form action="">
-            <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
-              <div class="input-group">
-                <input type="search" placeholder="Name" aria-describedby="button-addon1" class="form-control border-0 bg-light" v-model="filterName">
-                <div class="input-group-append">
-                  <button id="button-addon1" type="submit" class="btn btn-link text-primary" v-on:click="sort('name')"><i class="fa fa-sort"></i></button>
+    <div class="d-flex justify-content-center" style="margin-top:20px">
+      <div class="row" style = "width: 25%; margin-left: 50px">
+        <div class="col-lg-12 mx-auto">
+          <div class="bg-white p-3 rounded shadow">
+            <form action="">
+              <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
+                <div class="input-group">
+                  <input type="search" placeholder="Name" aria-describedby="button-addon1" class="form-control border-0 bg-light" v-model="filterName">
+                  <div class="input-group-append">
+                    <button id="button-addon1" type="submit" class="btn btn-link text-primary" v-on:click="sort('name')"><em class="fa fa-sort"></em></button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <button id="button-addon2" type="submit" class="btn btn-link text-warning" v-on:click="sort('type')"><i class="fa fa-sort"></i></button>
-                </div>
-                <input type="search" placeholder="Type" aria-describedby="button-addon2" class="form-control border-0 bg-light" v-model="filterType">
-              </div>
-            </div>
-            <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
-              <div class="input-group">
-                <input type="search" placeholder="City" aria-describedby="button-addon1" class="form-control border-0 bg-light" v-model="filterCity">
-                <div class="input-group-append">
-                  <button id="button-addon1" type="submit" class="btn btn-link text-primary" v-on:click="sort('location.address.townName')"><i class="fa fa-sort"></i></button>
+              <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button id="button-addon2" type="submit" class="btn btn-link text-warning" v-on:click="sort('type')"><em class="fa fa-sort"></em></button>
+                  </div>
+                  <input type="search" placeholder="Type" aria-describedby="button-addon2" class="form-control border-0 bg-light" v-model="filterType">
                 </div>
               </div>
-            </div>
-            <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
-              <div class="input-group">
-                <input type="search" placeholder="Min rating" aria-describedby="button-addon1" class="form-control border-0 bg-light" v-model="filterRatingFrom">
-                <div class="input-group-append">
-                  <button id="button-addon1" type="submit" class="btn btn-link text-primary" v-on:click="sort('rating')"><i class="fa fa-sort"></i></button>
+              <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
+                <div class="input-group">
+                  <input type="search" placeholder="City" aria-describedby="button-addon1" class="form-control border-0 bg-light" v-model="filterCity">
+                  <div class="input-group-append">
+                    <button id="button-addon1" type="submit" class="btn btn-link text-primary" v-on:click="sort('location.address.townName')"><em class="fa fa-sort"></em></button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </form>
+              <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
+                <div class="input-group">
+                  <input type="search" placeholder="Min rating" aria-describedby="button-addon1" class="form-control border-0 bg-light" v-model="filterRatingFrom">
+                  <div class="input-group-append">
+                    <button id="button-addon1" type="submit" class="btn btn-link text-primary" v-on:click="sort('rating')"><em class="fa fa-sort"></em></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="d-flex justify-content-center" style="margin-top:20px">
-      <div class="row row-cols-1 row-cols-md-2" style = "width: 85%;" v-for="l in lodgings" :key="l.id">
+      <div class="row row-cols-md-2" style = "width: 75%; margin-left: 50px" v-for="l in lodgings" :key="l.id">
         <div class="col">
           <article class="restaurant_card">
             <figure class="card-image">
@@ -73,40 +73,6 @@
         </div>
       </div>
     </div>
-    <!--<div class="d-flex justify-content-center" style="margin-top:20px">
-      <div class="row row-cols-1 row-cols-md-2" style = "width: 85%;">
-        <div class="col" v-for="r in sortedRestaurants" :key="r.uuid">
-          <article class="restaurant_card">
-            <figure class="card-image">
-              <img :src="r.logo" alt="" />
-            </figure>   
-            <div class="card-content">
-              <header class="card-header-restaurant">
-              <h2 v-html="highlightMatches(r.name, filterName)"></h2>
-              <span v-html="highlightMatches(r.type, filterType)"></span>
-              <br />
-              <span>{{r.status}}</span>   
-                <address style="margin-top:10px">
-                  <span class="icon-pin" aria-hidden="true"></span>
-                  {{r.locationLabel}}
-                </address>
-              </header>
-            </div>    
-            <ul class="card-stats" style="margin-bottom:20px">
-              <li v-if="r.items">
-                <strong>{{r.items.length}}</strong>
-                Articles
-              </li>
-              <li>
-                <strong>{{r.rating}}</strong>
-                Rating
-              </li>
-            </ul>   
-            <button class="card-button" v-on:click="showRestaurant(r.uuid)">View</button>
-          </article>
-        </div>
-      </div>
-    </div>-->
   </div>
 </template>
 

@@ -7,19 +7,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.isa.fishingapp.dto.UserDTO;
+import com.isa.fishingapp.model.enums.Role;
+
 
 @Entity
-@Table(name = "Users")
+@Table(name="\"user\"")
 @AttributeOverride( name = "address", column = @Column(name = "residence_address"))
 @AttributeOverride( name = "city", column = @Column(name = "residence_city"))
 @AttributeOverride( name = "country", column = @Column(name = "residence_country"))
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "user_sequence_generator", sequenceName = "user_sequence", initialValue = 100)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence_generator")
 	Integer id;
 	
 	String email;
@@ -30,6 +34,7 @@ public class User {
 	Location residence;
 	String contactPhone;
 	
+	Role userRole;
 	boolean activated;
 	
 	public User() { }
@@ -39,7 +44,7 @@ public class User {
 		this.password = user.getPassword();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
-		this.residence = new Location(user.getAddress(), user.getCity(), user.getCountry());
+		this.residence = new Location(user.getAddress(), user.getCity(), user.getCountry(), 0, 0);
 		this.contactPhone = user.getContactPhone();
 	}
 	
