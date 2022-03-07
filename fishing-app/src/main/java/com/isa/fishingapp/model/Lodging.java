@@ -45,4 +45,12 @@ public class Lodging {
 	public User getOwner() {
 		return owner;
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }

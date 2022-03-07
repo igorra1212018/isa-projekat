@@ -37,5 +37,13 @@ public class Location {
 	public String getCountry() {
 		return country;
 	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongtitude() {
+		return longtitude;
+	}
 	
 }
