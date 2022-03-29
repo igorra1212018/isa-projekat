@@ -1,13 +1,18 @@
 package com.isa.fishingapp.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 public class FishingLessonTerm {
 	private LocalDateTime dateTime;
 	private int duration;
 	private int capacity;
-	private List<String> additionalServices;
+	//private List<String> additionalServices;
+	@ManyToOne
+    @JoinColumn(name = "fishing_lesson_id")
+	private FishingLesson fishingLesson;
 	private int price;
 	private boolean isCanceled;
 	
@@ -17,12 +22,12 @@ public class FishingLessonTerm {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	public List<String> getAdditionalServices() {
+	/*public List<String> getAdditionalServices() {
 		return additionalServices;
 	}
 	public void setAdditionalServices(List<String> additionalServices) {
 		this.additionalServices = additionalServices;
-	}
+	}*/
 	public int getCapacity() {
 		return capacity;
 	}
@@ -46,5 +51,11 @@ public class FishingLessonTerm {
 	}
 	public void setCanceled(boolean isCanceled) {
 		this.isCanceled = isCanceled;
+	}
+	public FishingLesson getFishingLesson() {
+		return fishingLesson;
+	}
+	public void setFishingLesson(FishingLesson fishingLesson) {
+		this.fishingLesson = fishingLesson;
 	}
 }

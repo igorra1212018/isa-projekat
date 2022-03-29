@@ -9,6 +9,10 @@ public class ImageLodging extends Image {
     @JoinColumn(name = "lodging_id")
     private Lodging lodging;
 
+	public ImageLodging() {
+		
+	}
+	
     public ImageLodging(Integer id, String imageName, byte[] data, Lodging lodging) {
         super(id, imageName, data);
         this.lodging = lodging;
