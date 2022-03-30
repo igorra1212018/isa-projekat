@@ -9,7 +9,7 @@ public class FishingLessonTerm {
 	private LocalDateTime dateTime;
 	private int duration;
 	private int capacity;
-	//private List<String> additionalServices;
+	
 	@ManyToOne
     @JoinColumn(name = "fishing_lesson_id")
 	private FishingLesson fishingLesson;
@@ -22,12 +22,6 @@ public class FishingLessonTerm {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	/*public List<String> getAdditionalServices() {
-		return additionalServices;
-	}
-	public void setAdditionalServices(List<String> additionalServices) {
-		this.additionalServices = additionalServices;
-	}*/
 	public int getCapacity() {
 		return capacity;
 	}

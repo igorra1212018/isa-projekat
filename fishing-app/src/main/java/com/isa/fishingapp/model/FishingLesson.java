@@ -35,7 +35,7 @@ public class FishingLesson {
 	
 	@ManyToOne
     @JoinColumn(name = "owner_id")
-    private User owner;
+    private User owner; //User for now
 
 	public String getCancelCondition() {
 		return cancelCondition;
