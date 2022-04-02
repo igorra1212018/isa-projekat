@@ -35,10 +35,10 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable int userId) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable int userId) {
 		return Optional
 	            .ofNullable( userService.getUserById(userId) )
-	            .map( user -> ResponseEntity.ok().body(user) )
+	            .map( user -> ResponseEntity.ok().body(new UserDTO(user)) )
 	            .orElseGet( () -> ResponseEntity.notFound().build() );
     }
 	
@@ -62,6 +62,15 @@ public class UserController {
 		userService.registerUser(new User(user));
 		return new ResponseEntity<>(
 			      "Registration successful!", 
+			      HttpStatus.OK);
+	}
+	
+	@PostMapping("/edit_user_profile")
+	public ResponseEntity<String> editUserProfile(@RequestBody UserDTO user)
+	{
+		userService.updateUser(new User(user));
+		return new ResponseEntity<>(
+			      "Profile edit successful!", 
 			      HttpStatus.OK);
 	}
 	

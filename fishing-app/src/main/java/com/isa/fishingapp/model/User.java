@@ -40,6 +40,8 @@ public class User {
 	public User() { }
 
 	public User(UserDTO user) {
+		if(user.getId() != null)
+			this.id = user.getId();
 		this.email = user.getEmail();
 		this.password = user.getPassword();
 		this.firstName = user.getFirstName();

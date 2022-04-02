@@ -15,6 +15,10 @@ class UserService{
     registerUser(user){
         return axios.post(USER_API_BASE_URL + 'register', user);
     }
+
+    updateUser(user){
+        return axios.post(USER_API_BASE_URL + 'edit_user_profile', user);
+    }
 }
 
 export default new UserService();

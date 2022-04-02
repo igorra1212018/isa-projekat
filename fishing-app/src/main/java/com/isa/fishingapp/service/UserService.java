@@ -19,7 +19,16 @@ public class UserService {
 	{
 		return userRepository.save(user);
 	}
-
+	
+	public User updateUser(User user)
+	{
+		User userToUpdate = getUserById(user.getId());
+		if(userToUpdate == null)
+			return null;
+		userToUpdate = user;
+		return userRepository.save(userToUpdate);
+	}
+	
 	public User authenticate(String email, String password)
 	{
 		return userRepository.findByEmailAndPassword(email, password).orElse(null);

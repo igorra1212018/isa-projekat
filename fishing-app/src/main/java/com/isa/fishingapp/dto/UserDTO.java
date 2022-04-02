@@ -1,8 +1,9 @@
 package com.isa.fishingapp.dto;
 
-import com.isa.fishingapp.model.Location;
+import com.isa.fishingapp.model.User;
 
 public class UserDTO {
+	Integer id;
 	String email;
 	String password;
 	String firstName;
@@ -12,6 +13,23 @@ public class UserDTO {
 	String country;
 	String contactPhone;
 	
+	public UserDTO() {
+	}
+	
+	public UserDTO(User user) {
+		this.id = user.getId();
+		this.email = user.getEmail();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+		this.address = user.getResidence().getAddress();
+		this.city = user.getResidence().getCity();
+		this.country = user.getResidence().getCountry();
+		this.contactPhone = user.getContactPhone();
+	}
+	
+	public Integer getId() {
+		return id;
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -35,6 +53,9 @@ public class UserDTO {
 	}
 	public String getContactPhone() {
 		return contactPhone;
+	}
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	public void setEmail(String email) {
 		this.email = email;
