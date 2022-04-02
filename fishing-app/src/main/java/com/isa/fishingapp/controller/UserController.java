@@ -1,6 +1,7 @@
 package com.isa.fishingapp.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,14 @@ public class UserController {
 	{
 		return userService.getAllUsers();
 	}
+	
+	@GetMapping("/user/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable int userId) {
+		return Optional
+	            .ofNullable( userService.getUserById(userId) )
+	            .map( user -> ResponseEntity.ok().body(user) )
+	            .orElseGet( () -> ResponseEntity.notFound().build() );
+    }
 	
 	@GetMapping("/register")
 	public String getRegisterPage(Model model)

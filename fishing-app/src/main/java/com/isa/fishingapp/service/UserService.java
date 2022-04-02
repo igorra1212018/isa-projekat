@@ -1,6 +1,7 @@
 package com.isa.fishingapp.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,14 @@ public class UserService {
 	public List<User> getAllUsers()
 	{
 		return userRepository.findAll();
+	}
+	
+	public User getUserById(int id)
+	{
+		Optional<User> foundUser = userRepository.findById(id);
+		if(foundUser.isEmpty())
+			return null;
+		else
+			return foundUser.get();
 	}
 }
