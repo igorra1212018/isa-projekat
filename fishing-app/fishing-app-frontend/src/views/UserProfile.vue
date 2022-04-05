@@ -1,75 +1,79 @@
 <template>
-    <div class="login-reg-panel">
-		<div class="white-panel">
-			<div class="register-show">
-				<h2>MY PROFILE</h2>
-                <div class="row d-flex mt-5">
-                    <div class="col-md-12">
-                        <label class="input_label">
-                            <input type="email" name="email" v-model="user.email" disabled=yes required="required" @change="userInfoHasChanged()">
-                            <span class="keep_hovered">EMail</span>
-                        </label>
-                    </div>
+    <div class="white-panel">
+		<div class="register-show">
+			<h2>MY PROFILE</h2>
+            <div class="row d-flex mt-5">
+                <div class="col-md-12">
+                    <label class="input_label">
+                        <input type="email" name="email" v-model="user.email" disabled=yes required="required" @change="userInfoHasChanged()">
+                        <span class="keep_hovered">EMail</span>
+                    </label>
                 </div>
-                <!--<div class="row d-flex mt-4">
-                    <div class="col-md-6">
-                        <label class="input_label">
-                            <input type="password" name="password" v-model="user.password" required="required">
-                            <span class="keep_hovered">Password</span>
-                        </label>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="input_label">
-                            <input type="password" name="confirm-password" v-model="confirmPassword" required="required">
-                            <span class="keep_hovered">Confirm Password</span>
-                        </label>
-                    </div>
-                </div>-->
-                <div class="row d-flex mt-4">
-                    <div class="col-md-6">
-                        <label class="input_label">
-                            <input type="text" name="first-name" v-model="user.firstName" required="required" @change="userInfoHasChanged()">
-                            <span class="keep_hovered">First Name</span>
-                        </label>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="input_label">
-                            <input type="text" name="last-name" v-model="user.lastName" required="required" @change="userInfoHasChanged()">
-                            <span class="keep_hovered">Last Name</span>
-                        </label>
-                    </div>
+            </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-4">
+                    <label class="input_label">
+                        <input type="password" name="old-password" v-model="user.oldPasswordGuess" @change="userInfoHasChanged()">
+                        <span class="keep_hovered">Old Password</span>
+                    </label>
                 </div>
-                <div class="row d-flex mt-4">
-                    <div class="col-md-12">
-                        <label class="input_label">
-                            <input type="text" name="birth-date" v-model="user.contactPhone" required="required" @change="userInfoHasChanged()">
-                            <span class="keep_hovered">Contact Phone</span>
-                        </label>
-                    </div>
+                <div class="col-md-4">
+                    <label class="input_label">
+                        <input type="password" name="new-password" v-model="user.newPassword" @change="userInfoHasChanged()">
+                        <span class="keep_hovered">New Password</span>
+                    </label>
                 </div>
-                <div class="row d-flex mt-4">
-                    <div class="col-md-4">
-                        <label class="input_label">
-                            <input type="text" name="residence-address" v-model="user.address" required="required" @change="userInfoHasChanged()">
-                            <span class="keep_hovered">Address</span>
-                        </label>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="input_label">
-                            <input type="text" name="residence-city" v-model="user.city" required="required" @change="userInfoHasChanged()">
-                            <span class="keep_hovered">City</span>
-                        </label>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="input_label">
-                            <input type="text" name="residence-country" v-model="user.country" required="required" @change="userInfoHasChanged()">
-                            <span class="keep_hovered">Country</span>
-                        </label>
-                    </div>
+                <div class="col-md-4">
+                    <label class="input_label">
+                        <input type="password" name="confirm-new-password" v-model="user.newPasswordConfirmation" @change="userInfoHasChanged()">
+                        <span class="keep_hovered">Confirm New Password</span>
+                    </label>
                 </div>
-				<input type="button" value="Update" v-if="isUserInfoChanged" v-on:click="updateUser()"/>
-                <input type="button" value="Reset" v-if="isUserInfoChanged" v-on:click="loadUserData()"/>
-			</div>
+            </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-6">
+                    <label class="input_label">
+                        <input type="text" name="first-name" v-model="user.firstName" required="required" @change="userInfoHasChanged()">
+                        <span class="keep_hovered">First Name</span>
+                    </label>
+                </div>
+                <div class="col-md-6">
+                    <label class="input_label">
+                        <input type="text" name="last-name" v-model="user.lastName" required="required" @change="userInfoHasChanged()">
+                        <span class="keep_hovered">Last Name</span>
+                    </label>
+                </div>
+            </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-12">
+                    <label class="input_label">
+                        <input type="text" name="birth-date" v-model="user.contactPhone" required="required" @change="userInfoHasChanged()">
+                        <span class="keep_hovered">Contact Phone</span>
+                    </label>
+                </div>
+            </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-4">
+                    <label class="input_label">
+                        <input type="text" name="residence-address" v-model="user.address" required="required" @change="userInfoHasChanged()">
+                        <span class="keep_hovered">Address</span>
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <label class="input_label">
+                        <input type="text" name="residence-city" v-model="user.city" required="required" @change="userInfoHasChanged()">
+                        <span class="keep_hovered">City</span>
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <label class="input_label">
+                        <input type="text" name="residence-country" v-model="user.country" required="required" @change="userInfoHasChanged()">
+                        <span class="keep_hovered">Country</span>
+                    </label>
+                </div>
+            </div>
+			<input type="button" value="Update" v-if="isUserInfoChanged" v-on:click="updateUser()"/>
+            <input type="button" value="Reset" v-if="isUserInfoChanged" v-on:click="loadUserData()"/>
 		</div>
 	</div>
 </template>
@@ -127,10 +131,12 @@ export default {
     }
     .white-panel{
         background-color: rgba(255,255, 255, 1);
-        position:absolute;
-        top:-200px;
-        width:50%;
-        right:calc(50% - 50px);
+        position: relative;
+        top: 20%;
+        right:0;left:0;
+        width:40%;
+        margin:auto;
+        text-align:center;
         transition:.3s ease-in-out;
         z-index:0;
         box-shadow: 0 0 15px 9px #00000096;

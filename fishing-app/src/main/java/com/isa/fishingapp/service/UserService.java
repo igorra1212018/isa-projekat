@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.isa.fishingapp.dto.UserProfileChangeDTO;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.repository.UserRepository;
 
@@ -20,13 +23,24 @@ public class UserService {
 		return userRepository.save(user);
 	}
 	
-	public User updateUser(User user)
+	public ResponseEntity<String> updateUser(UserProfileChangeDTO user)
 	{
 		User userToUpdate = getUserById(user.getId());
-		if(userToUpdate == null)
-			return null;
-		userToUpdate = user;
-		return userRepository.save(userToUpdate);
+		if(userToUpdate == null) {
+			return new ResponseEntity<>(
+				      "Profile not found!", 
+				      HttpStatus.NOT_FOUND);
+		}
+		if(!userToUpdate.getPassword().equals(user.getOldPasswordGuess())) {
+			return new ResponseEntity<>(
+				      "Not Authorized", 
+				      HttpStatus.UNAUTHORIZED);
+		}
+		userToUpdate = new User(user);
+		userRepository.save(userToUpdate);
+		return new ResponseEntity<>(
+			      "Profile edit successful!", 
+			      HttpStatus.OK);
 	}
 	
 	public User authenticate(String email, String password)

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isa.fishingapp.dto.UserDTO;
+import com.isa.fishingapp.dto.UserProfileChangeDTO;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.service.UserService;
 
@@ -66,12 +67,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/edit_user_profile")
-	public ResponseEntity<String> editUserProfile(@RequestBody UserDTO user)
+	public ResponseEntity<String> editUserProfile(@RequestBody UserProfileChangeDTO user)
 	{
-		userService.updateUser(new User(user));
-		return new ResponseEntity<>(
-			      "Profile edit successful!", 
-			      HttpStatus.OK);
+		return userService.updateUser(user);
 	}
 	
 	@PostMapping("/login")
