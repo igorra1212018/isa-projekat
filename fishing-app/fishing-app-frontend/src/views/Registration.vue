@@ -45,31 +45,13 @@
                     </div>
                 </div>
                 <div class="row d-flex mt-4">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="input_label">
                             <input type="text" name="birth-date" v-model="user.contactPhone" required="required">
                             <span class="keep_hovered">Contact Phone</span>
                         </label>
                     </div>
-                    <div class="col-md-6">
-                        <label class="input_label">
-                            <input type="date" name="contact-phone" v-model="user.birthDate" required="required">
-                            <span class="keep_hovered">Date of Birth</span>
-                        </label>
-                    </div>
                 </div>
-                <div class="row">
-					<div class="row d-flex mt-2">
-                        <div class="col-md-6">
-                            <input type='radio' id='male' checked='checked' name='radio' class="male_option" v-model="user.gender" value="Male">
-                            <label for='male'>Male</label>
-                        </div>
-                        <div class="col-md-6">
-                            <input type='radio' id='female' name='radio' class="female_option" v-model="user.gender" value="Female">
-                            <label for='female'>Female</label>
-                        </div>
-                    </div>
-				</div>
                 <div class="row d-flex mt-4">
                     <div class="col-md-4">
                         <label class="input_label">

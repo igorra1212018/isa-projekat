@@ -6,7 +6,7 @@
                 <div class="row d-flex mt-5">
                     <div class="col-md-12">
                         <label class="input_label">
-                            <input type="email" name="email" v-model="user.email" required="required">
+                            <input type="email" name="email" v-model="user.email" disabled=yes required="required" @change="userInfoHasChanged()">
                             <span class="keep_hovered">EMail</span>
                         </label>
                     </div>
@@ -28,64 +28,47 @@
                 <div class="row d-flex mt-4">
                     <div class="col-md-6">
                         <label class="input_label">
-                            <input type="text" name="first-name" v-model="user.firstName" required="required">
+                            <input type="text" name="first-name" v-model="user.firstName" required="required" @change="userInfoHasChanged()">
                             <span class="keep_hovered">First Name</span>
                         </label>
                     </div>
                     <div class="col-md-6">
                         <label class="input_label">
-                            <input type="text" name="last-name" v-model="user.lastName" required="required">
+                            <input type="text" name="last-name" v-model="user.lastName" required="required" @change="userInfoHasChanged()">
                             <span class="keep_hovered">Last Name</span>
                         </label>
                     </div>
                 </div>
                 <div class="row d-flex mt-4">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="input_label">
-                            <input type="text" name="birth-date" v-model="user.contactPhone" required="required">
+                            <input type="text" name="birth-date" v-model="user.contactPhone" required="required" @change="userInfoHasChanged()">
                             <span class="keep_hovered">Contact Phone</span>
                         </label>
                     </div>
-                    <div class="col-md-6">
-                        <label class="input_label">
-                            <input type="date" name="contact-phone" v-model="user.birthDate" required="required">
-                            <span class="keep_hovered">Date of Birth</span>
-                        </label>
-                    </div>
                 </div>
-                <div class="row">
-					<div class="row d-flex mt-2">
-                        <div class="col-md-6">
-                            <input type='radio' id='male' checked='checked' name='radio' class="male_option" v-model="user.gender" value="Male">
-                            <label for='male'>Male</label>
-                        </div>
-                        <div class="col-md-6">
-                            <input type='radio' id='female' name='radio' class="female_option" v-model="user.gender" value="Female">
-                            <label for='female'>Female</label>
-                        </div>
-                    </div>
-				</div>
                 <div class="row d-flex mt-4">
                     <div class="col-md-4">
                         <label class="input_label">
-                            <input type="text" name="residence-address" v-model="user.address" required="required">
+                            <input type="text" name="residence-address" v-model="user.address" required="required" @change="userInfoHasChanged()">
                             <span class="keep_hovered">Address</span>
                         </label>
                     </div>
                     <div class="col-md-4">
                         <label class="input_label">
-                            <input type="text" name="residence-city" v-model="user.city" required="required">
+                            <input type="text" name="residence-city" v-model="user.city" required="required" @change="userInfoHasChanged()">
                             <span class="keep_hovered">City</span>
                         </label>
                     </div>
                     <div class="col-md-4">
                         <label class="input_label">
-                            <input type="text" name="residence-country" v-model="user.country" required="required">
+                            <input type="text" name="residence-country" v-model="user.country" required="required" @change="userInfoHasChanged()">
                             <span class="keep_hovered">Country</span>
                         </label>
                     </div>
                 </div>
-				<input type="button" value="Register" v-on:click="updateUser()"/>
+				<input type="button" value="Update" v-if="isUserInfoChanged" v-on:click="updateUser()"/>
+                <input type="button" value="Reset" v-if="isUserInfoChanged" v-on:click="loadUserData()"/>
 			</div>
 		</div>
 	</div>
@@ -99,20 +82,30 @@ export default {
     name: 'UserProfile',
     data(){
         return {
-            user: {}
+            user: {},
+            originalUser: {},
+            isUserInfoChanged: false
         }
     },
     mounted: function() {
-        UserService.getUser(100).then(response => {
-            this.user = response.data
-        })
-        .catch(err => {
-            console.error(err);
-        })
+        this.loadUserData()
     },
     methods: {
+        loadUserData() {
+            UserService.getUser(100).then(response => {
+                this.user = response.data
+                this.originalUser = this.user
+            })
+            .catch(err => {
+                console.error(err);
+            })
+            this.isUserInfoChanged = false
+        },
         updateUser() {
             UserService.updateUser(this.user);
+        },
+        userInfoHasChanged() {
+            this.isUserInfoChanged = true
         }
     }
 }
@@ -191,6 +184,7 @@ export default {
     .register-show input[type="button"] {
         max-width: 150px;
         width: 100%;
+        margin-left: 20px;
         background: rgba(0,95,255,1);
         color: #f9f9f9;
         border: none;
