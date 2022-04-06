@@ -55,7 +55,8 @@ public class User {
 		if(user.getId() != null)
 			this.id = user.getId();
 		this.email = user.getEmail();
-		this.password = user.getNewPassword();
+		if(user.getNewPassword() != null && !user.getNewPassword().isBlank())
+			this.password = user.getNewPassword();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
 		this.residence = new Location(user.getAddress(), user.getCity(), user.getCountry(), 0, 0);

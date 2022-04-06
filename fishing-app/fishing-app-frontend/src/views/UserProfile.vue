@@ -72,7 +72,7 @@
                     </label>
                 </div>
             </div>
-			<input type="button" value="Update" v-if="isUserInfoChanged" v-on:click="updateUser()"/>
+			<input type="button" value="Update" v-if="isUserInfoChanged" :disabled="!isAllInputValid()" v-on:click="updateUser()"/>
             <input type="button" value="Reset" v-if="isUserInfoChanged" v-on:click="loadUserData()"/>
 		</div>
 	</div>
@@ -107,9 +107,29 @@ export default {
         },
         updateUser() {
             UserService.updateUser(this.user);
+            this.loadUserData()
         },
         userInfoHasChanged() {
             this.isUserInfoChanged = true
+        },
+        isAllInputValid() {
+            if(this.user.firstName == "")
+                return false
+            if(this.user.lastName == "")
+                return false
+            if(this.user.contactPhone == "")
+                return false
+            if(this.user.address == "")
+                return false
+            if(this.user.city == "")
+                return false
+            if(this.user.country == "")
+                return false
+            if((this.user.oldPasswordGuess && (!this.user.newPassword || !this.user.newPasswordConfirmation))
+                || (this.user.newPassword && (!this.user.oldPasswordGuess || !this.user.newPasswordConfirmation))
+                || (this.user.newPasswordConfirmation && (!this.user.oldPasswordGuess || !this.user.newPassword)))
+                return false;
+            return true
         }
     }
 }
@@ -202,7 +222,20 @@ export default {
         transition: all .3s;
     }
 
-    .register-show input[type="button"]:hover {
+    .register-show input[type="button"]:disabled {
+        transform: scale(110%);
+        background: rgb(162, 196, 255);
+        color: #f9f9f9;
+        border: none;
+        padding: 10px;
+        text-transform: uppercase;
+        border-radius: 10px;
+        float:right;
+        cursor:auto;
+        transition: all .3s;
+    }
+
+    .register-show input[type="button"]:hover:enabled {
         transform: scale(110%);
         background: rgba(0,95,255,1);
         color: #f9f9f9;

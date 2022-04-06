@@ -31,12 +31,17 @@ public class UserService {
 				      "Profile not found!", 
 				      HttpStatus.NOT_FOUND);
 		}
-		if(!userToUpdate.getPassword().equals(user.getOldPasswordGuess())) {
+		if(user.getNewPassword() != null && !user.getNewPassword().isBlank() && !userToUpdate.getPassword().equals(user.getOldPasswordGuess())) {
 			return new ResponseEntity<>(
 				      "Not Authorized", 
 				      HttpStatus.UNAUTHORIZED);
 		}
+		String oldPassword = "";
+		if(user.getNewPassword() == null || user.getNewPassword().isBlank())
+			oldPassword = userToUpdate.getPassword();
 		userToUpdate = new User(user);
+		if(!oldPassword.isBlank())
+			userToUpdate.setPassword(oldPassword);
 		userRepository.save(userToUpdate);
 		return new ResponseEntity<>(
 			      "Profile edit successful!", 
