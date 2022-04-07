@@ -24,4 +24,11 @@ public class LodgingsController {
 	{
 		return lodgingService.getAllLodgings();
 	}
+	
+	@GetMapping("/my_lodgings")
+	public List<Lodging> getMyLodgings(Model model)
+	{
+		int currentUser = 351;
+		return lodgingService.getOwnerLodgings(currentUser);
+	}
 }
