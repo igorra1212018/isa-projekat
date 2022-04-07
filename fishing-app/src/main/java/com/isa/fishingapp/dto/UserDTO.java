@@ -12,7 +12,8 @@ public class UserDTO {
 	String city;
 	String country;
 	String contactPhone;
-	
+	String gender;
+
 	public UserDTO() {
 	}
 	
@@ -80,5 +81,11 @@ public class UserDTO {
 	}
 	public void setContactPhone(String contactPhone) {
 		this.contactPhone = contactPhone;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 }

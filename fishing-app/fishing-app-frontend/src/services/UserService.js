@@ -15,6 +15,10 @@ class UserService{
     registerUser(user){
         return axios.post(USER_API_BASE_URL + 'register', user);
     }
+    
+    registerOwner(user){
+        return axios.post(USER_API_BASE_URL + 'register_owner', user);
+    }
 
     updateUser(user){
         return axios.post(USER_API_BASE_URL + 'edit_user_profile', user);

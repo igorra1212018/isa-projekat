@@ -2,19 +2,28 @@ package com.isa.fishingapp.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class DateRange {
-	private LocalDateTime from;
-	private LocalDateTime to;
+	private final LocalDateTime fromDate;
+	private final LocalDateTime toDate;
 	
-	DateRange(LocalDateTime from, LocalDateTime to) throws Exception {
-		this.from = from;
-		this.to = to;
+	public DateRange() {
+		//No validation for now
+		fromDate = null;
+		toDate = null;
+	}
+	
+	public DateRange(LocalDateTime from, LocalDateTime to) throws Exception {
+		this.fromDate = from;
+		this.toDate = to;
 		
 		validate();
 	}
 	
 	void validate() throws Exception {
-		if (from.isAfter(to)) {
+		if (fromDate.isAfter(toDate)) {
 			throw new Exception("Invalid DateRange");
 		}
 	}

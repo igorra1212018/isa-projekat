@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.isa.fishingapp.dto.OwnerDTO;
 import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
+import com.isa.fishingapp.model.Owner;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.service.UserService;
 
@@ -28,6 +30,11 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@GetMapping("/")
+	public String home() {
+		return ("<h1>Test 123455</h1>");
+	}
 	
 	@GetMapping("/users")
 	public List<User> getUsers(Model model)
@@ -50,6 +57,13 @@ public class UserController {
 		return "register";
 	}
 	
+	@GetMapping("/register_owner")
+	public String getRegisterOwnerPage(Model model)
+	{
+		model.addAttribute("registerOwnerRequest", new User());
+		return "register_owner";
+	}
+	
 	@GetMapping("/login")
 	public String getLoginPage(Model model)
 	{
@@ -61,6 +75,19 @@ public class UserController {
 	public ResponseEntity<String> register(@RequestBody UserDTO user)
 	{
 		userService.registerUser(new User(user));
+		return new ResponseEntity<>(
+			      "Registration successful!", 
+			      HttpStatus.OK);
+	}
+	
+	@PostMapping("/register_owner")
+	public ResponseEntity<String> registerOwner(@RequestBody OwnerDTO owner) throws Exception
+	{
+		userService.registerOwner(new Owner(owner));
+		System.out.println("Enetered here!");
+		System.out.println(owner.getFirstName());
+		System.out.println(owner.getLastName());
+		System.out.println(owner.getApplicationDetails());
 		return new ResponseEntity<>(
 			      "Registration successful!", 
 			      HttpStatus.OK);

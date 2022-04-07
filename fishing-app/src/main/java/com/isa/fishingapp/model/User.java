@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
+import com.isa.fishingapp.model.enums.Gender;
 import com.isa.fishingapp.model.enums.Role;
 
 
@@ -36,6 +37,8 @@ public class User {
 	String contactPhone;
 	
 	Role userRole;
+	Gender gender;
+
 	boolean activated;
 	
 	public User() { }
@@ -125,6 +128,22 @@ public class User {
 
 	public void setActivated(boolean activated) {
 		this.activated = activated;
+	}
+	
+	public Role getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(Role userRole) {
+		this.userRole = userRole;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 
 	@Override
