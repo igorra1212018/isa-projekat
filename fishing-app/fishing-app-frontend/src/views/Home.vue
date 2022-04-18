@@ -1,49 +1,45 @@
 <template>
   <div>
-    <div class="d-flex justify-content-center" style="margin-top:20px">
-      <div class="row" style = "width: 25%; margin-left: 50px">
-        <div class="col-lg-12 mx-auto">
-          <div class="bg-white p-3 rounded shadow">
-            <form action="">
-              <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
-                <div class="input-group">
-                  <input type="search" placeholder="Name" aria-describedby="button-addon1" class="form-control border-0 bg-light" v-model="filterName">
-                  <div class="input-group-append">
-                    <button id="button-addon1" type="submit" class="btn btn-link text-primary" v-on:click="sort('name')"><em class="fa fa-sort"></em></button>
-                  </div>
-                </div>
-              </div>
-              <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <button id="button-addon2" type="submit" class="btn btn-link text-warning" v-on:click="sort('type')"><em class="fa fa-sort"></em></button>
-                  </div>
-                  <input type="search" placeholder="Type" aria-describedby="button-addon2" class="form-control border-0 bg-light" v-model="filterType">
-                </div>
-              </div>
-              <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
-                <div class="input-group">
-                  <input type="search" placeholder="City" aria-describedby="button-addon1" class="form-control border-0 bg-light" v-model="filterCity">
-                  <div class="input-group-append">
-                    <button id="button-addon1" type="submit" class="btn btn-link text-primary" v-on:click="sort('location.address.townName')"><em class="fa fa-sort"></em></button>
-                  </div>
-                </div>
-              </div>
-              <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
-                <div class="input-group">
-                  <input type="search" placeholder="Min rating" aria-describedby="button-addon1" class="form-control border-0 bg-light" v-model="filterRatingFrom">
-                  <div class="input-group-append">
-                    <button id="button-addon1" type="submit" class="btn btn-link text-primary" v-on:click="sort('rating')"><em class="fa fa-sort"></em></button>
-                  </div>
-                </div>
-              </div>
-            </form>
+    <div class="d-flex justify-content-center" style="margin-top:20px; margin-left:40px">
+      <div class="filter-panel">
+        <div class="filter-panel-parameters">
+          <h2>Search</h2>
+          <div class="row d-flex mt-5">
+            <div class="col-md-4">
+                <input type='radio' id='lodgings' checked='checked' name='radio' class="blue_option" v-model="type" value="Lodgings">
+                <label for='lodgings'>Lodgings</label>
+            </div>
+            <div class="col-md-4">
+                <input type='radio' id='boats' name='radio' class="blue_option" v-model="type" value="Boats">
+                <label for='boats'>Boats</label>
+            </div>
+            <div class="col-md-4">
+                <input type='radio' id='lessons' name='radio' class="blue_option" v-model="type" value="Lessons">
+                <label for='lessons'>Lessons</label>
+            </div>
           </div>
+          <div class="row d-flex mt-5">
+              <div class="col-md-12">
+                  <label class="input_label">
+                      <input type="text" name="name" v-model="searchParameters.name">
+                      <span class="keep_hovered">Name</span>
+                  </label>
+              </div>
+          </div>
+          <div class="row d-flex mt-5">
+              <div class="col-md-12">
+                  <label class="input_label">
+                      <input type="text" name="city" v-model="filterCity">
+                      <span class="keep_hovered">City</span>
+                  </label>
+              </div>
+          </div>
+          <input type="button" value="Search" v-on:click="search()"/>
         </div>
       </div>
       <div class="row row-cols-md-2" style = "width: 75%; margin-left: 50px" v-for="l in lodgings" :key="l.id">
         <div class="col">
-          <article class="restaurant_card">
+          <article class="entity_card">
             <figure class="card-image">
               <img src="../resources/DefaultLodgingIcon.jpg" alt="" />
             </figure>   
@@ -88,6 +84,7 @@ export default {
   data: function () {
     return {
       lodgings: {},
+      searchParameters: {},
       currentUser: null,
       name: '',
       type: '',
@@ -110,13 +107,38 @@ export default {
   methods: {
     getFullAddress: function (address) {
        return address.address + " " + address.city + " " + address.country;
-    }
+    },
+    search() {
+        LodgingService.getLodgingsBySearch(this.searchParameters).then(response => {
+            this.lodgings = response.data
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    },
   }
 }
 </script>
 
 <style>
-  .restaurant_card {
+  .filter-panel{
+      background-color: rgba(255,255, 255, 1);
+      position: relative;
+      margin-left: 20px;
+      width:20%;
+      text-align:center;
+      transition:.3s ease-in-out;
+      z-index:0;
+      box-shadow: 0 0 15px 9px #00000096;
+  }
+  .filter-panel-parameters{
+      z-index: 1;
+      transition:0.3s ease-in-out;
+      color:#242424;
+      text-align:left;
+      padding:50px;
+  }
+  .entity_card {
     position: relative;
     max-width: 360px;
     padding-bottom: 1.3125em;
@@ -274,5 +296,17 @@ export default {
   .hidden_label {
     display: none;
     height: 0px
+  }
+  input[type="radio"].blue_option:hover + label {
+      color: white;
+      background-color: rgb(143, 176, 233);
+      border: 2px solid white;
+      transition: all .3s;
+  }
+  input[type="radio"].blue_option:checked + label {
+      color: white;
+      background-color: rgba(0,95,255,1);
+      border: 2px solid white;
+      transition: all .3s;
   }
 </style>

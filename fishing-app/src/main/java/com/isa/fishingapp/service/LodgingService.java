@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.isa.fishingapp.dto.LodgingSearchDTO;
 import com.isa.fishingapp.model.Lodging;
 import com.isa.fishingapp.repository.LodgingRepository;
 
@@ -21,5 +22,10 @@ public class LodgingService {
 	public List<Lodging> getAllLodgings()
 	{
 		return lodgingRepository.findAll();
+	}
+	
+	public List<Lodging> getAllLodgings(LodgingSearchDTO searchParameters)
+	{
+		return lodgingRepository.getLodgingsByName(searchParameters.getName());
 	}
 }
