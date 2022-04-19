@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isa.fishingapp.service.LodgingService;
 import com.isa.fishingapp.dto.LodgingSearchDTO;
+import com.isa.fishingapp.dto.ReserveLodgingDTO;
+import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Lodging;
+import com.isa.fishingapp.model.ReservationLodging;
 
 @RestController
 @RequestMapping("/api")
@@ -37,5 +40,12 @@ public class LodgingsController {
 		return new ResponseEntity<>(
 					foundLodgings, 
 					HttpStatus.OK);
+	}
+	
+	@PostMapping("/reserve_lodging")
+	public ResponseEntity<ReservationLodging> reserveLodging(@RequestBody ReserveLodgingDTO reservationParameters)
+	{
+		lodgingService.reserveLodging(reservationParameters);
+		return null;
 	}
 }
