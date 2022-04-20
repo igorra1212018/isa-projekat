@@ -13,4 +13,9 @@ public interface ReservationLodgingRepository extends JpaRepository<ReservationL
 			+ "FROM reservation_lodging "
 			+ "WHERE (Now() BETWEEN from_date AND to_date) ", nativeQuery = true)
     List<ReservationLodging> getReservationLodgingsInInterval();
+	
+	@Query(value = "SELECT * "
+			+ "FROM reservation_lodging "
+			+ "WHERE lodging_id = :lodgingId", nativeQuery = true)
+    List<ReservationLodging> getReservationLodgingsInInterval(@Param("lodgingId") Integer lodgingId);
 }

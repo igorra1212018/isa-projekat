@@ -43,6 +43,11 @@ public class LodgingService {
 		return lodgingRepository.getLodgingsByName(searchParameters.getName());
 	}
 	
+	public List<ReservationLodging> getReservationsForLodging(int lodgingId)
+	{
+		return reservationLodgingRepository.getReservationLodgingsInInterval(lodgingId);
+	}
+	
 	public ReservationLodging reserveLodging(ReserveLodgingDTO reserveLodgingDTO)
 	{
 		ReservationLodging reservationLodging = new ReservationLodging();

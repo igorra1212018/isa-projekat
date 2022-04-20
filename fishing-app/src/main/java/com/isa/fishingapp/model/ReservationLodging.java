@@ -2,6 +2,7 @@ package com.isa.fishingapp.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,6 +29,7 @@ public class ReservationLodging {
 	@ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
     private User user;
+	@Embedded
 	private DateRange dateRange;
 	private boolean cancelled;
 	public Integer getId() {

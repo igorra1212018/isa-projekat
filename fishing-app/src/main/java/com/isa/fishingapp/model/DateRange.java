@@ -27,4 +27,12 @@ public class DateRange {
 			throw new Exception("Invalid DateRange");
 		}
 	}
+
+	public LocalDateTime getFromDate() {
+		return fromDate;
+	}
+
+	public LocalDateTime getToDate() {
+		return toDate;
+	}
 }

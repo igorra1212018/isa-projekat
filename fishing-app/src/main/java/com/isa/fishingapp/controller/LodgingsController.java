@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,16 @@ public class LodgingsController {
 		return new ResponseEntity<>(
 					foundLodgings, 
 					HttpStatus.OK);
+	}
+	
+	@GetMapping("/get_reservations_for_lodging/{lodgingId}")
+	public ResponseEntity<List<ReserveLodgingDTO>> getReservationsForLodging(@PathVariable int lodgingId)
+	{
+		List<ReservationLodging> foundReservations = lodgingService.getReservationsForLodging(lodgingId);
+		List<ReserveLodgingDTO> foundReservationsDTO = ReserveLodgingDTO.convertReservationLodgingListToDTO(foundReservations);
+		return new ResponseEntity<>(
+				foundReservationsDTO, 
+				HttpStatus.OK);
 	}
 	
 	@PostMapping("/reserve_lodging")
