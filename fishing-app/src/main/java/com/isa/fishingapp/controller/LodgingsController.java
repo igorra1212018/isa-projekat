@@ -54,9 +54,8 @@ public class LodgingsController {
 	}
 	
 	@PostMapping("/reserve_lodging")
-	public ResponseEntity<ReservationLodging> reserveLodging(@RequestBody ReserveLodgingDTO reservationParameters)
+	public ResponseEntity<String> reserveLodging(@RequestBody ReserveLodgingDTO reservationParameters)
 	{
-		lodgingService.reserveLodging(reservationParameters);
-		return null;
+		return lodgingService.reserveLodging(reservationParameters);
 	}
 }

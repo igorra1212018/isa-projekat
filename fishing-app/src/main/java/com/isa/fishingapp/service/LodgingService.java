@@ -3,6 +3,8 @@ package com.isa.fishingapp.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.isa.fishingapp.dto.LodgingSearchDTO;
@@ -45,11 +47,21 @@ public class LodgingService {
 	
 	public List<ReservationLodging> getReservationsForLodging(int lodgingId)
 	{
-		return reservationLodgingRepository.getReservationLodgingsInInterval(lodgingId);
+		return reservationLodgingRepository.getReservationLodgings(lodgingId);
 	}
 	
-	public ReservationLodging reserveLodging(ReserveLodgingDTO reserveLodgingDTO)
+	public ResponseEntity<String> reserveLodging(ReserveLodgingDTO reserveLodgingDTO)
 	{
+		try {
+			if(!getAllReservationsInInterval(reserveLodgingDTO.getLodgingId(), new DateRange(reserveLodgingDTO.getFromDate(), reserveLodgingDTO.getToDate())).isEmpty())
+				return new ResponseEntity<>(
+					      "Time period is already taken!", 
+					      HttpStatus.BAD_REQUEST);
+		} catch (Exception e1) {
+			return new ResponseEntity<>(
+				      "Date range is invalid!", 
+				      HttpStatus.BAD_REQUEST);
+		}
 		ReservationLodging reservationLodging = new ReservationLodging();
 		reservationLodging.setCancelled(false);
 		try {
@@ -60,11 +72,13 @@ public class LodgingService {
 		reservationLodging.setLodging(findLodgingById(reserveLodgingDTO.getLodgingId()));
 		reservationLodging.setUser(userRepository.getById(reserveLodgingDTO.getUserId()));
 		reservationLodgingRepository.save(reservationLodging);
-		return null;
+		return new ResponseEntity<>(
+			      "Lodging reservation successful!", 
+			      HttpStatus.OK);
 	}
 	
-	public List<ReservationLodging> getAllReservationsInInterval()
+	public List<ReservationLodging> getAllReservationsInInterval(Integer lodgingId, DateRange dateRange)
 	{
-		return reservationLodgingRepository.getReservationLodgingsInInterval();
+		return reservationLodgingRepository.getReservationLodgingsInInterval(lodgingId, dateRange.getFromDate(), dateRange.getToDate());
 	}
 }
