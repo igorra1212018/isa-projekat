@@ -1,5 +1,7 @@
 package com.isa.fishingapp.controller;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,12 @@ public class LodgingsController {
 		return lodgingService.getAllLodgings();
 	}
 	
+	@GetMapping("/lodging/{lodgingId}")
+	public Lodging getLodging(@PathVariable int lodgingId)
+	{
+		return lodgingService.getLodging(lodgingId);
+	}
+	
 	@PostMapping("/search_lodgings")
 	public ResponseEntity<List<Lodging>> getLodgings(@RequestBody LodgingSearchDTO searchParameters)
 	{
@@ -50,6 +58,19 @@ public class LodgingsController {
 		List<ReserveLodgingDTO> foundReservationsDTO = ReserveLodgingDTO.convertReservationLodgingListToDTO(foundReservations);
 		return new ResponseEntity<>(
 				foundReservationsDTO, 
+				HttpStatus.OK);
+	}
+	
+	@GetMapping("/get_available_lodging_reservation_dates/{lodgingId}")
+	public ResponseEntity<List<DateRange>> getAvailableLodgingReservationDates(@PathVariable int lodgingId) throws Exception
+	{
+		List<ReservationLodging> foundReservations = lodgingService.getReservationsForLodging(lodgingId);
+		List<DateRange> occupiedDateRanges = new ArrayList<>();
+		for(ReservationLodging rl : foundReservations)
+			occupiedDateRanges.add(rl.getDateRange());
+		DateRange maximumDateRange = new DateRange(LocalDateTime.MIN, LocalDateTime.MAX);
+		return new ResponseEntity<>(
+				maximumDateRange.splitByDateRange(occupiedDateRanges), 
 				HttpStatus.OK);
 	}
 	

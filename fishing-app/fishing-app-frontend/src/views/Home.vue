@@ -64,7 +64,7 @@
                 Rating
               </li>
             </ul>   
-            <button class="card-button">View</button>
+            <button class="card-button" v-on:click="viewLodging(l.id)">View</button>
           </article>
         </div>
       </div>
@@ -116,6 +116,9 @@ export default {
             console.error(err);
         })
     },
+    viewLodging(lodgingId) {
+      window.location.href = "http://localhost:8081/lodging/" + lodgingId;
+    }
   }
 }
 </script>

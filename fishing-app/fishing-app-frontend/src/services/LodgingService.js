@@ -8,6 +8,10 @@ class LodgingService{
         return axios.get(USER_API_BASE_URL + 'lodgings');
     }
 
+    getLodging(id){
+        return axios.get(USER_API_BASE_URL + 'lodging/' + id);
+    }
+
     getLodgingsBySearch(searchParameters){
         return axios.post(USER_API_BASE_URL + 'search_lodgings', searchParameters);
     }

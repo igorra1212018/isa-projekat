@@ -5,6 +5,7 @@ import Users from '../views/Users.vue'
 import Registration from '../views/Registration.vue'
 import UserProfile from '../views/UserProfile.vue'
 import OwnerRegistration from '../views/OwnerRegistration.vue'
+import Lodging from '../views/Lodging.vue'
 
 Vue.use(VueRouter)
 
@@ -41,6 +42,11 @@ const routes = [
     path: '/owner_registration',
     name: 'OwnerRegistration',
     component: OwnerRegistration
+  },
+  {
+    path: '/lodging/:id',
+    name: 'Lodging',
+    component: Lodging
   },
 ]
 

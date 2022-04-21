@@ -81,4 +81,8 @@ public class LodgingService {
 	{
 		return reservationLodgingRepository.getReservationLodgingsInInterval(lodgingId, dateRange.getFromDate(), dateRange.getToDate());
 	}
+
+	public Lodging getLodging(int lodgingId) {
+		return lodgingRepository.findById(lodgingId).orElse(null);
+	}
 }
