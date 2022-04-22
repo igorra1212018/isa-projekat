@@ -68,7 +68,7 @@ public class LodgingsController {
 		List<DateRange> occupiedDateRanges = new ArrayList<>();
 		for(ReservationLodging rl : foundReservations)
 			occupiedDateRanges.add(rl.getDateRange());
-		DateRange maximumDateRange = new DateRange(LocalDateTime.MIN, LocalDateTime.MAX);
+		DateRange maximumDateRange = new DateRange(LocalDateTime.now(), (LocalDateTime.now().plusYears(2)));
 		return new ResponseEntity<>(
 				maximumDateRange.splitByDateRange(occupiedDateRanges), 
 				HttpStatus.OK);

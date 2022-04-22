@@ -12,6 +12,10 @@ class LodgingService{
         return axios.get(USER_API_BASE_URL + 'lodging/' + id);
     }
 
+    getAvailableLodgingReservationDates(id){
+        return axios.get(USER_API_BASE_URL + 'get_available_lodging_reservation_dates/' + id);
+    }
+
     getLodgingsBySearch(searchParameters){
         return axios.post(USER_API_BASE_URL + 'search_lodgings', searchParameters);
     }
