@@ -16,11 +16,29 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <select name="day_from" id="day_from">
-                      <option value="volvo" v-for="d in getAvailableReservationDays" :key="d">{{d}}</option>
+                    <select name="day_from" id="day_from" v-model="selectedDay">
+                      <option v-for="d in getAvailableReservationDays" :value="d" :key="d">{{d}}</option>
                     </select>
                 </div>
             </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-3">
+                    <select name="selected_year_to" id="selected_year_to" v-model="selectedYearTo">
+                      <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="selected_month_to" id="selected_month_to" v-model="selectedMonthTo">
+                      <option v-for="m in availableMonths" :value="m" :key="m">{{m}}</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="selected_day_to" id="selected_day_to" v-model="selectedDayTo">
+                      <option v-for="d in getAvailableReservationDaysTo" :value="d" :key="d">{{d}}</option>
+                    </select>
+                </div>
+            </div>
+            <button class="card-button" v-on:click="reserveLodging()">View</button>
 		</div>
 	</div>
 </template>
@@ -38,7 +56,12 @@ export default {
             availableMonths: [],
             selectedYear: 1,
             selectedMonth: 1,
-            availableLodgingReservationDates: []
+            selectedDay: 1,
+            selectedYearTo: 1,
+            selectedMonthTo: 1,
+            selectedDayTo: 1,
+            availableLodgingReservationDates: [],
+            reservationParameters: {}
         }
     },
     mounted: function() {
@@ -56,7 +79,13 @@ export default {
         }
     },
     methods: {
-        
+        reserveLodging() {
+            this.reservationParameters.lodgingId = this.$route.params.id
+            this.reservationParameters.userId = 1
+            this.reservationParameters.fromDate = new Date(this.selectedYear, this.selectedMonth-1, this.selectedDay+1)
+            this.reservationParameters.toDate = new Date(this.selectedYearTo, this.selectedMonthTo-1, this.selectedDayTo+1)
+            LodgingService.reserveLodging(this.reservationParameters)
+        }
     },
     computed: {
         getAvailableReservationDays() {
@@ -72,8 +101,28 @@ export default {
             let availableDays = []
             for (let i = 1; i <= maxDays; i++) {
                 this.availableLodgingReservationDates.forEach((value) => {
-                    var testingDate = new Date(this.selectedYear, this.selectedMonth, i);
-                    if((testingDate > new Date(value.fromDate[0], value.fromDate[1], value.fromDate[2])) && (testingDate < new Date(value.toDate[0], value.toDate[1], value.toDate[2])))
+                    var testingDate = new Date(this.selectedYear, this.selectedMonth-1, i+1);
+                    if((testingDate > new Date(value.fromDate[0], value.fromDate[1]-1, value.fromDate[2]+1)) && (testingDate < new Date(value.toDate[0], value.toDate[1]-1, value.toDate[2]+1)))
+                        availableDays.push(i)
+                });
+            }
+            return availableDays
+        },
+        getAvailableReservationDaysTo() {
+            let maxDays = 0;
+            if(this.selectedMonthTo == 1 || this.selectedMonthTo == 3 || this.selectedMonthTo == 5 || this.selectedMonthTo == 7 || this.selectedMonthTo == 8 || this.selectedMonthTo == 10 || this.selectedMonthTo == 12 )
+                maxDays = 31
+            else if(this.selectedMonthTo == 2 && (this.selectedYearTo % 4) == 0)
+                maxDays = 29
+            else if(this.selectedMonthTo == 2)
+                maxDays = 28
+            else
+                maxDays = 30
+            let availableDays = []
+            for (let i = 1; i <= maxDays; i++) {
+                this.availableLodgingReservationDates.forEach((value) => {
+                    var testingDate = new Date(this.selectedYearTo, this.selectedMonthTo-1, i+1);
+                    if((testingDate > new Date(value.fromDate[0], value.fromDate[1]-1, value.fromDate[2]+1)) && (testingDate < new Date(value.toDate[0], value.toDate[1]-1, value.toDate[2]+1)))
                         availableDays.push(i)
                 });
             }

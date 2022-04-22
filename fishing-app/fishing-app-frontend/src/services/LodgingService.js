@@ -19,6 +19,10 @@ class LodgingService{
     getLodgingsBySearch(searchParameters){
         return axios.post(USER_API_BASE_URL + 'search_lodgings', searchParameters);
     }
+
+    reserveLodging(reservationParameters){
+        return axios.post(USER_API_BASE_URL + 'reserve_lodging/', reservationParameters);
+    }
 }
 
 export default new LodgingService();
