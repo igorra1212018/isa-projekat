@@ -1,11 +1,12 @@
 import axios from 'axios';
+import authHeader from '../auth-header';
 
 const USER_API_BASE_URL = 'http://localhost:8080/api/';
 
 class LodgingService{
 
     getLodgings(){
-        return axios.get(USER_API_BASE_URL + 'lodgings');
+        return axios.get(USER_API_BASE_URL + 'lodgings', { headers: authHeader() });
     }
 
     getLodging(id){

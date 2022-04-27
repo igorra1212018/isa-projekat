@@ -12,8 +12,19 @@ class UserService{
         return axios.get(USER_API_BASE_URL + id)
     }
 
-    login(user){
-        return axios.post('http://localhost:8080/api/auth/signin', user)
+    login(user) {
+      return axios
+        .post('http://localhost:8080/api/auth/signin', user)
+        .then(response => {
+          if (response.data.accessToken) {
+            localStorage.setItem('user', JSON.stringify(response.data));
+          }
+          return response.data;
+        });
+    }
+
+    logout() {
+      localStorage.removeItem('user');
     }
 
     registerUser(user){

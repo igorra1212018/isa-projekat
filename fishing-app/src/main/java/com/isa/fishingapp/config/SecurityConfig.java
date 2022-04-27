@@ -65,17 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.anyRequest().authenticated();*/
 		http.cors().and().csrf().disable()
 		 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-		 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests()
-	      .antMatchers("/api/lodgings*")
-	      .permitAll();
-		http.authorizeRequests()
-	      .antMatchers("/api/user/login*")
-	      .permitAll();
-		http.authorizeRequests()
-		  .antMatchers("/api/user/register*")
-	      .permitAll();
-		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+		 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 	
     @Bean

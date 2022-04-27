@@ -12,7 +12,6 @@ import com.isa.fishingapp.model.User;
 public class UserDetailsImpl implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
-	private String username;
 	private String email;
 	@JsonIgnore
 	private String password;
@@ -20,14 +19,13 @@ public class UserDetailsImpl implements UserDetails {
 	public UserDetailsImpl(Integer integer, String username, String email, String password,
 			Collection<? extends GrantedAuthority> authorities) {
 		this.id = integer;
-		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.authorities = authorities;
 	}
 	public static UserDetailsImpl build(User user) {
 		List<GrantedAuthority> authorities = user.getRoles().stream()
-				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
+				.map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().name()))
 				.collect(Collectors.toList());
 		return new UserDetailsImpl(
 				user.getId(), 
@@ -52,7 +50,7 @@ public class UserDetailsImpl implements UserDetails {
 	}
 	@Override
 	public String getUsername() {
-		return username;
+		return getEmail();
 	}
 	@Override
 	public boolean isAccountNonExpired() {

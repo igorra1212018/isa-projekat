@@ -46,9 +46,7 @@ export default {
     },
     methods: {
         async login(){
-            UserService.login(this.user).then((res) => {
-                localStorage.setItem('token', JSON.stringify(res.data))
-            })
+            UserService.login(this.user);
         }
     }
 }

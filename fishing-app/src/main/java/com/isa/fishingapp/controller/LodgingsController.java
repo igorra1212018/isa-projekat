@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,8 @@ public class LodgingsController {
 	LodgingService lodgingService;
 	
 	@GetMapping("/lodgings")
+	//@PreAuthorize("hasRole('CUSTOMER')")
+	@PreAuthorize("permitAll")
 	public List<Lodging> getLodgings(Model model)
 	{
 		return lodgingService.getAllLodgings();
