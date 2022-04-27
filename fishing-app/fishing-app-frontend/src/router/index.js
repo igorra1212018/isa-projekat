@@ -7,6 +7,7 @@ import UserProfile from '../views/UserProfile.vue'
 import OwnerRegistration from '../views/OwnerRegistration.vue'
 import Lodging from '../views/Lodging.vue'
 import Login from '../views/Login.vue'
+import Unauthorized from '../views/Unauthorized.vue'
 
 Vue.use(VueRouter)
 
@@ -53,6 +54,11 @@ const routes = [
     path: '/lodging/:id',
     name: 'Lodging',
     component: Lodging
+  },
+  {
+    path: '/unauthorized',
+    name: 'Unauthorized',
+    component: Unauthorized
   },
 ]
 

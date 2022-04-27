@@ -62,6 +62,15 @@ public class UserController {
 	            .orElseGet( () -> ResponseEntity.notFound().build() );
     }
 	
+	@GetMapping("/email/{userEmail}")
+	@PostAuthorize("returnObject.body.email == authentication.principal.email")
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String userEmail) {
+		return Optional
+	            .ofNullable( userService.findByEmail(userEmail) )
+	            .map( user -> ResponseEntity.ok().body(new UserDTO(user)) )
+	            .orElseGet( () -> ResponseEntity.notFound().build() );
+    }
+	
 	@PostMapping("/emailavailability")
 	@PreAuthorize("permitAll")
 	public ResponseEntity<Boolean> isEmailAvailable(@RequestBody String email)

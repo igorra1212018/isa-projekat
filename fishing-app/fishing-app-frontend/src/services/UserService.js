@@ -13,6 +13,10 @@ class UserService{
         return axios.get(USER_API_BASE_URL + id, { headers: authHeader() })
     }
 
+    getUserByEmail(userEmail){
+        return axios.get(USER_API_BASE_URL + 'email/' + userEmail, { headers: authHeader() })
+    }
+
     isEmailAvailable(emailParam) {
       /*var myObj = {
         email: ""

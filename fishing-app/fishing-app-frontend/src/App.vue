@@ -2,6 +2,7 @@
   <div id="app">
     <nav class="navMenu navbar-dark bg-dark">
       <a href="/" style="float:left">Homepage</a>
+      <a :href="getUserProfileHref" v-if="user">Profile</a>
       <a href="/" v-if="user" v-on:click="logout()">Logout</a>
       <a href="/login" v-if="!user">Login</a>
     </nav>
@@ -14,15 +15,21 @@ export default {
   name: 'App',
   data(){
       return {
-          user: {}
+          user: {},
       }
   },
   mounted: function() {
       this.setupData()
   },
+  computed: {
+    getUserProfileHref() {
+      return "user/" + (JSON.parse(this.user)).id
+    }
+  },
   methods: {
       logout() {
           localStorage.removeItem('user');
+          this.userId = 0;
       },
       setupData() {
         this.user = localStorage.getItem('user')

@@ -34,7 +34,7 @@
                   </label>
               </div>
           </div>
-          <input type="button" value="Search" v-on:click="search()"/>
+          <input type="button" class="blue-button" value="Search" v-on:click="search()"/>
         </div>
       </div>
       <div class="row row-cols-md-2" style = "width: 75%; margin-left: 50px" v-for="l in lodgings" :key="l.id">
@@ -302,6 +302,7 @@ export default {
   }
   input[type="radio"].blue_option:hover + label {
       color: white;
+      text-align: left;
       background-color: rgb(143, 176, 233);
       border: 2px solid white;
       transition: all .3s;
@@ -310,6 +311,31 @@ export default {
       color: white;
       background-color: rgba(0,95,255,1);
       border: 2px solid white;
+      transition: all .3s;
+  }
+  .blue-button {
+      max-width: 150px;
+      width: 100%;
+      background: rgba(0,95,255,1);
+      color: #f9f9f9;
+      border: none;
+      padding: 10px;
+      text-transform: uppercase;
+      border-radius: 10px;
+      float:right;
+      cursor:pointer;
+      transition: all .3s;
+  }
+  .blue-button:hover {
+      transform: scale(110%);
+      background: rgba(0,95,255,1);
+      color: #f9f9f9;
+      border: none;
+      padding: 10px;
+      text-transform: uppercase;
+      border-radius: 10px;
+      float:right;
+      cursor:pointer;
       transition: all .3s;
   }
 </style>
