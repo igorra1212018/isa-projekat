@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
 import com.isa.fishingapp.model.Owner;
+import com.isa.fishingapp.model.Role;
 import com.isa.fishingapp.model.User;
+import com.isa.fishingapp.model.enums.ERole;
 import com.isa.fishingapp.repository.OwnerRepository;
+import com.isa.fishingapp.repository.RoleRepository;
 import com.isa.fishingapp.repository.UserRepository;
 
 @Service
@@ -21,9 +24,14 @@ public class UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private OwnerRepository ownerRepository;
+	@Autowired
+	private RoleRepository roleRepository;
 	
 	public User registerUser(User user)
 	{
+		Role userRole = roleRepository.findByName(ERole.CUSTOMER)
+				.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+		user.getRoles().add(userRole);
 		return userRepository.save(user);
 	}
 	
@@ -70,6 +78,15 @@ public class UserService {
 	public User getUserById(int id)
 	{
 		Optional<User> foundUser = userRepository.findById(id);
+		if(foundUser.isEmpty())
+			return null;
+		else
+			return foundUser.get();
+	}
+	
+	public User findByEmail(String email)
+	{
+		Optional<User> foundUser = userRepository.findByEmail(email);
 		if(foundUser.isEmpty())
 			return null;
 		else

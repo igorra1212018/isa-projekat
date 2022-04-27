@@ -1,19 +1,32 @@
 package com.isa.fishingapp.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.persistence.JoinColumn;
 
 import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
 import com.isa.fishingapp.model.enums.Gender;
-import com.isa.fishingapp.model.enums.Role;
+import com.isa.fishingapp.model.enums.ERole;
 
 
 @Entity
@@ -22,13 +35,17 @@ import com.isa.fishingapp.model.enums.Role;
 @AttributeOverride( name = "city", column = @Column(name = "residence_city"))
 @AttributeOverride( name = "country", column = @Column(name = "residence_country"))
 public class User {
-
 	@Id
-    @SequenceGenerator(name = "user_sequence_generator", sequenceName = "user_sequence", initialValue = 100)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence_generator")
-	Integer id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected Integer id;
 	
+	@NotBlank
+	@Size(max = 50)
+	@Email
 	String email;
+	
+	@NotBlank
+	@Size(max = 120)
 	String password;
 	String firstName;
 	String lastName;
@@ -36,7 +53,11 @@ public class User {
 	Location residence;
 	String contactPhone;
 	
-	Role userRole;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(	name = "user_roles", 
+				joinColumns = @JoinColumn(name = "user_id"), 
+				inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles = new HashSet<>();
 	Gender gender;
 
 	boolean activated;
@@ -130,12 +151,12 @@ public class User {
 		this.activated = activated;
 	}
 	
-	public Role getUserRole() {
-		return userRole;
+	public Set<Role> getRoles() {
+		return roles;
 	}
 
-	public void setUserRole(Role userRole) {
-		this.userRole = userRole;
+	public void setRoles(Set<Role> userRoles) {
+		this.roles = userRoles;
 	}
 
 	public Gender getGender() {

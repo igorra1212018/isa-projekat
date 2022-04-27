@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-const USER_API_BASE_URL = 'http://localhost:8080/api/';
+const USER_API_BASE_URL = 'http://localhost:8080/api/user/';
 
 class UserService{
 
     getUsers(){
-        return axios.get(USER_API_BASE_URL + 'users');
+        return axios.get(USER_API_BASE_URL + 'all');
     }
 
     getUser(id){
-        return axios.get(USER_API_BASE_URL + 'user/' + id)
+        return axios.get(USER_API_BASE_URL + id)
     }
 
     registerUser(user){
@@ -21,7 +21,7 @@ class UserService{
     }
 
     updateUser(user){
-        return axios.post(USER_API_BASE_URL + 'edit_user_profile', user);
+        return axios.post(USER_API_BASE_URL + 'edit', user);
     }
 }
 

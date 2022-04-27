@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,43 +21,40 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isa.fishingapp.dto.OwnerDTO;
 import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
+import com.isa.fishingapp.jwt.JwtUtils;
 import com.isa.fishingapp.model.Owner;
 import com.isa.fishingapp.model.User;
+import com.isa.fishingapp.repository.RoleRepository;
 import com.isa.fishingapp.service.UserService;
 
 @RestController
-@RequestMapping("/api")
-@CrossOrigin("http://localhost:4000/")
+@RequestMapping("/api/user")
+@CrossOrigin("http://localhost:8081/")
 public class UserController {
-	
+	@Autowired
+	AuthenticationManager authenticationManager;
+	@Autowired
+	RoleRepository roleRepository;
+	@Autowired
+	PasswordEncoder encoder;
+	@Autowired
+	JwtUtils jwtUtils;
 	@Autowired
 	UserService userService;
 	
-	@GetMapping("/")
-	public String home() {
-		return ("<h1>Test 123455</h1>");
-	}
-	
-	@GetMapping("/users")
+	@GetMapping("/all")
 	public List<User> getUsers(Model model)
 	{
 		return userService.getAllUsers();
 	}
 	
-	@GetMapping("/user/{userId}")
+	@GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable int userId) {
 		return Optional
 	            .ofNullable( userService.getUserById(userId) )
 	            .map( user -> ResponseEntity.ok().body(new UserDTO(user)) )
 	            .orElseGet( () -> ResponseEntity.notFound().build() );
     }
-	
-	@GetMapping("/register")
-	public String getRegisterPage(Model model)
-	{
-		model.addAttribute("registerRequest", new User());
-		return "register";
-	}
 	
 	@GetMapping("/register_owner")
 	public String getRegisterOwnerPage(Model model)
@@ -64,17 +63,16 @@ public class UserController {
 		return "register_owner";
 	}
 	
-	@GetMapping("/login")
-	public String getLoginPage(Model model)
-	{
-		model.addAttribute("loginRequest", new User());
-		return "login";
-	}
-	
 	@PostMapping("/register")
-	public ResponseEntity<String> register(@RequestBody UserDTO user)
+	public ResponseEntity<String> register(@RequestBody UserDTO signUpRequest)
 	{
-		userService.registerUser(new User(user));
+		if (userService.findByEmail(signUpRequest.getEmail()) != null) {
+			return ResponseEntity
+					.badRequest()
+					.body("Error: Username is already taken!");
+		}
+		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
+		userService.registerUser(new User(signUpRequest));
 		return new ResponseEntity<>(
 			      "Registration successful!", 
 			      HttpStatus.OK);
@@ -84,16 +82,12 @@ public class UserController {
 	public ResponseEntity<String> registerOwner(@RequestBody OwnerDTO owner) throws Exception
 	{
 		userService.registerOwner(new Owner(owner));
-		System.out.println("Enetered here!");
-		System.out.println(owner.getFirstName());
-		System.out.println(owner.getLastName());
-		System.out.println(owner.getApplicationDetails());
 		return new ResponseEntity<>(
 			      "Registration successful!", 
 			      HttpStatus.OK);
 	}
 	
-	@PostMapping("/edit_user_profile")
+	@PostMapping("/edit")
 	public ResponseEntity<String> editUserProfile(@RequestBody UserProfileChangeDTO user)
 	{
 		return userService.updateUser(user);

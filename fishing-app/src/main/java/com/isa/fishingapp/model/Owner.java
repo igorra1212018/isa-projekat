@@ -12,7 +12,7 @@ import org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor;
 
 import com.isa.fishingapp.dto.OwnerDTO;
 import com.isa.fishingapp.model.enums.Gender;
-import com.isa.fishingapp.model.enums.Role;
+import com.isa.fishingapp.model.enums.ERole;
 
 import net.bytebuddy.description.modifier.Ownership;
 
@@ -47,7 +47,7 @@ public class Owner extends User{
 		this.residence = new Location(owner.getAddress(), owner.getCity(), owner.getCountry(), 0, 0);
 		this.contactPhone = owner.getContactPhone();
 		this.setApplicationDetails(owner.getApplicationDetails());
-		this.userRole = Role.valueOf(owner.getRole());
+		//this.getRoles().add(new Role());
 		this.gender = Gender.valueOf(owner.getGender());
 		this.availability = new DateRange(LocalDateTime.now(), LocalDateTime.now().plusYears(3)); //Plus 3 years
 	}
