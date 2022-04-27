@@ -1,11 +1,14 @@
 package com.isa.fishingapp.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isa.fishingapp.dto.OwnerDTO;
@@ -43,12 +47,14 @@ public class UserController {
 	UserService userService;
 	
 	@GetMapping("/all")
+	@PreAuthorize("hasRole('ADMINISTRATOR')")
 	public List<User> getUsers(Model model)
 	{
 		return userService.getAllUsers();
 	}
 	
 	@GetMapping("/{userId}")
+	@PostAuthorize("returnObject.body.email == authentication.principal.email")
     public ResponseEntity<UserDTO> getUserById(@PathVariable int userId) {
 		return Optional
 	            .ofNullable( userService.getUserById(userId) )
@@ -56,20 +62,24 @@ public class UserController {
 	            .orElseGet( () -> ResponseEntity.notFound().build() );
     }
 	
-	@GetMapping("/register_owner")
-	public String getRegisterOwnerPage(Model model)
+	@PostMapping("/emailavailability")
+	@PreAuthorize("permitAll")
+	public ResponseEntity<Boolean> isEmailAvailable(@RequestBody String email)
 	{
-		model.addAttribute("registerOwnerRequest", new User());
-		return "register_owner";
+		System.out.println(email);
+		return ResponseEntity
+				.ok()
+				.body(userService.isEmailAvailable(email));
 	}
 	
 	@PostMapping("/register")
+	@PreAuthorize("not(isAuthenticated())")
 	public ResponseEntity<String> register(@RequestBody UserDTO signUpRequest)
 	{
 		if (userService.findByEmail(signUpRequest.getEmail()) != null) {
 			return ResponseEntity
 					.badRequest()
-					.body("Error: Username is already taken!");
+					.body("Error: Email is already taken!");
 		}
 		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
 		userService.registerUser(new User(signUpRequest));

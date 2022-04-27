@@ -92,4 +92,8 @@ public class UserService {
 		else
 			return foundUser.get();
 	}
+
+	public boolean isEmailAvailable(String email) {
+		return (userRepository.findByEmail(email) == null);
+	}
 }

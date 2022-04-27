@@ -30,12 +30,12 @@ const routes = [
     component: Users
   },
   {
-    path: '/user_profile',
+    path: '/user/:id',
     name: 'UserProfile',
     component: UserProfile
   },
   {
-    path: '/registration',
+    path: '/register',
     name: 'Registration',
     component: Registration
   },
@@ -63,12 +63,17 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/register', '/home'];
+  const publicPages = ['/','/login', '/register', '/home'];
+  const unauthorizedOnlyPages = ['/login', '/register']
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
   if (authRequired && !loggedIn) {
     next('/login');
-  } else {
+  } 
+  else if (unauthorizedOnlyPages.includes(to.path) && loggedIn) {
+    next('/');
+  }
+  else {
     next();
   }
 });

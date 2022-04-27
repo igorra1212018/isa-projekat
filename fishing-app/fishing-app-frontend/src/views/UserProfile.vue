@@ -96,7 +96,7 @@ export default {
     },
     methods: {
         loadUserData() {
-            UserService.getUser(100).then(response => {
+            UserService.getUser(this.$route.params.id).then(response => {
                 this.user = response.data
                 this.originalUser = this.user
             })

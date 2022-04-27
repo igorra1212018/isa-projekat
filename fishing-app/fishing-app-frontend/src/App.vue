@@ -1,35 +1,52 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <nav class="navMenu navbar-dark bg-dark">
+      <a href="/" style="float:left">Homepage</a>
+      <a href="/" v-if="user" v-on:click="logout()">Logout</a>
+      <a href="/login" v-if="!user">Login</a>
+    </nav>
     <router-view/>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'App',
+  data(){
+      return {
+          user: {}
+      }
+  },
+  mounted: function() {
+      this.setupData()
+  },
+  methods: {
+      logout() {
+          localStorage.removeItem('user');
+      },
+      setupData() {
+        this.user = localStorage.getItem('user')
+      }
+  },
+  watch: {
+    $route () {
+      this.setupData()
+    }
+  }
+}
+</script>
+
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap');
 
 #app {
   font-family: 'Roboto', sans-serif;
+  font-size: 12px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
 }
 
 body, html {
@@ -42,5 +59,29 @@ body, html {
   background-attachment: fixed;
   background-size: cover;
   font-family: 'Roboto', sans-serif;
+}
+
+.navMenu {
+  align-content: right;
+  padding-left:20px !important;
+  padding-right:20px !important;
+  padding-top:3px !important;
+  text-align: right;
+  width: 100%;
+  font-size: 16px;
+}
+
+.navMenu a {
+	color: #f6f4e6;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-weight: 500;
+	display: inline-block;
+	-webkit-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+
+.navMenu a:hover {
+  color: rgba(0,95,255,1);
 }
 </style>

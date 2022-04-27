@@ -1,17 +1,17 @@
 <template>
-    <div class="login-reg-panel">
+    <div class="registration-panel">
 		<div class="register-info-box">
 			<h2>Have an account?</h2>
 			<p>Click here to log in instead</p>
             <label id="label-login" for="log-login-show">Login</label>
 		</div>
-		<div class="white-panel">
+		<div class="registration-white-panel">
 			<div class="register-show">
 				<h2>REGISTER</h2>
                 <div class="row d-flex mt-5">
                     <div class="col-md-12">
-                        <label class="input_label">
-                            <input type="email" name="email" v-model="user.email" required="required">
+                        <label v-bind:class="{ input_label: emailAvailable, input_label_invalid: !emailAvailable }">
+                            <input type="email" name="email" v-model="user.email" required="required" v-on:blur="checkEmailAvailability">
                             <span class="keep_hovered">EMail</span>
                         </label>
                     </div>
@@ -88,11 +88,18 @@ export default {
         return {
             user: {},
             confirmPassword: "",
+            emailAvailable: true
         }
     },
     methods: {
         registerUser(){
             UserService.registerUser(this.user);
+        },
+        checkEmailAvailability(){
+            if(!this.user.email || UserService.isEmailAvailable(this.user.email))
+                this.emailAvailable = true
+            else
+                this.emailAvailable = false
         }
     }
 }
@@ -100,7 +107,7 @@ export default {
 </script>
 
 <style>
-    .login-reg-panel{
+    .registration-panel{
         position: relative;
         top: 50%;
         transform: translateY(50%);
@@ -112,25 +119,25 @@ export default {
         background: rgb(9,53,121);
         background: linear-gradient(90deg, rgba(9,53,121,1) 0%, rgba(9,51,121,1) 35%, rgba(0,95,255,1) 100%);
     }
-    .white-panel{
+    .registration-white-panel{
         background-color: rgba(255,255, 255, 1);
         position:absolute;
-        top:-200px;
+        top:-100px;
         width:50%;
         right:calc(50% - 50px);
         transition:.3s ease-in-out;
         z-index:0;
         box-shadow: 0 0 15px 9px #00000096;
     }
-    .login-reg-panel input[type="radio"]{
+    .registration-panel input[type="radio"]{
         position:relative;
         display:none;
     }
-    .login-reg-panel{
+    .registration-panel{
         color:#B8B8B8;
     }
-    .login-reg-panel #label-login, 
-    .login-reg-panel #label-register{
+    .registration-panel #label-login, 
+    .registration-panel #label-register{
         border:1px solid white;
         padding:5px 5px;
         width:150px;
@@ -305,6 +312,114 @@ export default {
         border-bottom: 1px solid rgba(0,95,255,1);
         box-shadow: 0 1px 0 0 rgba(0,95,255,1);
     }
+
+
+    label.input_label_invalid {
+        position: relative;
+        display: block;
+        margin: 0 0 40px 0;
+    }
+    label.input_label_invalid > input {
+        position: relative;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #9e9e9e;
+        border-radius: 0;
+        outline: none;
+        height: 45px;
+        width: 100%;
+        font-size: 16px;
+        padding: 0;
+        box-shadow: none;
+        box-sizing: content-box;
+        transition: all .3s;
+    }
+    label.input_label_invalid:hover > input {
+        position: relative;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #e4675e;
+        border-radius: 0;
+        outline: none;
+        height: 45px;
+        width: 100%;
+        font-size: 16px;
+        padding: 0;
+        box-shadow: none;
+        box-sizing: content-box;
+        transition: all .3s;
+    }
+    label.input_label_invalid > input:valid {
+        border-bottom: 1px solid #d93025;
+        box-shadow: 0 1px 0 0 #d93025;
+    }
+    label.input_label_invalid > span {
+        color: #9e9e9e;
+        position: absolute;
+        top: -10px;
+        left: 0;
+        font-size: 16px;
+        cursor: text;
+        transition: .2s ease-out;
+    }
+    label.input_label_invalid > input:focus + span {
+        transform: translateY(-25px) scale(0.8);
+        transform-origin: 0;
+        color: #d93025;
+    }
+    label.input_label_invalid > input:focus {
+        border-bottom: 1px solid #d93025;
+        box-shadow: 0 1px 0 0 #d93025;
+    }   
+    label.input_label_invalid > select {
+        position: relative;
+        background-color: transparent;
+        border: none;
+        border-bottom: 1px solid #9e9e9e;
+        border-radius: 0;
+        outline: none;
+        height: 45px;
+        width: 100%;
+        font-size: 16px;
+        margin: 0 0 0 0;
+        padding: 0;
+        box-shadow: none;
+        box-sizing: content-box;
+        transition: all .3s;
+    }
+    label.input_label_invalid > select:valid {
+        border-bottom: 1px solid #d93025;
+        box-shadow: 0 1px 0 0 #d93025;
+    }
+    label.input_label_invalid > span {
+        color: #9e9e9e;
+        position: absolute;
+        top: -10px;
+        left: 0;
+        font-size: 16px;
+        cursor: text;
+        transition: .2s ease-out;
+    }
+    label.input_label_invalid > select:focus + span {
+        transform: translateY(-25px) scale(0.8);
+        transform-origin: 0;
+        color: #d93025;
+    }
+    label.input_label_invalid > select:valid + span.keep_hovered {
+        transform: translateY(-25px) scale(0.8);
+        transform-origin: 0;
+        color: #d93025;
+    }
+    label.input_label_invalid > input:valid + span.keep_hovered {
+        transform: translateY(-25px) scale(0.8);
+        transform-origin: 0;
+        color: #d93025;
+    }
+    label.input_label_invalid > select:focus {
+        border-bottom: 1px solid #d93025;
+        box-shadow: 0 1px 0 0 #d93025;
+    }
+
 
     /* GENDER SELECTION */  
     input[type="radio"] {

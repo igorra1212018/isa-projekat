@@ -32,7 +32,6 @@ public class LodgingsController {
 	LodgingService lodgingService;
 	
 	@GetMapping("/lodgings")
-	//@PreAuthorize("hasRole('CUSTOMER')")
 	@PreAuthorize("permitAll")
 	public List<Lodging> getLodgings(Model model)
 	{
@@ -78,6 +77,7 @@ public class LodgingsController {
 	}
 	
 	@PostMapping("/reserve_lodging")
+	@PreAuthorize("hasRole('CUSTOMER')")
 	public ResponseEntity<String> reserveLodging(@RequestBody ReserveLodgingDTO reservationParameters)
 	{
 		return lodgingService.reserveLodging(reservationParameters);
