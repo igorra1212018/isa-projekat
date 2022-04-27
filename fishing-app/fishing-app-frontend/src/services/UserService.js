@@ -12,6 +12,10 @@ class UserService{
         return axios.get(USER_API_BASE_URL + id)
     }
 
+    login(user){
+        return axios.post('http://localhost:8080/api/auth/signin', user)
+    }
+
     registerUser(user){
         return axios.post(USER_API_BASE_URL + 'register', user);
     }

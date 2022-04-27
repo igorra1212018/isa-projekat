@@ -20,7 +20,7 @@ public class JwtUtils {
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 	@Value("test")
 	private String jwtSecret;
-	@Value("123")
+	@Value("36000000")
 	private int jwtExpirationMs;
 	public String generateJwtToken(Authentication authentication) {
 		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();

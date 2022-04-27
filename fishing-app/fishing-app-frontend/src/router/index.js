@@ -6,6 +6,7 @@ import Registration from '../views/Registration.vue'
 import UserProfile from '../views/UserProfile.vue'
 import OwnerRegistration from '../views/OwnerRegistration.vue'
 import Lodging from '../views/Lodging.vue'
+import Login from '../views/Login.vue'
 
 Vue.use(VueRouter)
 
@@ -37,6 +38,11 @@ const routes = [
     path: '/registration',
     name: 'Registration',
     component: Registration
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
   },
   {
     path: '/owner_registration',
