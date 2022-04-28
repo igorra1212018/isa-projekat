@@ -29,17 +29,18 @@ public class ReservableService<T extends Reservable> {
 	
 	public List<T> findAll()
 	{
+		System.out.println(this.discriminatorString);
 		return reservableRepository.findAll(discriminatorString);
-	}
-	
-	public T findByReservableId(Integer id)
-	{
-		return reservableRepository.findById(id).orElse(null);
 	}
 	
 	public List<T> findAll(ReservableSearchDTO searchParameters)
 	{
 		return reservableRepository.findByName(searchParameters.getName(), discriminatorString);
+	}
+	
+	public T findByReservableId(Integer id)
+	{
+		return reservableRepository.findById(id).orElse(null);
 	}
 	
 	public T registerReservable(T reservable)

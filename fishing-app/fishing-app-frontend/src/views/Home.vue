@@ -103,6 +103,39 @@
           </div>
         </div>
       </div>
+      <div v-if="type == 'Lessons'" style="width: 100%; height: 100%">
+        <div class="row row-cols-md-2" style = "width: 75%; margin-left: 50px" v-for="f in fishingLessons" :key="f.id">
+          <div class="col">
+            <article class="entity_card">
+              <figure class="card-image">
+                <img src="../resources/DefaultLodgingIcon.jpg" alt="" />
+              </figure>   
+              <div class="card-content">
+                <header class="card-header-restaurant">
+                <h2>{{f.name}}</h2>
+                <br />
+                <span>Status</span>   
+                  <address style="margin-top:10px">
+                    <span class="icon-pin" aria-hidden="true"></span>
+                    {{getFullAddress(f.address)}}
+                  </address>
+                </header>
+              </div>    
+              <ul class="card-stats" style="margin-bottom:20px">
+                <li>
+                  <strong>4</strong>
+                  Articles
+                </li>
+                <li>
+                  <strong>5</strong>
+                  Rating
+                </li>
+              </ul>   
+              <button class="card-button" v-on:click="viewFishingLesson(f.id)">View</button>
+            </article>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
