@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isa.fishingapp.service.LodgingService;
+import com.isa.fishingapp.service.ReservationService;
 import com.isa.fishingapp.dto.LodgingSearchDTO;
 import com.isa.fishingapp.dto.ReserveLodgingDTO;
 import com.isa.fishingapp.model.DateRange;
@@ -25,60 +26,16 @@ import com.isa.fishingapp.model.Lodging;
 import com.isa.fishingapp.model.ReservationLodging;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/lodging")
 @CrossOrigin("http://localhost:4000/")
-public class LodgingsController {
+public class LodgingsController extends ReservableController<Lodging, ReservationLodging> {
 	@Autowired
 	LodgingService lodgingService;
-	
-	@GetMapping("/lodgings")
-	@PreAuthorize("permitAll")
-	public List<Lodging> getLodgings(Model model)
-	{
-		return lodgingService.getAllLodgings();
-	}
-	
-	@GetMapping("/lodging/{lodgingId}")
-	@PreAuthorize("permitAll")
-	public Lodging getLodging(@PathVariable int lodgingId)
-	{
-		return lodgingService.getLodging(lodgingId);
-	}
-	
-	@PostMapping("/search_lodgings")
-	public ResponseEntity<List<Lodging>> getLodgings(@RequestBody LodgingSearchDTO searchParameters)
-	{
-		List<Lodging> foundLodgings = lodgingService.getAllLodgings(searchParameters);
-		return new ResponseEntity<>(
-					foundLodgings, 
-					HttpStatus.OK);
-	}
-	
-	@GetMapping("/get_reservations_for_lodging/{lodgingId}")
-	public ResponseEntity<List<ReserveLodgingDTO>> getReservationsForLodging(@PathVariable int lodgingId)
-	{
-		List<ReservationLodging> foundReservations = lodgingService.getReservationsForLodging(lodgingId);
-		List<ReserveLodgingDTO> foundReservationsDTO = ReserveLodgingDTO.convertReservationLodgingListToDTO(foundReservations);
-		return new ResponseEntity<>(
-				foundReservationsDTO, 
-				HttpStatus.OK);
-	}
-	
-	@GetMapping("/get_available_lodging_reservation_dates/{lodgingId}")
-	public ResponseEntity<List<DateRange>> getAvailableLodgingReservationDates(@PathVariable int lodgingId) throws Exception
-	{
-		List<ReservationLodging> foundReservations = lodgingService.getReservationsForLodging(lodgingId);
-		List<DateRange> occupiedDateRanges = new ArrayList<>();
-		for(ReservationLodging rl : foundReservations)
-			occupiedDateRanges.add(rl.getDateRange());
-		DateRange maximumDateRange = new DateRange(LocalDateTime.now(), (LocalDateTime.now().plusYears(2)));
-		return new ResponseEntity<>(
-				maximumDateRange.splitByDateRange(occupiedDateRanges), 
-				HttpStatus.OK);
-	}
+	@Autowired
+	ReservationService<ReservationLodging> reservationService;
 	
 	@PostMapping("/reserve_lodging")
-	@PreAuthorize("hasRole('CUSTOMER')")
+	@PreAuthorize("hasRole('ROLE_CUSTOMER')")
 	public ResponseEntity<String> reserveLodging(@RequestBody ReserveLodgingDTO reservationParameters)
 	{
 		return lodgingService.reserveLodging(reservationParameters);

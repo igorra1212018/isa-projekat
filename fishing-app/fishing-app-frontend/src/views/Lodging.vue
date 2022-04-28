@@ -82,7 +82,7 @@ export default {
     },
     methods: {
         reserveLodging() {
-            this.reservationParameters.lodgingId = this.$route.params.id
+            this.reservationParameters.reservableId = parseInt(this.$route.params.id)
             this.reservationParameters.userId = 1
             this.reservationParameters.fromDate = new Date(this.selectedYear, this.selectedMonth-1, this.selectedDay+1)
             this.reservationParameters.toDate = new Date(this.selectedYearTo, this.selectedMonthTo-1, this.selectedDayTo+1)

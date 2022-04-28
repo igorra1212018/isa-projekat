@@ -13,29 +13,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "fishing_lesson")
-public class FishingLesson {
+public class FishingLesson extends Reservable {
 	
-	@Id
-    @SequenceGenerator(name = "fishing_lesson_sequence_generator", sequenceName = "fishing_lesson_sequence", initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fishing_lesson_sequence_generator")
-    @Column(name = "id", unique = true)
-	private Integer id;
-	
-	private String name;
-	private String description;
-	
-	@Embedded
-	private Location address;
-	
-	private int capacity; // I termin i lesson imaju capacity?
+	private int capacity;
 	private String rules;
 	private String availableEquipment;
 	private String pricelist;
 	private String cancelCondition;
-	
-	@ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner; //User for now
 
 	public String getCancelCondition() {
 		return cancelCondition;
@@ -75,29 +59,5 @@ public class FishingLesson {
 
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Location getAddress() {
-		return address;
-	}
-
-	public void setAddress(Location address) {
-		this.address = address;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 }
