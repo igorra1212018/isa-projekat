@@ -5,21 +5,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.isa.fishingapp.dto.ReserveLodgingDTO;
 import com.isa.fishingapp.dto.ReserveReservableDTO;
-import com.isa.fishingapp.model.Boat;
 import com.isa.fishingapp.model.DateRange;
-import com.isa.fishingapp.model.ReservationBoat;
+import com.isa.fishingapp.model.FishingLesson;
+import com.isa.fishingapp.model.Lodging;
+import com.isa.fishingapp.model.ReservationFishingLesson;
+import com.isa.fishingapp.model.ReservationLodging;
+import com.isa.fishingapp.repository.ReservationLodgingRepository;
 import com.isa.fishingapp.repository.UserRepository;
 
 @Service
-public class BoatService extends ReservableService<Boat> {
+public class FishingLessonService extends ReservableService<FishingLesson> {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private ReservationService<ReservationBoat> reservationsService;
+	private ReservationService<ReservationFishingLesson> reservationsService;
 	
-	public BoatService() {
-		super("BOAT");
+	public FishingLessonService() {
+		super("FISHING_LESSON");
 	}
 	
 	public ResponseEntity<String> reserve(ReserveReservableDTO reserveBoatDTO)
@@ -34,10 +38,10 @@ public class BoatService extends ReservableService<Boat> {
 				      "Date range is invalid!", 
 				      HttpStatus.BAD_REQUEST);
 		}
-		ReservationBoat reservationLodging;
+		ReservationFishingLesson reservation;
 		try {
-			reservationLodging = new ReservationBoat(userRepository.getById(reserveBoatDTO.getUserId()), new DateRange(reserveBoatDTO.getFromDate(), reserveBoatDTO.getToDate()), findById(reserveBoatDTO.getReservableId()));
-			reservationsService.save(reservationLodging);
+			reservation = new ReservationFishingLesson(userRepository.getById(reserveBoatDTO.getUserId()), new DateRange(reserveBoatDTO.getFromDate(), reserveBoatDTO.getToDate()), findById(reserveBoatDTO.getReservableId()));
+			reservationsService.save(reservation);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -47,3 +51,4 @@ public class BoatService extends ReservableService<Boat> {
 			      HttpStatus.OK);
 	}
 }
+

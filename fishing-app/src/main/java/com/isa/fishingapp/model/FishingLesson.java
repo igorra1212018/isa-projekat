@@ -1,6 +1,7 @@
 package com.isa.fishingapp.model;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "fishing_lesson")
+@DiscriminatorValue("FISHING_LESSON")
 public class FishingLesson extends Reservable {
 	
 	private int capacity;

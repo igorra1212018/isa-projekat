@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isa.fishingapp.service.BoatService;
-import com.isa.fishingapp.service.LodgingService;
 import com.isa.fishingapp.service.ReservationService;
 import com.isa.fishingapp.dto.LodgingSearchDTO;
 import com.isa.fishingapp.dto.ReserveLodgingDTO;

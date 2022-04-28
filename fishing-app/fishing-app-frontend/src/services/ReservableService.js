@@ -31,5 +31,3 @@ class ReservableService{
         return axios.post(USER_API_BASE_URL + 'reserve_lodging/', reservationParameters, { headers: authHeader() });
     }
 }
-
-export default new ReservableService();

@@ -17,27 +17,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isa.fishingapp.service.LodgingService;
+import com.isa.fishingapp.service.BoatService;
+import com.isa.fishingapp.service.FishingLessonService;
 import com.isa.fishingapp.service.ReservationService;
 import com.isa.fishingapp.dto.LodgingSearchDTO;
 import com.isa.fishingapp.dto.ReserveLodgingDTO;
+import com.isa.fishingapp.dto.ReserveReservableDTO;
+import com.isa.fishingapp.model.Boat;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Lodging;
+import com.isa.fishingapp.model.ReservationBoat;
+import com.isa.fishingapp.model.ReservationFishingLesson;
 import com.isa.fishingapp.model.ReservationLodging;
 
 @RestController
-@RequestMapping("/api/lodging")
+@RequestMapping("/api/fishinglesson")
 @CrossOrigin("http://localhost:4000/")
-public class LodgingsController extends ReservableController<Lodging, ReservationLodging> {
+public class FishingLessonController {
 	@Autowired
-	LodgingService lodgingService;
+	FishingLessonService fishingLessonService;
 	@Autowired
-	ReservationService<ReservationLodging> reservationService;
+	ReservationService<ReservationFishingLesson> reservationService;
 	
 	@PostMapping("/reserve")
 	@PreAuthorize("hasRole('ROLE_CUSTOMER')")
-	public ResponseEntity<String> reserveLodging(@RequestBody ReserveLodgingDTO reservationParameters)
+	public ResponseEntity<String> reserveFishingLesson(@RequestBody ReserveReservableDTO reservationParameters)
 	{
-		return lodgingService.reserveLodging(reservationParameters);
+		return fishingLessonService.reserve(reservationParameters);
 	}
 }

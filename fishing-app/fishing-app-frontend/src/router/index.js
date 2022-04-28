@@ -5,6 +5,7 @@ import Users from '../views/Users.vue'
 import Registration from '../views/Registration.vue'
 import UserProfile from '../views/UserProfile.vue'
 import Lodging from '../views/Lodging.vue'
+import Boat from '../views/Boat.vue'
 import Login from '../views/Login.vue'
 import Unauthorized from '../views/Unauthorized.vue'
 
@@ -54,6 +55,11 @@ const routes = [
     path: '/lodging/:id',
     name: 'Lodging',
     component: Lodging
+  },
+  {
+    path: '/boat/:id',
+    name: 'Boat',
+    component: Boat
   },
   {
     path: '/unauthorized',

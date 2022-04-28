@@ -41,4 +41,9 @@ public class ReservableService<T extends Reservable> {
 	{
 		return reservableRepository.findByName(searchParameters.getName(), discriminatorString);
 	}
+	
+	public T registerReservable(T reservable)
+	{
+		return reservableRepository.save(reservable);
+	}
 }

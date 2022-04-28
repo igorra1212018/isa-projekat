@@ -9,14 +9,11 @@ import com.isa.fishingapp.dto.ReserveLodgingDTO;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Lodging;
 import com.isa.fishingapp.model.ReservationLodging;
-import com.isa.fishingapp.repository.LodgingRepository;
 import com.isa.fishingapp.repository.ReservationLodgingRepository;
 import com.isa.fishingapp.repository.UserRepository;
 
 @Service
 public class LodgingService extends ReservableService<Lodging> {
-	@Autowired
-	private LodgingRepository lodgingRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -26,11 +23,6 @@ public class LodgingService extends ReservableService<Lodging> {
 	
 	public LodgingService() {
 		super("LODGING");
-	}
-	
-	public Lodging registerLodging(Lodging lodging)
-	{
-		return lodgingRepository.save(lodging);
 	}
 	
 	public ResponseEntity<String> reserveLodging(ReserveLodgingDTO reserveLodgingDTO)

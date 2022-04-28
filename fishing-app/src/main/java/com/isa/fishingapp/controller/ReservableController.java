@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.isa.fishingapp.dto.ReservableSearchDTO;
+import com.isa.fishingapp.dto.ReserveLodgingDTO;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.Reservation;
@@ -41,7 +42,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 		return reservableService.findById(reservableId);
 	}
 	
-	@GetMapping("/get_available_lodging_reservation_dates/{reservableId}")
+	@GetMapping("/get_available_reservation_dates/{reservableId}")
 	public ResponseEntity<List<DateRange>> getAvailableLodgingReservationDates(@PathVariable int reservableId) throws Exception
 	{
 		List<Y> foundReservations = reservationService.findByEntityId(reservableId);
@@ -77,6 +78,6 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	@PreAuthorize("hasRole('CUSTOMER')")
 	public ResponseEntity<String> reserveLodging(@RequestBody ReserveLodgingDTO reservationParameters)
 	{
-		return lodgingService.reserveLodging(reservationParameters);
+		return reservableService.reserve(reservationParameters);
 	}*/
 }

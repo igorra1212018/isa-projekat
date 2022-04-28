@@ -111,6 +111,7 @@
 
 import LodgingService from '../services/LodgingService';
 import BoatService from '../services/BoatService';
+import FishingLessonService from '../services/FishingLessonService';
 
 export default {
   name: 'Home',
@@ -121,6 +122,7 @@ export default {
     return {
       lodgings: {},
       boats: {},
+      fishingLessons: {},
       searchParameters: {},
       currentUser: null,
       name: '',
@@ -141,6 +143,9 @@ export default {
       this.lodgings = res.data
       BoatService.getAllReservables().then(res => {
         this.boats = res.data
+        FishingLessonService.getAllReservables().then(res => {
+          this.fishingLessons = res.data
+        });
       });
     });
   },
@@ -161,6 +166,9 @@ export default {
     },
     viewBoat(boatId) {
       window.location.href = "http://localhost:8081/boat/" + boatId;
+    },
+    viewFishingLesson(boatId) {
+      window.location.href = "http://localhost:8081/fishinglesson/" + boatId;
     }
   }
 }

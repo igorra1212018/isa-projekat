@@ -1,29 +1,29 @@
 import axios from 'axios';
 import authHeader from '../auth-header';
 
-const USER_API_BASE_URL = 'http://localhost:8080/api/lodging/';
+const USER_API_BASE_URL = 'http://localhost:8080/api/boat/';
 
-class LodgingService{
+class BoatService{
 
-    getLodgings(){
+    getAllReservables(){
         return axios.get(USER_API_BASE_URL + 'all', { headers: authHeader() });
     }
 
-    getLodging(id){
+    getReservable(id){
         return axios.get(USER_API_BASE_URL + id);
     }
 
-    getAvailableLodgingReservationDates(id){
+    getAvailableReservablesReservationDates(id){
         return axios.get(USER_API_BASE_URL + 'get_available_reservation_dates/' + id);
     }
 
-    getLodgingsBySearch(searchParameters){
+    getReservablesBySearch(searchParameters){
         return axios.post(USER_API_BASE_URL + 'search', searchParameters);
     }
 
-    reserveLodging(reservationParameters){
+    reserveReservable(reservationParameters){
         return axios.post(USER_API_BASE_URL + 'reserve', reservationParameters, { headers: authHeader() });
     }
 }
 
-export default new LodgingService();
+export default new BoatService();
