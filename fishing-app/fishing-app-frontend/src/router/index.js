@@ -27,12 +27,18 @@ const routes = [
   {
     path: '/users',
     name: 'Users',
-    component: Users
+    component: Users,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/user/:id',
     name: 'UserProfile',
-    component: UserProfile
+    component: UserProfile,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/register',
@@ -63,18 +69,15 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/','/login', '/register', '/home'];
-  const unauthorizedOnlyPages = ['/login', '/register']
-  const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
-  if (authRequired && !loggedIn) {
-    next('/login');
-  } 
-  else if (unauthorizedOnlyPages.includes(to.path) && loggedIn) {
-    next('/');
-  }
-  else {
-    next();
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!loggedIn) {
+      next({ name: 'Login' })
+    } else {
+      next()
+    }
+  } else {
+    next()
   }
 });
 

@@ -4,7 +4,7 @@
 			<h2>{{lodging.name}}</h2>
             <p>{{lodging.address.address}} {{lodging.address.city}} {{lodging.address.country}}</p>
             <p>{{lodging.description}}</p>
-            <div class="row d-flex mt-4">
+            <div class="row d-flex mt-4" v-if="user">
                 <div class="col-md-3">
                     <select name="year_from" id="year_from" v-model="selectedYear">
                       <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
@@ -21,7 +21,7 @@
                     </select>
                 </div>
             </div>
-            <div class="row d-flex mt-4">
+            <div class="row d-flex mt-4" v-if="user">
                 <div class="col-md-3">
                     <select name="selected_year_to" id="selected_year_to" v-model="selectedYearTo">
                       <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
@@ -52,6 +52,7 @@ export default {
     data(){
         return {
             lodging: {},
+            user: {},
             availableYears: [],
             availableMonths: [],
             selectedYear: 1,
@@ -68,6 +69,7 @@ export default {
         LodgingService.getLodging(this.$route.params.id).then(res => {
           this.lodging = res.data
         });
+        this.user = localStorage.getItem('user');
         LodgingService.getAvailableLodgingReservationDates(this.$route.params.id).then(res => {
           this.availableLodgingReservationDates = res.data
         });

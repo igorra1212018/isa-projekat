@@ -87,7 +87,7 @@ export default {
       searchParameters: {},
       currentUser: null,
       name: '',
-      type: '',
+      type: 'Lodgings',
       location: '',
       rating: '',
       open: false,

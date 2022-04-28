@@ -39,6 +39,7 @@ public class LodgingsController {
 	}
 	
 	@GetMapping("/lodging/{lodgingId}")
+	@PreAuthorize("permitAll")
 	public Lodging getLodging(@PathVariable int lodgingId)
 	{
 		return lodgingService.getLodging(lodgingId);
