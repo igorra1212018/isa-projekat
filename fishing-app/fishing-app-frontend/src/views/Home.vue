@@ -7,15 +7,15 @@
           <div class="row d-flex mt-5">
             <div class="col-md-4">
                 <input type='radio' id='lodgings' checked='checked' name='radio' class="blue_option" v-model="type" value="Lodgings">
-                <label for='lodgings'>Lodgings</label>
+                <label for='lodgings'><font-awesome-icon icon="fa-solid fa-house" /></label>
             </div>
             <div class="col-md-4">
                 <input type='radio' id='boats' name='radio' class="blue_option" v-model="type" value="Boats">
-                <label for='boats'>Boats</label>
+                <label for='boats'><font-awesome-icon icon="fa-solid fa-ship" size="lg"/></label>
             </div>
             <div class="col-md-4">
                 <input type='radio' id='lessons' name='radio' class="blue_option" v-model="type" value="Lessons">
-                <label for='lessons'>Lessons</label>
+                <label for='lessons'><font-awesome-icon icon="fa-solid fa-fish-fins" /></label>
             </div>
           </div>
           <div class="row d-flex mt-5">
