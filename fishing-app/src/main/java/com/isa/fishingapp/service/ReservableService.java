@@ -13,15 +13,23 @@ import com.isa.fishingapp.repository.ReservableRepository;
 public class ReservableService<T extends Reservable> {
 	@Autowired
 	private ReservableRepository<T> reservableRepository;
+	private String discriminatorString;
+	
+	public ReservableService() {
+	}
+	
+	public ReservableService(String discriminatorString) {
+		this.discriminatorString = discriminatorString;
+	}
 	
 	public T findById(Integer id)
 	{
-		return reservableRepository.findById(id).orElse(null);
+		return reservableRepository.findById(id, discriminatorString).orElse(null);
 	}
 	
 	public List<T> findAll()
 	{
-		return reservableRepository.findAll();
+		return reservableRepository.findAll(discriminatorString);
 	}
 	
 	public T findByReservableId(Integer id)
@@ -31,6 +39,6 @@ public class ReservableService<T extends Reservable> {
 	
 	public List<T> findAll(ReservableSearchDTO searchParameters)
 	{
-		return reservableRepository.findByName(searchParameters.getName());
+		return reservableRepository.findByName(searchParameters.getName(), discriminatorString);
 	}
 }

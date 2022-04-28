@@ -1,6 +1,9 @@
 package com.isa.fishingapp.model;
 
+import java.beans.Transient;
+
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -52,5 +55,12 @@ public abstract class Reservable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	@Transient
+	public String getDiscriminatorValue(){
+	    DiscriminatorValue val = this.getClass().getAnnotation( DiscriminatorValue.class );
+
+	    return val == null ? null : val.value();
 	}
 }

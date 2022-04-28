@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.isa.fishingapp.repository.ReservationRepository;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservation;
+import com.isa.fishingapp.model.ReservationBoat;
 
 @Service
 public class ReservationService<T extends Reservation> {
@@ -21,7 +22,10 @@ public class ReservationService<T extends Reservation> {
 	
 	public List<T> findAllReservationsInInterval(Integer entityId, DateRange dateRange)
 	{
-		System.out.println(entityId);
 		return reservationsRepository.findReservationEntitiesInInterval(entityId, dateRange.getFromDate(), dateRange.getToDate());
+	}
+
+	public void save(T reservation) {
+		reservationsRepository.save(reservation);
 	}
 }

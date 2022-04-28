@@ -24,6 +24,10 @@ public class LodgingService extends ReservableService<Lodging> {
 	@Autowired
 	private ReservationLodgingRepository reservationLodgingRepository;
 	
+	public LodgingService() {
+		super("LODGING");
+	}
+	
 	public Lodging registerLodging(Lodging lodging)
 	{
 		return lodgingRepository.save(lodging);
@@ -52,9 +56,5 @@ public class LodgingService extends ReservableService<Lodging> {
 		return new ResponseEntity<>(
 			      "Lodging reservation successful!", 
 			      HttpStatus.OK);
-	}
-
-	public Lodging getLodging(int lodgingId) {
-		return lodgingRepository.findById(lodgingId).orElse(null);
 	}
 }
