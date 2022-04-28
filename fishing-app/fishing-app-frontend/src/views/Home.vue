@@ -139,12 +139,12 @@ export default {
     }
   },
   mounted: function() {
-    LodgingService.getLodgings().then(res => {
+    LodgingService.getAllReservables().then(res => {
       this.lodgings = res.data
-      BoatService.getAllReservables().then(res => {
-        this.boats = res.data
-        FishingLessonService.getAllReservables().then(res => {
-          this.fishingLessons = res.data
+      BoatService.getAllReservables().then(res2 => {
+        this.boats = res2.data
+        FishingLessonService.getAllReservables().then(res3 => {
+          this.fishingLessons = res3.data
         });
       });
     });
@@ -154,12 +154,15 @@ export default {
        return address.address + " " + address.city + " " + address.country;
     },
     search() {
-        LodgingService.getLodgingsBySearch(this.searchParameters).then(response => {
-            this.lodgings = response.data
-        })
-        .catch(err => {
-            console.error(err);
-        })
+        LodgingService.getAllReservablesSearch(this.searchParameters).then(res => {
+          this.lodgings = res.data
+          BoatService.getAllReservablesSearch(this.searchParameters).then(res2 => {
+            this.boats = res2.data
+            FishingLessonService.getAllReservablesSearch(this.searchParameters).then(res3 => {
+              this.fishingLessons = res3.data
+            });
+          });
+        });
     },
     viewLodging(lodgingId) {
       window.location.href = "http://localhost:8081/lodging/" + lodgingId;

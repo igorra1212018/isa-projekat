@@ -25,6 +25,7 @@ import com.isa.fishingapp.dto.ReserveLodgingDTO;
 import com.isa.fishingapp.dto.ReserveReservableDTO;
 import com.isa.fishingapp.model.Boat;
 import com.isa.fishingapp.model.DateRange;
+import com.isa.fishingapp.model.FishingLesson;
 import com.isa.fishingapp.model.Lodging;
 import com.isa.fishingapp.model.ReservationBoat;
 import com.isa.fishingapp.model.ReservationFishingLesson;
@@ -33,7 +34,7 @@ import com.isa.fishingapp.model.ReservationLodging;
 @RestController
 @RequestMapping("/api/fishinglesson")
 @CrossOrigin("http://localhost:4000/")
-public class FishingLessonController {
+public class FishingLessonController extends ReservableController<FishingLesson, ReservationFishingLesson> {
 	@Autowired
 	FishingLessonService fishingLessonService;
 	@Autowired

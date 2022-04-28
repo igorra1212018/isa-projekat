@@ -5,23 +5,23 @@ const USER_API_BASE_URL = 'http://localhost:8080/api/lodging/';
 
 class LodgingService{
 
-    getLodgings(){
+    getAllReservables(){
         return axios.get(USER_API_BASE_URL + 'all', { headers: authHeader() });
     }
 
-    getLodging(id){
-        return axios.get(USER_API_BASE_URL + id);
-    }
-
-    getAvailableLodgingReservationDates(id){
-        return axios.get(USER_API_BASE_URL + 'get_available_reservation_dates/' + id);
-    }
-
-    getLodgingsBySearch(searchParameters){
+    getAllReservablesSearch(searchParameters){
         return axios.post(USER_API_BASE_URL + 'search', searchParameters);
     }
 
-    reserveLodging(reservationParameters){
+    getReservable(id){
+        return axios.get(USER_API_BASE_URL + id);
+    }
+
+    getAvailableReservablesReservationDates(id){
+        return axios.get(USER_API_BASE_URL + 'get_available_reservation_dates/' + id);
+    }
+
+    reserveReservable(reservationParameters){
         return axios.post(USER_API_BASE_URL + 'reserve', reservationParameters, { headers: authHeader() });
     }
 }
