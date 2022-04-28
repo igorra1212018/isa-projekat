@@ -37,35 +37,70 @@
           <input type="button" class="blue-button" value="Search" v-on:click="search()"/>
         </div>
       </div>
-      <div class="row row-cols-md-2" style = "width: 75%; margin-left: 50px" v-for="l in lodgings" :key="l.id">
-        <div class="col">
-          <article class="entity_card">
-            <figure class="card-image">
-              <img src="../resources/DefaultLodgingIcon.jpg" alt="" />
-            </figure>   
-            <div class="card-content">
-              <header class="card-header-restaurant">
-              <h2>{{l.name}}</h2>
-              <br />
-              <span>Status</span>   
-                <address style="margin-top:10px">
-                  <span class="icon-pin" aria-hidden="true"></span>
-                  {{getFullAddress(l.address)}}
-                </address>
-              </header>
-            </div>    
-            <ul class="card-stats" style="margin-bottom:20px">
-              <li>
-                <strong>4</strong>
-                Articles
-              </li>
-              <li>
-                <strong>5</strong>
-                Rating
-              </li>
-            </ul>   
-            <button class="card-button" v-on:click="viewLodging(l.id)">View</button>
-          </article>
+      <div v-if="type == 'Lodgings'" style="width: 100%; height: 100%">
+        <div class="row row-cols-md-2" style = "width: 75%; margin-left: 50px" v-for="l in lodgings" :key="l.id">
+          <div class="col">
+            <article class="entity_card">
+              <figure class="card-image">
+                <img src="../resources/DefaultLodgingIcon.jpg" alt="" />
+              </figure>   
+              <div class="card-content">
+                <header class="card-header-restaurant">
+                <h2>{{l.name}}</h2>
+                <br />
+                <span>Status</span>   
+                  <address style="margin-top:10px">
+                    <span class="icon-pin" aria-hidden="true"></span>
+                    {{getFullAddress(l.address)}}
+                  </address>
+                </header>
+              </div>    
+              <ul class="card-stats" style="margin-bottom:20px">
+                <li>
+                  <strong>4</strong>
+                  Articles
+                </li>
+                <li>
+                  <strong>5</strong>
+                  Rating
+                </li>
+              </ul>   
+              <button class="card-button" v-on:click="viewLodging(l.id)">View</button>
+            </article>
+          </div>
+        </div>
+      </div>
+      <div v-if="type == 'Boats'" style="width: 100%; height: 100%">
+        <div class="row row-cols-md-2" style = "width: 75%; margin-left: 50px" v-for="b in boats" :key="b.id">
+          <div class="col">
+            <article class="entity_card">
+              <figure class="card-image">
+                <img src="../resources/DefaultLodgingIcon.jpg" alt="" />
+              </figure>   
+              <div class="card-content">
+                <header class="card-header-restaurant">
+                <h2>{{b.name}}</h2>
+                <br />
+                <span>Status</span>   
+                  <address style="margin-top:10px">
+                    <span class="icon-pin" aria-hidden="true"></span>
+                    {{getFullAddress(b.address)}}
+                  </address>
+                </header>
+              </div>    
+              <ul class="card-stats" style="margin-bottom:20px">
+                <li>
+                  <strong>4</strong>
+                  Articles
+                </li>
+                <li>
+                  <strong>5</strong>
+                  Rating
+                </li>
+              </ul>   
+              <button class="card-button" v-on:click="viewBoat(b.id)">View</button>
+            </article>
+          </div>
         </div>
       </div>
     </div>
@@ -75,6 +110,7 @@
 <script>
 
 import LodgingService from '../services/LodgingService';
+import BoatService from '../services/BoatService';
 
 export default {
   name: 'Home',
@@ -84,6 +120,7 @@ export default {
   data: function () {
     return {
       lodgings: {},
+      boats: {},
       searchParameters: {},
       currentUser: null,
       name: '',
@@ -102,6 +139,9 @@ export default {
   mounted: function() {
     LodgingService.getLodgings().then(res => {
       this.lodgings = res.data
+      BoatService.getAllReservables().then(res => {
+        this.boats = res.data
+      });
     });
   },
   methods: {
@@ -118,6 +158,9 @@ export default {
     },
     viewLodging(lodgingId) {
       window.location.href = "http://localhost:8081/lodging/" + lodgingId;
+    },
+    viewBoat(boatId) {
+      window.location.href = "http://localhost:8081/boat/" + boatId;
     }
   }
 }
