@@ -13,20 +13,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.persistence.JoinColumn;
 
 import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
-import com.isa.fishingapp.model.enums.Gender;
-import com.isa.fishingapp.model.enums.ERole;
 
 
 @Entity
@@ -58,7 +53,6 @@ public class User {
 				joinColumns = @JoinColumn(name = "user_id"), 
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
-	Gender gender;
 
 	boolean activated;
 	
@@ -157,14 +151,6 @@ public class User {
 
 	public void setRoles(Set<Role> userRoles) {
 		this.roles = userRoles;
-	}
-
-	public Gender getGender() {
-		return gender;
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
 	}
 
 	@Override

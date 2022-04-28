@@ -9,12 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
-import com.isa.fishingapp.model.Owner;
 import com.isa.fishingapp.model.Role;
 import com.isa.fishingapp.model.User;
+import com.isa.fishingapp.model.UserCreationRequest;
 import com.isa.fishingapp.model.enums.ERole;
-import com.isa.fishingapp.repository.OwnerRepository;
 import com.isa.fishingapp.repository.RoleRepository;
+import com.isa.fishingapp.repository.UserCreationRequestRepository;
 import com.isa.fishingapp.repository.UserRepository;
 
 @Service
@@ -23,7 +23,7 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private OwnerRepository ownerRepository;
+	private UserCreationRequestRepository userCreationRequestRepository;
 	@Autowired
 	private RoleRepository roleRepository;
 	
@@ -33,6 +33,16 @@ public class UserService {
 				.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 		user.getRoles().add(userRole);
 		return userRepository.save(user);
+	}
+	
+	public User registerUser(User user, UserCreationRequest creationRequest)
+	{
+		Role userRole = roleRepository.findByName(ERole.LODGING_OWNER)
+				.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+		user.getRoles().add(userRole);
+		userRepository.save(user);
+		userCreationRequestRepository.save(creationRequest);
+		return user;
 	}
 	
 	public ResponseEntity<String> updateUser(UserProfileChangeDTO user)
@@ -58,11 +68,6 @@ public class UserService {
 		return new ResponseEntity<>(
 			      "Profile edit successful!", 
 			      HttpStatus.OK);
-	}
-	
-	public User registerOwner(Owner owner)
-	{
-		return ownerRepository.save(owner);
 	}
 	
 	public User authenticate(String email, String password)

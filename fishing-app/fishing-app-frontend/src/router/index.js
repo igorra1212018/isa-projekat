@@ -4,7 +4,6 @@ import Home from '../views/Home.vue'
 import Users from '../views/Users.vue'
 import Registration from '../views/Registration.vue'
 import UserProfile from '../views/UserProfile.vue'
-import OwnerRegistration from '../views/OwnerRegistration.vue'
 import Lodging from '../views/Lodging.vue'
 import Login from '../views/Login.vue'
 import Unauthorized from '../views/Unauthorized.vue'
@@ -44,11 +43,6 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
-  },
-  {
-    path: '/owner_registration',
-    name: 'OwnerRegistration',
-    component: OwnerRegistration
   },
   {
     path: '/lodging/:id',

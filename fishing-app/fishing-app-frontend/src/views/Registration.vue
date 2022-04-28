@@ -5,75 +5,97 @@
 			<p>Click here to log in instead</p>
             <label id="label-login" for="log-login-show">Login</label>
 		</div>
+        <div v-bind:class="{ 'registration-side-panel': user.role && user.role != 'CLIENT', 'registration-side-panel-hidden': !user.role || user.role == 'CLIENT' }">
+			<h3>REQUEST ELABORATION</h3>
+            <textarea cols="40" rows="5" v-model="user.applicationDetails"></textarea>
+        </div>
 		<div class="registration-white-panel">
-			<div class="register-show">
-				<h2>REGISTER</h2>
-                <div class="row d-flex mt-5">
-                    <div class="col-md-12">
-                        <label v-bind:class="{ input_label: emailAvailable, input_label_invalid: !emailAvailable }">
-                            <input type="email" name="email" v-model="user.email" required="required" v-on:blur="checkEmailAvailability">
-                            <span class="keep_hovered">EMail</span>
-                        </label>
-                    </div>
+			<h2>REGISTER</h2>
+            <div class="row d-flex mt-5">
+                <div class="col-md-12">
+                    <label v-bind:class="{ input_label: emailAvailable, input_label_invalid: !emailAvailable }">
+                        <input type="email" name="email" v-model="user.email" required="required" v-on:blur="checkEmailAvailability">
+                        <span class="keep_hovered">EMail</span>
+                    </label>
                 </div>
-                <div class="row d-flex mt-4">
-                    <div class="col-md-6">
-                        <label class="input_label">
-                            <input type="password" name="password" v-model="user.password" required="required">
-                            <span class="keep_hovered">Password</span>
-                        </label>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="input_label">
-                            <input type="password" name="confirm-password" v-model="confirmPassword" required="required">
-                            <span class="keep_hovered">Confirm Password</span>
-                        </label>
-                    </div>
+            </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-6">
+                    <label class="input_label">
+                        <input type="password" name="password" v-model="user.password" required="required">
+                        <span class="keep_hovered">Password</span>
+                    </label>
                 </div>
-                <div class="row d-flex mt-4">
-                    <div class="col-md-6">
-                        <label class="input_label">
-                            <input type="text" name="first-name" v-model="user.firstName" required="required">
-                            <span class="keep_hovered">First Name</span>
-                        </label>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="input_label">
-                            <input type="text" name="last-name" v-model="user.lastName" required="required">
-                            <span class="keep_hovered">Last Name</span>
-                        </label>
-                    </div>
+                <div class="col-md-6">
+                    <label class="input_label">
+                        <input type="password" name="confirm-password" v-model="confirmPassword" required="required">
+                        <span class="keep_hovered">Confirm Password</span>
+                    </label>
                 </div>
-                <div class="row d-flex mt-4">
-                    <div class="col-md-12">
-                        <label class="input_label">
-                            <input type="text" name="birth-date" v-model="user.contactPhone" required="required">
-                            <span class="keep_hovered">Contact Phone</span>
-                        </label>
-                    </div>
+            </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-6">
+                    <label class="input_label">
+                        <input type="text" name="first-name" v-model="user.firstName" required="required">
+                        <span class="keep_hovered">First Name</span>
+                    </label>
                 </div>
-                <div class="row d-flex mt-4">
-                    <div class="col-md-4">
-                        <label class="input_label">
-                            <input type="text" name="residence-address" v-model="user.address" required="required">
-                            <span class="keep_hovered">Address</span>
-                        </label>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="input_label">
-                            <input type="text" name="residence-city" v-model="user.city" required="required">
-                            <span class="keep_hovered">City</span>
-                        </label>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="input_label">
-                            <input type="text" name="residence-country" v-model="user.country" required="required">
-                            <span class="keep_hovered">Country</span>
-                        </label>
-                    </div>
+                <div class="col-md-6">
+                    <label class="input_label">
+                        <input type="text" name="last-name" v-model="user.lastName" required="required">
+                        <span class="keep_hovered">Last Name</span>
+                    </label>
                 </div>
-				<input type="button" value="Register" v-on:click="registerUser()"/>
-			</div>
+            </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-6">
+                    <input type='radio' id='client' checked='checked' name='radio' class="blue_option" v-model="user.role" value="CLIENT">
+                    <label for='client'>Client</label>
+                </div>
+                <div class="col-md-6">
+                    <input type='radio' id='lodging_owner' checked='checked' name='radio' class="blue_option" v-model="user.role" value="LODGING_OWNER">
+                    <label for='lodging_owner'>Host</label>
+                </div>
+            </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-6">
+                    <input type='radio' id='boat_owner' name='radio' class="blue_option" v-model="user.role" value="BOAT_OWNER">
+                    <label for='boat_owner'>Captain</label>
+                </div>
+                <div class="col-md-6">
+                    <input type='radio' id='instructor' name='radio' class="blue_option" v-model="user.role" value="INSTRUCTOR">
+                    <label for='instructor'>Instructor</label>
+                </div>
+            </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-12">
+                    <label class="input_label">
+                        <input type="text" name="birth-date" v-model="user.contactPhone" required="required">
+                        <span class="keep_hovered">Contact Phone</span>
+                    </label>
+                </div>
+            </div>
+            <div class="row d-flex mt-4">
+                <div class="col-md-4">
+                    <label class="input_label">
+                        <input type="text" name="residence-address" v-model="user.address" required="required">
+                        <span class="keep_hovered">Address</span>
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <label class="input_label">
+                        <input type="text" name="residence-city" v-model="user.city" required="required">
+                        <span class="keep_hovered">City</span>
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <label class="input_label">
+                        <input type="text" name="residence-country" v-model="user.country" required="required">
+                        <span class="keep_hovered">Country</span>
+                    </label>
+                </div>
+            </div>
+			<input type="button" value="Register" v-on:click="registerUser()"/>
 		</div>
 	</div>
 </template>
@@ -93,7 +115,10 @@ export default {
     },
     methods: {
         registerUser(){
-            UserService.registerUser(this.user);
+            if(this.user.role && this.user.role == 'CLIENT')
+                UserService.registerUser(this.user);
+            else if(this.user.role)
+                UserService.registerOwner(this.user);
         },
         checkEmailAvailability(){
             if(!this.user.email || UserService.isEmailAvailable(this.user.email))
@@ -122,13 +147,97 @@ export default {
     .registration-white-panel{
         background-color: rgba(255,255, 255, 1);
         position:absolute;
-        top:-100px;
+        top:-150px;
         width:50%;
         right:calc(50% - 50px);
         transition:.3s ease-in-out;
         z-index:0;
         box-shadow: 0 0 15px 9px #00000096;
+        color:#242424;
+        text-align:left;
+        padding:50px;
     }
+    .registration-white-panel input[type="button"] {
+        max-width: 150px;
+        width: 100%;
+        background: rgba(0,95,255,1);
+        color: #f9f9f9;
+        border: none;
+        padding: 10px;
+        text-transform: uppercase;
+        border-radius: 10px;
+        float:right;
+        cursor:pointer;
+        transition: all .3s;
+    }
+    .registration-white-panel input[type="button"]:hover {
+        transform: scale(110%);
+        background: rgba(0,95,255,1);
+        color: #f9f9f9;
+        border: none;
+        padding: 10px;
+        text-transform: uppercase;
+        border-radius: 10px;
+        float:right;
+        cursor:pointer;
+        transition: all .3s;
+    }
+
+    .registration-side-panel{
+        background-color: rgba(255,255, 255, 1);
+        position:absolute;
+        width: 40%;
+        top:-100px;
+        right:calc(75% + 200px);
+        transition:.3s ease-in-out;
+        z-index:0;
+        box-shadow: 0 0 15px 9px #00000096;
+        color:#242424;
+        text-align:left;
+        padding:50px;
+    }
+    .registration-side-panel-hidden{
+        background-color: rgba(255,255, 255, 1);
+        position:absolute;
+        opacity: 0%;
+        width: 40%;
+        top:-100px;
+        right:calc(50% + 200px);
+        transition:.3s ease-in-out;
+        z-index:0;
+        box-shadow: 0 0 15px 9px #00000096;
+        color:#242424;
+        text-align:left;
+        padding:50px;
+    }
+    .registration-side-panel-hidden textarea,
+    .registration-side-panel textarea {
+        border:1px solid rgb(143, 176, 233);
+        border-radius: 10px;
+        resize: none;
+        height: 400px;
+        width: 100%;
+        transition: all .3s;
+    }
+
+    .registration-side-panel textarea:hover {
+        border:1px solid rgba(0,95,255,1);
+        border-radius: 10px;
+        resize: none;
+        height: 400px;
+        width: 100%;
+        transition: all .3s;
+    }
+
+    .registration-side-panel textarea:focus {
+        border:1px solid rgba(0,95,255,1);
+        border-radius: 10px;
+        resize: none;
+        height: 400px;
+        width: 100%;
+        transition: all .3s;
+    }
+
     .registration-panel input[type="radio"]{
         position:relative;
         display:none;
@@ -173,33 +282,6 @@ export default {
         color:#242424;
         text-align:left;
         padding:50px;
-    }
-    
-    .register-show input[type="button"] {
-        max-width: 150px;
-        width: 100%;
-        background: rgba(0,95,255,1);
-        color: #f9f9f9;
-        border: none;
-        padding: 10px;
-        text-transform: uppercase;
-        border-radius: 10px;
-        float:right;
-        cursor:pointer;
-        transition: all .3s;
-    }
-
-    .register-show input[type="button"]:hover {
-        transform: scale(110%);
-        background: rgba(0,95,255,1);
-        color: #f9f9f9;
-        border: none;
-        padding: 10px;
-        text-transform: uppercase;
-        border-radius: 10px;
-        float:right;
-        cursor:pointer;
-        transition: all .3s;
     }
 
     /* INPUT FIELDS */

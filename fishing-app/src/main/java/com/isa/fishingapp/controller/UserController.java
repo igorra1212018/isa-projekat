@@ -26,8 +26,9 @@ import com.isa.fishingapp.dto.OwnerDTO;
 import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
 import com.isa.fishingapp.jwt.JwtUtils;
-import com.isa.fishingapp.model.Owner;
 import com.isa.fishingapp.model.User;
+import com.isa.fishingapp.model.UserCreationRequest;
+import com.isa.fishingapp.model.enums.ERequestType;
 import com.isa.fishingapp.repository.RoleRepository;
 import com.isa.fishingapp.service.UserService;
 
@@ -75,7 +76,6 @@ public class UserController {
 	@PreAuthorize("permitAll")
 	public ResponseEntity<Boolean> isEmailAvailable(@RequestBody String email)
 	{
-		System.out.println(email);
 		return ResponseEntity
 				.ok()
 				.body(userService.isEmailAvailable(email));
@@ -98,9 +98,17 @@ public class UserController {
 	}
 	
 	@PostMapping("/register_owner")
-	public ResponseEntity<String> registerOwner(@RequestBody OwnerDTO owner) throws Exception
+	@PreAuthorize("not(isAuthenticated())")
+	public ResponseEntity<String> registerOwner(@RequestBody OwnerDTO signUpRequest) throws Exception
 	{
-		userService.registerOwner(new Owner(owner));
+		if (userService.findByEmail(signUpRequest.getEmail()) != null) {
+			return ResponseEntity
+					.badRequest()
+					.body("Error: Email is already taken!");
+		}
+		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
+		User createdUser = new User(signUpRequest);
+		userService.registerUser(createdUser, new UserCreationRequest(createdUser, ERequestType.LODGING_OWNER, signUpRequest.getApplicationDetails()));
 		return new ResponseEntity<>(
 			      "Registration successful!", 
 			      HttpStatus.OK);
