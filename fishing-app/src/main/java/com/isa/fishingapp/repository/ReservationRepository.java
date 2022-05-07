@@ -24,4 +24,9 @@ public interface ReservationRepository<T extends Reservation> extends JpaReposit
 			+ "FROM reservation "
 			+ "WHERE reserved_entity_id = :entityId", nativeQuery = true)
     List<T> findByEntityId(@Param("entityId") Integer entityId);
+	
+	@Query(value = "SELECT * "
+			+ "FROM (SELECT * FROM reservation user_id = :userId AND reservation_type = :discriminatorParameter) AS r "
+			+ "LEFT JOIN reservation_lodging l ON l.id = r.id AND r.reservation_type = :discriminatorParameter ", nativeQuery = true)
+    List<T> findByUserId(@Param("userId") int userId, @Param("discriminatorParameter") String discriminatorParameter);
 }

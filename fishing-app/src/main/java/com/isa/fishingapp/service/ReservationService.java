@@ -14,6 +14,14 @@ import com.isa.fishingapp.model.ReservationBoat;
 public class ReservationService<T extends Reservation> {
 	@Autowired
 	private ReservationRepository<T> reservationsRepository;
+	private String discriminatorString;
+	
+	public ReservationService() {
+	}
+	
+	public ReservationService(String discriminatorString) {
+		this.discriminatorString = discriminatorString;
+	}
 	
 	public List<T> findByEntityId(int entityId)
 	{
@@ -23,6 +31,11 @@ public class ReservationService<T extends Reservation> {
 	public List<T> findAllReservationsInInterval(Integer entityId, DateRange dateRange)
 	{
 		return reservationsRepository.findReservationEntitiesInInterval(entityId, dateRange.getFromDate(), dateRange.getToDate());
+	}
+	
+	public List<T> findByUserId(Integer userId)
+	{
+		return reservationsRepository.findByUserId(userId, discriminatorString);
 	}
 
 	public void save(T reservation) {
