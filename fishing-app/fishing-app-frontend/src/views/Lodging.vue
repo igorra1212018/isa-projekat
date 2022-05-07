@@ -66,11 +66,11 @@ export default {
         }
     },
     mounted: function() {
-        LodgingService.getLodging(this.$route.params.id).then(res => {
+        LodgingService.getReservable(this.$route.params.id).then(res => {
           this.lodging = res.data
         });
         this.user = localStorage.getItem('user');
-        LodgingService.getAvailableLodgingReservationDates(this.$route.params.id).then(res => {
+        LodgingService.getAvailableReservablesReservationDates(this.$route.params.id).then(res => {
           this.availableLodgingReservationDates = res.data
         });
         this.availableYears.push(new Date().getFullYear() )
@@ -86,7 +86,7 @@ export default {
             this.reservationParameters.userId = 1
             this.reservationParameters.fromDate = new Date(this.selectedYear, this.selectedMonth-1, this.selectedDay+1)
             this.reservationParameters.toDate = new Date(this.selectedYearTo, this.selectedMonthTo-1, this.selectedDayTo+1)
-            LodgingService.reserveLodging(this.reservationParameters)
+            LodgingService.reserveReservable(this.reservationParameters)
         }
     },
     computed: {
