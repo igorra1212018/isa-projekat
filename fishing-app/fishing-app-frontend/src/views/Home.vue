@@ -202,13 +202,13 @@ export default {
         });
     },
     viewLodging(lodgingId) {
-      window.location.href = "http://localhost:8081/lodging/" + lodgingId;
+      window.location.href = "http://localhost:8081/reservable/lodging/" + lodgingId;
     },
     viewBoat(boatId) {
-      window.location.href = "http://localhost:8081/boat/" + boatId;
+      window.location.href = "http://localhost:8081/reservable/boat/" + boatId;
     },
     viewFishingLesson(boatId) {
-      window.location.href = "http://localhost:8081/fishinglesson/" + boatId;
+      window.location.href = "http://localhost:8081/reservable/fishinglesson/" + boatId;
     }
   }
 }
