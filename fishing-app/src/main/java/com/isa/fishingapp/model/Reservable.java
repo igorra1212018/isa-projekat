@@ -17,6 +17,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -36,6 +37,10 @@ public abstract class Reservable {
 	private String description;
 	@Embedded
 	private Location address;
+	
+	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "primary_image_id")
+	private Image primaryImage;
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "reservable_id")
@@ -71,6 +76,14 @@ public abstract class Reservable {
 
 	public void setImages(Set<Image> images) {
 		this.images = images;
+	}
+
+	public Image getPrimaryImage() {
+		return primaryImage;
+	}
+
+	public void setPrimaryImage(Image primaryImage) {
+		this.primaryImage = primaryImage;
 	}
 
 	@Transient

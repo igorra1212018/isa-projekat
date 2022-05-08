@@ -1,11 +1,11 @@
 <template>
-    <div class="white-panel">
+    <div class="white-panel" style="margin-top: 40px">
+        <img :src="convertImageToBase64(lodging.primaryImage.data)" style="width: 100%; height: 400px">
 		<div class="register-show">
 			<h2>{{lodging.name}}</h2>
             <p>{{lodging.address.address}} {{lodging.address.city}} {{lodging.address.country}}</p>
             <p>{{lodging.description}}</p>
             <div v-for="l in lodging.images" :key="l.id">
-                <p>IMAGE</p>
                 <img :src="convertImageToBase64(l.data)">
             </div>
             <div class="row d-flex mt-4" v-if="user">
