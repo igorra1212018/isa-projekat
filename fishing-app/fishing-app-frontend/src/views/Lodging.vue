@@ -4,6 +4,10 @@
 			<h2>{{lodging.name}}</h2>
             <p>{{lodging.address.address}} {{lodging.address.city}} {{lodging.address.country}}</p>
             <p>{{lodging.description}}</p>
+            <div v-for="l in lodging.images" :key="l.id">
+                <p>IMAGE</p>
+                <img :src="convertImageToBase64(l.data)">
+            </div>
             <div class="row d-flex mt-4" v-if="user">
                 <div class="col-md-3">
                     <select name="year_from" id="year_from" v-model="selectedYear">
@@ -87,6 +91,9 @@ export default {
             this.reservationParameters.fromDate = new Date(this.selectedYear, this.selectedMonth-1, this.selectedDay+1)
             this.reservationParameters.toDate = new Date(this.selectedYearTo, this.selectedMonthTo-1, this.selectedDayTo+1)
             LodgingService.reserveReservable(this.reservationParameters)
+        },
+        convertImageToBase64(byteArray) {
+            return 'data:image/jpeg;base64,' + byteArray;
         }
     },
     computed: {

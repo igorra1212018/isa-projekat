@@ -4,7 +4,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "image")
-@Inheritance(strategy=InheritanceType.JOINED)
 public class Image {
 	@Id
     @SequenceGenerator(name = "image_sequence_generator", sequenceName = "image_sequence", initialValue = 100)
