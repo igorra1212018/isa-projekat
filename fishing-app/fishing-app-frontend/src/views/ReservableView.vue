@@ -1,11 +1,11 @@
 <template>
     <div class="white-panel" style="margin-top: 40px">
-        <img :src="convertImageToBase64(lodging.primaryImage.data)" style="width: 100%; height: 400px">
+        <img :src="convertImageToBase64(reservable.primaryImage.data)" style="width: 100%; height: 400px">
 		<div class="register-show">
-			<h2>{{lodging.name}}</h2>
-            <p>{{lodging.address.address}} {{lodging.address.city}} {{lodging.address.country}}</p>
-            <p>{{lodging.description}}</p>
-            <div v-for="l in lodging.images" :key="l.id">
+			<h2>{{reservable.name}}</h2>
+            <p>{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country}}</p>
+            <p>{{reservable.description}}</p>
+            <div v-for="l in reservable.images" :key="l.id">
                 <img :src="convertImageToBase64(l.data)">
             </div>
             <div class="row d-flex mt-4" v-if="user">
@@ -42,20 +42,21 @@
                     </select>
                 </div>
             </div>
-            <button class="card-button" v-on:click="reserveLodging()">View</button>
+            <button class="card-button" v-on:click="reserveReservable()">View</button>
 		</div>
 	</div>
 </template>
 
 <script>
 
-import LodgingService from '../services/LodgingService';
+import ReservableService from '../services/ReservableService';
 
 export default {
-    name: 'Lodging',
+    name: 'ReservableView',
     data(){
         return {
-            lodging: {},
+            reservable: {},
+            reservableService: {},
             user: {},
             availableYears: [],
             availableMonths: [],
@@ -65,17 +66,18 @@ export default {
             selectedYearTo: 1,
             selectedMonthTo: 1,
             selectedDayTo: 1,
-            availableLodgingReservationDates: [],
+            availableReservableReservationDates: [],
             reservationParameters: {}
         }
     },
     mounted: function() {
-        LodgingService.getReservable(this.$route.params.id).then(res => {
-          this.lodging = res.data
+        this.reservableService = new ReservableService(this.$route.params.reservable_type);
+        this.reservableService.getReservable(this.$route.params.id).then(res => {
+          this.reservable = res.data
         });
         this.user = localStorage.getItem('user');
-        LodgingService.getAvailableReservablesReservationDates(this.$route.params.id).then(res => {
-          this.availableLodgingReservationDates = res.data
+        this.reservableService.getAvailableReservablesReservationDates(this.$route.params.id).then(res => {
+          this.availableReservableReservationDates = res.data
         });
         this.availableYears.push(new Date().getFullYear() )
         this.availableYears.push(new Date().getFullYear() + 1)
@@ -85,12 +87,12 @@ export default {
         }
     },
     methods: {
-        reserveLodging() {
+        reserveReservable() {
             this.reservationParameters.reservableId = parseInt(this.$route.params.id)
             this.reservationParameters.userId = 1
             this.reservationParameters.fromDate = new Date(this.selectedYear, this.selectedMonth-1, this.selectedDay+1)
             this.reservationParameters.toDate = new Date(this.selectedYearTo, this.selectedMonthTo-1, this.selectedDayTo+1)
-            LodgingService.reserveReservable(this.reservationParameters)
+            this.reservableService.reserveReservable(this.reservationParameters)
         },
         convertImageToBase64(byteArray) {
             return 'data:image/jpeg;base64,' + byteArray;
@@ -109,7 +111,7 @@ export default {
                 maxDays = 30
             let availableDays = []
             for (let i = 1; i <= maxDays; i++) {
-                this.availableLodgingReservationDates.forEach((value) => {
+                this.availableReservableReservationDates.forEach((value) => {
                     var testingDate = new Date(this.selectedYear, this.selectedMonth-1, i+1);
                     if((testingDate > new Date(value.fromDate[0], value.fromDate[1]-1, value.fromDate[2]+1)) && (testingDate < new Date(value.toDate[0], value.toDate[1]-1, value.toDate[2]+1)))
                         availableDays.push(i)
@@ -129,7 +131,7 @@ export default {
                 maxDays = 30
             let availableDays = []
             for (let i = 1; i <= maxDays; i++) {
-                this.availableLodgingReservationDates.forEach((value) => {
+                this.availableReservableReservationDates.forEach((value) => {
                     var testingDate = new Date(this.selectedYearTo, this.selectedMonthTo-1, i+1);
                     if((testingDate > new Date(value.fromDate[0], value.fromDate[1]-1, value.fromDate[2]+1)) && (testingDate < new Date(value.toDate[0], value.toDate[1]-1, value.toDate[2]+1)))
                         availableDays.push(i)

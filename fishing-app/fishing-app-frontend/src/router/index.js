@@ -4,8 +4,7 @@ import Home from '../views/Home.vue'
 import Users from '../views/Users.vue'
 import Registration from '../views/Registration.vue'
 import UserProfile from '../views/UserProfile.vue'
-import Lodging from '../views/Lodging.vue'
-import Boat from '../views/Boat.vue'
+import ReservableView from '../views/ReservableView.vue'
 import Login from '../views/Login.vue'
 import Unauthorized from '../views/Unauthorized.vue'
 
@@ -44,14 +43,9 @@ const routes = [
     component: Login
   },
   {
-    path: '/lodging/:id',
-    name: 'Lodging',
-    component: Lodging
-  },
-  {
-    path: '/boat/:id',
-    name: 'Boat',
-    component: Boat
+    path: '/reservable/:reservable_type/:id',
+    name: 'ReservableView',
+    component: ReservableView
   },
   {
     path: '/unauthorized',

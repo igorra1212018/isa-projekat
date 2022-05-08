@@ -142,9 +142,7 @@
 
 <script>
 
-import LodgingService from '../services/LodgingService';
-import BoatService from '../services/BoatService';
-import FishingLessonService from '../services/FishingLessonService';
+import ReservableService from '../services/ReservableService';
 
 export default {
   name: 'Home',
@@ -156,6 +154,9 @@ export default {
       lodgings: {},
       boats: {},
       fishingLessons: {},
+      lodgingService: {},
+      boatService: {},
+      fishingLessonService: {},
       searchParameters: {},
       currentUser: null,
       name: '',
@@ -172,11 +173,14 @@ export default {
     }
   },
   mounted: function() {
-    LodgingService.getAllReservables().then(res => {
+    this.lodgingService = new ReservableService('lodging')
+    this.boatService = new ReservableService('boat')
+    this.fishingLessonService = new ReservableService('fishinglesson')
+    this.lodgingService.getAllReservables().then(res => {
       this.lodgings = res.data
-      BoatService.getAllReservables().then(res2 => {
+      this.boatService.getAllReservables().then(res2 => {
         this.boats = res2.data
-        FishingLessonService.getAllReservables().then(res3 => {
+        this.fishingLessonService.getAllReservables().then(res3 => {
           this.fishingLessons = res3.data
         });
       });
@@ -187,11 +191,11 @@ export default {
        return address.address + " " + address.city + " " + address.country;
     },
     search() {
-        LodgingService.getAllReservablesSearch(this.searchParameters).then(res => {
+        this.lodgingService.getAllReservablesSearch(this.searchParameters).then(res => {
           this.lodgings = res.data
-          BoatService.getAllReservablesSearch(this.searchParameters).then(res2 => {
+          this.boatService.getAllReservablesSearch(this.searchParameters).then(res2 => {
             this.boats = res2.data
-            FishingLessonService.getAllReservablesSearch(this.searchParameters).then(res3 => {
+            this.fishingLessonService.getAllReservablesSearch(this.searchParameters).then(res3 => {
               this.fishingLessons = res3.data
             });
           });
