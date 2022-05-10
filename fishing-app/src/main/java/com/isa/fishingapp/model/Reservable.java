@@ -4,6 +4,7 @@ import java.beans.Transient;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
@@ -34,6 +35,7 @@ public abstract class Reservable {
     private User owner;
 	
 	private String name;
+	@Column(length=4095)
 	private String description;
 	@Embedded
 	private Location address;

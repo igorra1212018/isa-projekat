@@ -1,13 +1,15 @@
 <template>
     <div class="white-panel" style="margin-top: 40px">
-        <img :src="convertImageToBase64(reservable.primaryImage.data)" style="width: 100%; height: 400px">
+        <div style="width: 100%; height: 400px">
+            <!--<div class="reservable-title-card">
+                <h1>{{reservable.name}}</h1>
+            </div>-->
+            <img :src="convertImageToBase64(reservable.primaryImage.data)" style="width: 100%; height: 400px">
+        </div>
 		<div class="register-show">
-			<h2>{{reservable.name}}</h2>
-            <p>{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country}}</p>
-            <p>{{reservable.description}}</p>
-            <div v-for="l in reservable.images" :key="l.id">
-                <img :src="convertImageToBase64(l.data)">
-            </div>
+            <h1 style="text-align: center">{{reservable.name}}</h1>
+            <p style="text-align: center; font-size: 16px">{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country}}</p>
+            <p class="reservable-description"><em>{{reservable.description}}</em></p>
             <div class="row d-flex mt-4" v-if="user">
                 <div class="col-md-3">
                     <select name="year_from" id="year_from" v-model="selectedYear">
@@ -44,6 +46,11 @@
             </div>
             <button class="card-button" v-on:click="reserveReservable()">View</button>
 		</div>
+        <div class="row row-cols-md-1" v-for="l in reservable.images" :key="l.id">
+            <div class="col">
+                <img :src="convertImageToBase64(l.data)" style="height: 100%; width: 100%">
+            </div>
+        </div>
 	</div>
 </template>
 
@@ -143,6 +150,22 @@ export default {
 }
 
 </script>
-
 <style>
+.reservable-title-card {
+    position: absolute;
+    top: 50px;
+    background: linear-gradient(to right, rgba(0,95,255,1), rgba(0,136,221,0.5));
+    color: #f9f9f9;
+    border: none;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 100px;
+    padding-bottom: 5px;
+}
+.reservable-description {
+    font-size: 16px;
+    text-align: center;
+    padding-top: 20px;
+    border-top: solid 2px gray;
+}
 </style>
