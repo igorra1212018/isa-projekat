@@ -39,6 +39,7 @@ public abstract class Reservable {
 	private String description;
 	@Embedded
 	private Location address;
+	private int basePrice;
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "primary_image_id")
@@ -47,6 +48,10 @@ public abstract class Reservable {
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "reservable_id")
 	private Set<Image> images;
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "reservable_id")
+	private Set<ReservableAmenity> amenities;
 
 	public String getName() {
 		return name;
@@ -86,6 +91,38 @@ public abstract class Reservable {
 
 	public void setPrimaryImage(Image primaryImage) {
 		this.primaryImage = primaryImage;
+	}
+
+	public int getBasePrice() {
+		return basePrice;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setAddress(Location address) {
+		this.address = address;
+	}
+
+	public void setBasePrice(int basePrice) {
+		this.basePrice = basePrice;
+	}
+
+	public Set<ReservableAmenity> getAmenities() {
+		return amenities;
+	}
+
+	public void setAmenities(Set<ReservableAmenity> amenities) {
+		this.amenities = amenities;
 	}
 
 	@Transient

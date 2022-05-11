@@ -1,16 +1,38 @@
 <template>
-    <div class="white-panel" style="margin-top: 40px">
-        <div style="width: 100%; height: 400px">
+    <div class="white-panel" style="margin-top: 40px; bottom: 20px">
+        <div style="width: 100%; height: 400px;">
             <!--<div class="reservable-title-card">
                 <h1>{{reservable.name}}</h1>
             </div>-->
             <img :src="convertImageToBase64(reservable.primaryImage.data)" style="width: 100%; height: 400px">
         </div>
-		<div class="register-show">
+        <div class="pc-tab">
+            <input checked="checked" id="tab1" type="radio" v-model="selectedTab" value="Overview" />
+            <input id="tab2" type="radio" v-model="selectedTab" value="Services" />
+            <input id="tab3" type="radio" v-model="selectedTab" value="Rules" />
+            <input id="tab4" type="radio" v-model="selectedTab" value="Gallery" />
+            <nav>
+              <ul>
+                <li class="reservable-view-tab">
+                  <label for="tab1" style="width: 25%"><h5>Overview</h5></label>
+                </li>
+                <li class="reservable-view-tab">
+                  <label for="tab2" style="width: 25%"><h5>Services</h5></label>
+                </li>
+                <li class="reservable-view-tab">
+                  <label for="tab3" style="width: 25%"><h5>Rules</h5></label>
+                </li>
+                <li class="reservable-view-tab">
+                  <label for="tab4" style="width: 25%"><h5>Gallery</h5></label>
+                </li>
+              </ul>
+            </nav>
+        </div>
+		<div class="reservable-view-content-area" v-if="selectedTab == 'Overview'">
             <h1 style="text-align: center">{{reservable.name}}</h1>
             <p style="text-align: center; font-size: 16px">{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country}}</p>
             <p class="reservable-description"><em>{{reservable.description}}</em></p>
-            <div class="row d-flex mt-4" v-if="user">
+            <!--<div class="row d-flex mt-4" v-if="user">
                 <div class="col-md-3">
                     <select name="year_from" id="year_from" v-model="selectedYear">
                       <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
@@ -44,11 +66,26 @@
                     </select>
                 </div>
             </div>
-            <button class="card-button" v-on:click="reserveReservable()">View</button>
+            <button class="card-button" v-on:click="reserveReservable()">View</button>-->
 		</div>
-        <div class="row row-cols-md-1" v-for="l in reservable.images" :key="l.id">
-            <div class="col">
-                <img :src="convertImageToBase64(l.data)" style="height: 100%; width: 100%">
+        <div class="reservable-view-content-area" v-if="selectedTab == 'Services'">
+            <div class="row d-flex row-cols-md-3">
+                <div class="col" v-for="a in reservable.amenities" :key="a.id">
+                    <div class="amenity-card">
+                        <font-awesome-icon icon="fas fa-wifi" size="6x" v-if="a.amenityIcon == 'wifi'" />
+                        <font-awesome-icon icon="fas fa-snowflake" size="6x" v-if="a.amenityIcon == 'hvac'" />
+                        <font-awesome-icon icon="fas fa-square-parking" size="6x" v-if="a.amenityIcon == 'parking'" />
+                        <font-awesome-icon icon="fas fa-camera" size="6x" v-if="a.amenityIcon == 'tour'" />
+                        <h4>{{a.amenityName}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="reservable-view-content-area" v-if="selectedTab == 'Gallery'">
+            <div class="row row-cols-md-2" v-for="l in reservable.images" :key="l.id">
+                <div class="col">
+                    <img :src="convertImageToBase64(l.data)" style="height: 100%; width: 100%">
+                </div>
             </div>
         </div>
 	</div>
@@ -74,7 +111,8 @@ export default {
             selectedMonthTo: 1,
             selectedDayTo: 1,
             availableReservableReservationDates: [],
-            reservationParameters: {}
+            reservationParameters: {},
+            selectedTab: 'Overview'
         }
     },
     mounted: function() {
@@ -166,6 +204,57 @@ export default {
     font-size: 16px;
     text-align: center;
     padding-top: 20px;
-    border-top: solid 2px gray;
+    border-top: solid 1px gray;
+}
+.pc-tab > input, .pc-tab section > div {
+    display: none;
+}
+.pc-tab {
+	width: 90%;
+	margin: 0 auto;
+    margin-left: 5%;
+    margin-right: 5%
+}
+.pc-tab ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.pc-tab ul li label {
+	float: left;
+	padding: 15px 25px;
+	border: 0;
+    border-bottom: solid 1px gray;
+	background: white;
+}
+.pc-tab ul li label:hover {
+    border-bottom: solid 2px rgba(0,95,255,1);
+}
+.pc-tab ul li label:active {
+	border-bottom: solid 2px rgba(0,95,255,1);
+}
+.pc-tab ul li label:after {
+	border-bottom: solid 2px rgba(0,95,255,1);
+}
+.pc-tab ul li:not(:last-child) label {
+	border-right-width: 0;
+}
+.reservable-view-content-area{
+    z-index: 1;
+    transition:0.3s ease-in-out;
+    color:#242424;
+    text-align:left;
+    padding:50px;
+    margin-top: 40px
+}
+.amenity-card {
+    position: relative;
+    max-width: 33%;
+    padding-bottom: 1.3125em;
+    margin-bottom: 60px;
+    text-align: center;
+}
+.amenity-card {
+    color: rgba(0,95,255,1);
 }
 </style>
