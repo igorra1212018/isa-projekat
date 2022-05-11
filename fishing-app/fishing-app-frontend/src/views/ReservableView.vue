@@ -76,15 +76,19 @@
                         <font-awesome-icon icon="fas fa-snowflake" size="6x" v-if="a.amenityIcon == 'hvac'" />
                         <font-awesome-icon icon="fas fa-square-parking" size="6x" v-if="a.amenityIcon == 'parking'" />
                         <font-awesome-icon icon="fas fa-camera" size="6x" v-if="a.amenityIcon == 'tour'" />
-                        <h4>{{a.amenityName}}</h4>
+                        <h4 style="margin-top: 15px">{{a.amenityName}}</h4>
+                        <h5 v-if="a.price > 0"><em>{{a.price}}$</em></h5>
+                        <h5 v-if="a.price <= 0"><em>Free</em></h5>
                     </div>
                 </div>
             </div>
         </div>
         <div class="reservable-view-content-area" v-if="selectedTab == 'Gallery'">
-            <div class="row row-cols-md-2" v-for="l in reservable.images" :key="l.id">
-                <div class="col">
-                    <img :src="convertImageToBase64(l.data)" style="height: 100%; width: 100%">
+            <div class="row row-cols-md-2">
+                <div class="col" v-for="l in reservable.images" :key="l.id">
+                    <div class="reservable-image-container">
+                        <img :src="convertImageToBase64(l.data)" style="height: 100%; width: 100%">
+                    </div>
                 </div>
             </div>
         </div>
@@ -249,12 +253,13 @@ export default {
 }
 .amenity-card {
     position: relative;
-    max-width: 33%;
+    max-width: 100%;
     padding-bottom: 1.3125em;
     margin-bottom: 60px;
     text-align: center;
 }
-.amenity-card {
-    color: rgba(0,95,255,1);
+.reservable-image-container {
+    position: relative;
+    max-width: 100%;
 }
 </style>
