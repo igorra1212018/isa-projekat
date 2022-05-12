@@ -49,7 +49,6 @@ public class LodgingService extends ReservableService<Lodging> {
 			if(reserveLodgingDTO.getAmenities() != null && !reserveLodgingDTO.getAmenities().isEmpty()) {
 				for(Integer i : reserveLodgingDTO.getAmenities())
 				{
-					System.out.println("TEST 1");
 					ReservableAmenity amenity = reservableRepository.findReservableAmenityById(i).orElse(null);
 					if(amenity != null)
 						reservedAmenities.add(amenity);

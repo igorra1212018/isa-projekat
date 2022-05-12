@@ -42,7 +42,7 @@ public class BoatService extends ReservableService<Boat> {
 		try {
 			reservation = new ReservationBoat(userRepository.getById(reserveBoatDTO.getUserId()), new DateRange(reserveBoatDTO.getFromDate(), reserveBoatDTO.getToDate()), findById(reserveBoatDTO.getReservableId()));
 			
-			/*Set<ReservableAmenity> reservedAmenities = new HashSet<ReservableAmenity>();
+			Set<ReservableAmenity> reservedAmenities = new HashSet<ReservableAmenity>();
 			if(reserveBoatDTO.getAmenities() != null && !reserveBoatDTO.getAmenities().isEmpty()) {
 				for(Integer i : reserveBoatDTO.getAmenities())
 				{
@@ -51,7 +51,7 @@ public class BoatService extends ReservableService<Boat> {
 						reservedAmenities.add(amenity);
 				}
 			}
-			reservation.setAmenities(reservedAmenities);*/
+			reservation.setAmenities(reservedAmenities);
 			
 			reservationsService.save(reservation);
 		} catch (Exception e1) {
