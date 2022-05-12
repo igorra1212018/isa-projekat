@@ -1,5 +1,8 @@
 package com.isa.fishingapp.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +12,7 @@ import com.isa.fishingapp.dto.ReserveReservableDTO;
 import com.isa.fishingapp.model.Boat;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.ReservationBoat;
+import com.isa.fishingapp.model.ReservableAmenity;
 import com.isa.fishingapp.repository.UserRepository;
 
 @Service
@@ -34,10 +38,22 @@ public class BoatService extends ReservableService<Boat> {
 				      "Date range is invalid!", 
 				      HttpStatus.BAD_REQUEST);
 		}
-		ReservationBoat reservationLodging;
+		ReservationBoat reservation;
 		try {
-			reservationLodging = new ReservationBoat(userRepository.getById(reserveBoatDTO.getUserId()), new DateRange(reserveBoatDTO.getFromDate(), reserveBoatDTO.getToDate()), findById(reserveBoatDTO.getReservableId()));
-			reservationsService.save(reservationLodging);
+			reservation = new ReservationBoat(userRepository.getById(reserveBoatDTO.getUserId()), new DateRange(reserveBoatDTO.getFromDate(), reserveBoatDTO.getToDate()), findById(reserveBoatDTO.getReservableId()));
+			
+			/*Set<ReservableAmenity> reservedAmenities = new HashSet<ReservableAmenity>();
+			if(reserveBoatDTO.getAmenities() != null && !reserveBoatDTO.getAmenities().isEmpty()) {
+				for(Integer i : reserveBoatDTO.getAmenities())
+				{
+					ReservableAmenity amenity = reservableRepository.findReservableAmenityById(i).orElse(null);
+					if(amenity != null)
+						reservedAmenities.add(amenity);
+				}
+			}
+			reservation.setAmenities(reservedAmenities);*/
+			
+			reservationsService.save(reservation);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

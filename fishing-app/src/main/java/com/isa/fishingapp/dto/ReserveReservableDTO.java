@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.Reservation;
 
 public class ReserveReservableDTO {
@@ -12,6 +11,7 @@ public class ReserveReservableDTO {
 	Integer userId;
 	LocalDateTime fromDate;
 	LocalDateTime toDate;
+	List<Integer> amenities;
 	public ReserveReservableDTO() {
 	}
 	public ReserveReservableDTO(Reservation reservation) {
@@ -44,11 +44,22 @@ public class ReserveReservableDTO {
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
+	public List<Integer> getAmenities() {
+		return amenities;
+	}
+	public void setAmenities(List<Integer> amenities) {
+		this.amenities = amenities;
+	}
 	public static List<ReserveReservableDTO> convertReservationListToDTO(List<Reservation> reservationList) {
 		List<ReserveReservableDTO> output = new ArrayList<>();
 		for(Reservation r : reservationList) {
 			output.add(new ReserveReservableDTO(r));
 		}
 		return output;
+	}
+	@Override
+	public String toString() {
+		return "ReserveReservableDTO [reservableId=" + reservableId + ", userId=" + userId + ", fromDate=" + fromDate
+				+ ", toDate=" + toDate + ", amenities=" + amenities + "]";
 	}
 }

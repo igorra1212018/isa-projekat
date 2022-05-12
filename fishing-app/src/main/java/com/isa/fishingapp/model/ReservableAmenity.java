@@ -39,4 +39,14 @@ public class ReservableAmenity {
 	public void setPrice(float price) {
 		this.price = price;
 	}
+	public ReservableAmenity() {
+		super();
+	}
+	public ReservableAmenity(Integer id, String amenityName, String amenityIcon, float price) {
+		super();
+		this.id = id;
+		this.amenityName = amenityName;
+		this.amenityIcon = amenityIcon;
+		this.price = price;
+	}
 }

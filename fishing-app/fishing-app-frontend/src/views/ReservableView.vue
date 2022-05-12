@@ -1,98 +1,151 @@
 <template>
-    <div class="white-panel" style="margin-top: 40px; bottom: 20px">
-        <div style="width: 100%; height: 400px;">
-            <!--<div class="reservable-title-card">
-                <h1>{{reservable.name}}</h1>
-            </div>-->
-            <img :src="convertImageToBase64(reservable.primaryImage.data)" style="width: 100%; height: 400px">
+    <div class="row d-flex" style="margin-top: 40px; bottom: 20px">
+        <div class="col-md-4">
         </div>
-        <div class="pc-tab">
-            <input checked="checked" id="tab1" type="radio" v-model="selectedTab" value="Overview" />
-            <input id="tab2" type="radio" v-model="selectedTab" value="Services" />
-            <input id="tab3" type="radio" v-model="selectedTab" value="Rules" />
-            <input id="tab4" type="radio" v-model="selectedTab" value="Gallery" />
-            <nav>
-              <ul>
-                <li class="reservable-view-tab">
-                  <label for="tab1" style="width: 25%"><h5>Overview</h5></label>
-                </li>
-                <li class="reservable-view-tab">
-                  <label for="tab2" style="width: 25%"><h5>Services</h5></label>
-                </li>
-                <li class="reservable-view-tab">
-                  <label for="tab3" style="width: 25%"><h5>Rules</h5></label>
-                </li>
-                <li class="reservable-view-tab">
-                  <label for="tab4" style="width: 25%"><h5>Gallery</h5></label>
-                </li>
-              </ul>
-            </nav>
-        </div>
-		<div class="reservable-view-content-area" v-if="selectedTab == 'Overview'">
-            <h1 style="text-align: center">{{reservable.name}}</h1>
-            <p style="text-align: center; font-size: 16px">{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country}}</p>
-            <p class="reservable-description"><em>{{reservable.description}}</em></p>
-            <!--<div class="row d-flex mt-4" v-if="user">
-                <div class="col-md-3">
-                    <select name="year_from" id="year_from" v-model="selectedYear">
-                      <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
-                    </select>
+        <div class="col-md-4">
+            <div class="reservable-white-panel">
+                <div style="width: 100%; height: 400px;" v-if="reservable.primaryImage && reservable.primaryImage.data">
+                    <img :src="convertImageToBase64(reservable.primaryImage.data)" style="width: 100%; height: 400px">
                 </div>
-                <div class="col-md-3">
-                    <select name="month_from" id="month_from" v-model="selectedMonth">
-                      <option v-for="m in availableMonths" :value="m" :key="m">{{m}}</option>
-                    </select>
+                <div class="pc-tab">
+                    <input checked="checked" id="tab1" type="radio" v-model="selectedTab" value="Overview" />
+                    <input id="tab2" type="radio" v-model="selectedTab" value="Services" />
+                    <input id="tab3" type="radio" v-model="selectedTab" value="Rules" />
+                    <input id="tab4" type="radio" v-model="selectedTab" value="Gallery" />
+                    <nav>
+                      <ul>
+                        <li class="reservable-view-tab">
+                          <label for="tab1" style="width: 25%"><h5>Overview</h5></label>
+                        </li>
+                        <li class="reservable-view-tab">
+                          <label for="tab2" style="width: 25%"><h5>Services</h5></label>
+                        </li>
+                        <li class="reservable-view-tab">
+                          <label for="tab3" style="width: 25%"><h5>Rules</h5></label>
+                        </li>
+                        <li class="reservable-view-tab">
+                          <label for="tab4" style="width: 25%"><h5>Gallery</h5></label>
+                        </li>
+                      </ul>
+                    </nav>
                 </div>
-                <div class="col-md-3">
-                    <select name="day_from" id="day_from" v-model="selectedDay">
-                      <option v-for="d in getAvailableReservationDays" :value="d" :key="d">{{d}}</option>
-                    </select>
+                <div class="reservable-view-content-area" v-if="selectedTab == 'Overview'">
+                    <h1 style="text-align: center">{{reservable.name}}</h1>
+                    <p style="text-align: center; font-size: 16px">{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country}}</p>
+                    <p class="reservable-description"><em>{{reservable.description}}</em></p>
+                    <!--<div class="row d-flex mt-4" v-if="user">
+                        <div class="col-md-3">
+                            <select name="year_from" id="year_from" v-model="selectedYear">
+                              <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="month_from" id="month_from" v-model="selectedMonth">
+                              <option v-for="m in availableMonths" :value="m" :key="m">{{m}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="day_from" id="day_from" v-model="selectedDay">
+                              <option v-for="d in getAvailableReservationDays" :value="d" :key="d">{{d}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row d-flex mt-4" v-if="user">
+                        <div class="col-md-3">
+                            <select name="selected_year_to" id="selected_year_to" v-model="selectedYearTo">
+                              <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="selected_month_to" id="selected_month_to" v-model="selectedMonthTo">
+                              <option v-for="m in availableMonths" :value="m" :key="m">{{m}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="selected_day_to" id="selected_day_to" v-model="selectedDayTo">
+                              <option v-for="d in getAvailableReservationDaysTo" :value="d" :key="d">{{d}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="card-button" v-on:click="reserveReservable()">View</button>-->
                 </div>
-            </div>
-            <div class="row d-flex mt-4" v-if="user">
-                <div class="col-md-3">
-                    <select name="selected_year_to" id="selected_year_to" v-model="selectedYearTo">
-                      <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
-                    </select>
+                <div class="reservable-view-content-area" v-if="selectedTab == 'Services'">
+                    <div class="row d-flex row-cols-md-3">
+                        <div class="col" v-for="a in reservable.amenities" :key="a.id">
+                            <div class="amenity-card">
+                                <font-awesome-icon icon="fas fa-wifi" size="6x" v-if="a.amenityIcon == 'wifi'" />
+                                <font-awesome-icon icon="fas fa-snowflake" size="6x" v-if="a.amenityIcon == 'hvac'" />
+                                <font-awesome-icon icon="fas fa-square-parking" size="6x" v-if="a.amenityIcon == 'parking'" />
+                                <font-awesome-icon icon="fas fa-camera" size="6x" v-if="a.amenityIcon == 'tour'" />
+                                <h4 style="margin-top: 15px">{{a.amenityName}}</h4>
+                                <h5 v-if="a.price > 0"><em>{{a.price}}$</em></h5>
+                                <h5 v-if="a.price <= 0"><em>Free</em></h5>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <select name="selected_month_to" id="selected_month_to" v-model="selectedMonthTo">
-                      <option v-for="m in availableMonths" :value="m" :key="m">{{m}}</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select name="selected_day_to" id="selected_day_to" v-model="selectedDayTo">
-                      <option v-for="d in getAvailableReservationDaysTo" :value="d" :key="d">{{d}}</option>
-                    </select>
-                </div>
-            </div>
-            <button class="card-button" v-on:click="reserveReservable()">View</button>-->
-		</div>
-        <div class="reservable-view-content-area" v-if="selectedTab == 'Services'">
-            <div class="row d-flex row-cols-md-3">
-                <div class="col" v-for="a in reservable.amenities" :key="a.id">
-                    <div class="amenity-card">
-                        <font-awesome-icon icon="fas fa-wifi" size="6x" v-if="a.amenityIcon == 'wifi'" />
-                        <font-awesome-icon icon="fas fa-snowflake" size="6x" v-if="a.amenityIcon == 'hvac'" />
-                        <font-awesome-icon icon="fas fa-square-parking" size="6x" v-if="a.amenityIcon == 'parking'" />
-                        <font-awesome-icon icon="fas fa-camera" size="6x" v-if="a.amenityIcon == 'tour'" />
-                        <h4 style="margin-top: 15px">{{a.amenityName}}</h4>
-                        <h5 v-if="a.price > 0"><em>{{a.price}}$</em></h5>
-                        <h5 v-if="a.price <= 0"><em>Free</em></h5>
+                <div class="reservable-view-content-area" v-if="selectedTab == 'Gallery'">
+                    <div class="row row-cols-md-2">
+                        <div class="col" v-for="l in reservable.images" :key="l.id">
+                            <div class="reservable-image-container">
+                                <img :src="convertImageToBase64(l.data)" style="height: 100%; width: 100%">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="reservable-view-content-area" v-if="selectedTab == 'Gallery'">
-            <div class="row row-cols-md-2">
-                <div class="col" v-for="l in reservable.images" :key="l.id">
-                    <div class="reservable-image-container">
-                        <img :src="convertImageToBase64(l.data)" style="height: 100%; width: 100%">
+        <div class="col-md-2">
+            <div class="reservable-white-panel" v-if="user">
+              <div class="reservable-side-panel-parameters">
+                <h2>Reserve</h2>
+                <div class="row d-flex mt-4">
+                    <div class="col-md-3">
+                        <select name="year_from" id="year_from" v-model="selectedYear">
+                          <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="month_from" id="month_from" v-model="selectedMonth">
+                          <option v-for="m in availableMonths" :value="m" :key="m">{{m}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="day_from" id="day_from" v-model="selectedDay">
+                          <option v-for="d in getAvailableReservationDays" :value="d" :key="d">{{d}}</option>
+                        </select>
                     </div>
                 </div>
+                <div class="row d-flex mt-4" style="padding-bottom: 20px">
+                    <div class="col-md-3">
+                        <select name="selected_year_to" id="selected_year_to" v-model="selectedYearTo">
+                          <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="selected_month_to" id="selected_month_to" v-model="selectedMonthTo">
+                          <option v-for="m in availableMonths" :value="m" :key="m">{{m}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="selected_day_to" id="selected_day_to" v-model="selectedDayTo">
+                          <option v-for="d in getAvailableReservationDaysTo" :value="d" :key="d">{{d}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div v-for="a in reservable.amenities" :key="a.id">
+                    <div v-if="a.price > 0">
+                        <input type="checkbox" :value="a.id" v-bind:id="a.id" v-model="selectedAmenities">
+                        <label v-bind:for="a.id">{{a.amenityName}}</label>
+                    </div>
+                </div>
+                <input type="button" class="blue-button" value="Reserve" v-on:click="reserveReservable()"/>
+              </div>
             </div>
         </div>
-	</div>
+        <div class="col-md-2">
+        </div>
+    </div>
 </template>
 
 <script>
@@ -114,6 +167,7 @@ export default {
             selectedYearTo: 1,
             selectedMonthTo: 1,
             selectedDayTo: 1,
+            selectedAmenities: [],
             availableReservableReservationDates: [],
             reservationParameters: {},
             selectedTab: 'Overview'
@@ -141,6 +195,7 @@ export default {
             this.reservationParameters.userId = 1
             this.reservationParameters.fromDate = new Date(this.selectedYear, this.selectedMonth-1, this.selectedDay+1)
             this.reservationParameters.toDate = new Date(this.selectedYearTo, this.selectedMonthTo-1, this.selectedDayTo+1)
+            this.reservationParameters.amenities = this.selectedAmenities;
             this.reservableService.reserveReservable(this.reservationParameters)
         },
         convertImageToBase64(byteArray) {
@@ -193,6 +248,15 @@ export default {
 
 </script>
 <style>
+.reservable-white-panel{
+    background-color: rgba(255,255, 255, 1);
+    width:100%;
+    margin:auto;
+    text-align:center;
+    transition:.3s ease-in-out;
+    z-index:0;
+    box-shadow: 0 0 15px 9px #00000096;
+}
 .reservable-title-card {
     position: absolute;
     top: 50px;
@@ -261,5 +325,12 @@ export default {
 .reservable-image-container {
     position: relative;
     max-width: 100%;
+}
+.reservable-side-panel-parameters {
+    z-index: 1;
+    transition:0.3s ease-in-out;
+    color:#242424;
+    text-align:left;
+    padding:50px;
 }
 </style>

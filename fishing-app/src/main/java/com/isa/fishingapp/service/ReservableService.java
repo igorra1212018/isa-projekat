@@ -12,7 +12,7 @@ import com.isa.fishingapp.repository.ReservableRepository;
 @Service
 public class ReservableService<T extends Reservable> {
 	@Autowired
-	private ReservableRepository<T> reservableRepository;
+	protected ReservableRepository<T> reservableRepository;
 	private String discriminatorString;
 	
 	public ReservableService() {
