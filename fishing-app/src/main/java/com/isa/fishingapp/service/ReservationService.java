@@ -10,9 +10,9 @@ import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservation;
 
 @Service
-public class ReservationService<T extends Reservation> {
+public class ReservationService {
 	@Autowired
-	private ReservationRepository<T> reservationsRepository;
+	private ReservationRepository reservationsRepository;
 	private String discriminatorString;
 	
 	public ReservationService() {
@@ -22,22 +22,22 @@ public class ReservationService<T extends Reservation> {
 		this.discriminatorString = discriminatorString;
 	}
 	
-	public List<T> findByEntityId(int entityId)
+	public List<Reservation> findByEntityId(int entityId)
 	{
 		return reservationsRepository.findByEntityId(entityId);
 	}
 	
-	public List<T> findAllReservationsInInterval(Integer entityId, DateRange dateRange)
+	public List<Reservation> findAllReservationsInInterval(Integer entityId, DateRange dateRange)
 	{
 		return reservationsRepository.findReservationEntitiesInInterval(entityId, dateRange.getFromDate(), dateRange.getToDate());
 	}
 	
-	public List<T> findByUserId(Integer userId)
+	public List<Reservation> findByUserId(Integer userId)
 	{
-		return reservationsRepository.findByUserId(userId, discriminatorString);
+		return reservationsRepository.findByUserId(userId);
 	}
 
-	public void save(T reservation) {
+	public void save(Reservation reservation) {
 		reservationsRepository.save(reservation);
 	}
 }

@@ -9,24 +9,24 @@ import org.springframework.data.repository.query.Param;
 
 import com.isa.fishingapp.model.Reservation;
 
-public interface ReservationRepository<T extends Reservation> extends JpaRepository<T, Integer> {
+public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 	@Query(value = "SELECT * "
 			+ "FROM reservation "
 			+ "WHERE (Now() BETWEEN from_date AND to_date) ", nativeQuery = true)
-    List<T> getReservationLodgingsInInterval();
+    List<Reservation> getReservationLodgingsInInterval();
 	
 	@Query(value = "SELECT * "
 			+ "FROM reservation "
 			+ "WHERE :entityId = reserved_entity_id AND NOT ((:dateFrom > to_date) OR (:dateTo < from_date))", nativeQuery = true)
-    List<T> findReservationEntitiesInInterval(@Param("entityId") Integer entityId, @Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
+    List<Reservation> findReservationEntitiesInInterval(@Param("entityId") Integer entityId, @Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
 	
 	@Query(value = "SELECT * "
 			+ "FROM reservation "
 			+ "WHERE reserved_entity_id = :entityId", nativeQuery = true)
-    List<T> findByEntityId(@Param("entityId") Integer entityId);
+    List<Reservation> findByEntityId(@Param("entityId") Integer entityId);
 	
 	@Query(value = "SELECT * "
-			+ "FROM (SELECT * FROM reservation user_id = :userId AND reservation_type = :discriminatorParameter) AS r "
-			+ "LEFT JOIN reservation_lodging l ON l.id = r.id AND r.reservation_type = :discriminatorParameter ", nativeQuery = true)
-    List<T> findByUserId(@Param("userId") int userId, @Param("discriminatorParameter") String discriminatorParameter);
+			+ "FROM reservation "
+			+ "WHERE user_id = :userId ", nativeQuery = true)
+    List<Reservation> findByUserId(@Param("userId") int userId);
 }

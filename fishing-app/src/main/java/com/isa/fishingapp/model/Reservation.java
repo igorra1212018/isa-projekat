@@ -20,7 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.InheritanceType;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="reservation_type")
 @Table(name="reservation")
 public class Reservation {

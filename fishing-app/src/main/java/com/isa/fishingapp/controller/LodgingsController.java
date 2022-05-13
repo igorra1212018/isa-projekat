@@ -32,7 +32,7 @@ public class LodgingsController extends ReservableController<Lodging, Reservatio
 	@Autowired
 	LodgingService lodgingService;
 	@Autowired
-	ReservationService<ReservationLodging> reservationService;
+	ReservationService reservationService;
 	
 	@PostMapping("/reserve")
 	@PreAuthorize("hasRole('ROLE_CUSTOMER')")

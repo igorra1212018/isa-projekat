@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "reservation_boat")
 @DiscriminatorValue("RESERVATION_BOAT")
 public class ReservationBoat extends Reservation {
 	public ReservationBoat() {

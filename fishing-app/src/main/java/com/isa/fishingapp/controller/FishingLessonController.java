@@ -38,7 +38,7 @@ public class FishingLessonController extends ReservableController<FishingLesson,
 	@Autowired
 	FishingLessonService fishingLessonService;
 	@Autowired
-	ReservationService<ReservationFishingLesson> reservationService;
+	ReservationService reservationService;
 	
 	@PostMapping("/reserve")
 	@PreAuthorize("hasRole('ROLE_CUSTOMER')")

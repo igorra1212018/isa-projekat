@@ -21,7 +21,7 @@ public class LodgingService extends ReservableService<Lodging> {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private ReservationService<ReservationLodging> reservationsService;
+	private ReservationService reservationsService;
 	@Autowired
 	private ReservationLodgingRepository reservationLodgingRepository;
 	

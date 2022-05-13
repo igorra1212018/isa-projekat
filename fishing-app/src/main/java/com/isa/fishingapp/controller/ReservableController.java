@@ -26,7 +26,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	@Autowired
 	ReservableService<T> reservableService;
 	@Autowired
-	ReservationService<Y> reservationService;
+	ReservationService reservationService;
 	
 	@GetMapping("/all")
 	@PreAuthorize("permitAll")
@@ -45,9 +45,9 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	@GetMapping("/get_available_reservation_dates/{reservableId}")
 	public ResponseEntity<List<DateRange>> getAvailableLodgingReservationDates(@PathVariable int reservableId) throws Exception
 	{
-		List<Y> foundReservations = reservationService.findByEntityId(reservableId);
+		List<Reservation> foundReservations = reservationService.findByEntityId(reservableId);
 		List<DateRange> occupiedDateRanges = new ArrayList<>();
-		for(Y rl : foundReservations)
+		for(Reservation rl : foundReservations)
 			occupiedDateRanges.add(rl.getDateRange());
 		DateRange maximumDateRange = new DateRange(LocalDateTime.now(), (LocalDateTime.now().plusYears(2)));
 		return new ResponseEntity<>(
@@ -65,6 +65,15 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 				HttpStatus.OK);
 	}*/
 	
+	@GetMapping("/reservations/{userId}")
+	//@PreAuthorize("#userId == authentication.principal.id")
+	public ResponseEntity<List<Reservation>> getAllReservables(@PathVariable int userId)
+	{
+		return new ResponseEntity<>(
+				reservationService.findByUserId(userId), 
+				HttpStatus.OK);
+	}
+	
 	@PostMapping("/search")
 	public ResponseEntity<List<T>> getLodgings(@RequestBody ReservableSearchDTO searchParameters)
 	{
@@ -73,11 +82,4 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 					foundReservables, 
 					HttpStatus.OK);
 	}
-	
-	/*@PostMapping("/reserve")
-	@PreAuthorize("hasRole('CUSTOMER')")
-	public ResponseEntity<String> reserveLodging(@RequestBody ReserveLodgingDTO reservationParameters)
-	{
-		return reservableService.reserve(reservationParameters);
-	}*/
 }

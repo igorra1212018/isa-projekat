@@ -23,7 +23,7 @@ public class BoatController extends ReservableController<Boat, ReservationBoat> 
 	@Autowired
 	BoatService boatService;
 	@Autowired
-	ReservationService<ReservationLodging> reservationService;
+	ReservationService reservationService;
 	
 	@PostMapping("/reserve")
 	@PreAuthorize("hasRole('ROLE_CUSTOMER')")

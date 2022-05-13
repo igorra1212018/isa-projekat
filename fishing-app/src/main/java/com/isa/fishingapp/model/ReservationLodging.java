@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import com.isa.fishingapp.dto.ReserveLodgingDTO;
 
 @Entity
-@Table(name = "reservation_lodging")
 @DiscriminatorValue("RESERVATION_LODGING")
 public class ReservationLodging extends Reservation {
 	

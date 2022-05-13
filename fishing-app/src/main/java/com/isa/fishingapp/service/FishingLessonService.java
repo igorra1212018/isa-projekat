@@ -24,7 +24,7 @@ public class FishingLessonService extends ReservableService<FishingLesson> {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private ReservationService<ReservationFishingLesson> reservationsService;
+	private ReservationService reservationsService;
 	
 	public FishingLessonService() {
 		super("FISHING_LESSON");

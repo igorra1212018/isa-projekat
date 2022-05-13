@@ -20,7 +20,7 @@ public class BoatService extends ReservableService<Boat> {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private ReservationService<ReservationBoat> reservationsService;
+	private ReservationService reservationsService;
 	
 	public BoatService() {
 		super("BOAT");
