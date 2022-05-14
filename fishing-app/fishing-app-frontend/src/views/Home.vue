@@ -38,11 +38,11 @@
         </div>
       </div>
       <div v-if="type == 'Lodgings'" style="width: 100%; height: 100%">
-        <div class="row row-cols-md-2" style = "width: 75%; margin-left: 50px" v-for="l in lodgings" :key="l.id">
-          <div class="col">
+        <div class="row row-cols-md-3" style = "width: 75%; margin-left: 50px">
+          <div class="col" v-for="l in lodgings" :key="l.id">
             <article class="entity_card">
               <figure class="card-image">
-                <img src="../resources/DefaultLodgingIcon.jpg" alt="" />
+                <img :src="convertImageToBase64(l.primaryImage.data)" alt="" >
               </figure>   
               <div class="card-content">
                 <header class="card-header-restaurant">
@@ -209,6 +209,9 @@ export default {
     },
     viewFishingLesson(boatId) {
       window.location.href = "http://localhost:8081/reservable/fishinglesson/" + boatId;
+    },
+    convertImageToBase64(byteArray) {
+        return 'data:image/jpeg;base64,' + byteArray;
     }
   }
 }
@@ -220,6 +223,7 @@ export default {
       position: relative;
       margin-left: 20px;
       width:20%;
+      height: 500px;
       text-align:center;
       transition:.3s ease-in-out;
       z-index:0;

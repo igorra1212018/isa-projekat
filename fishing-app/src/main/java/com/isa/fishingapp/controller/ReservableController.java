@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.isa.fishingapp.dto.ReservableSearchDTO;
@@ -45,7 +46,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	@GetMapping("/get_available_reservation_dates/{reservableId}")
 	public ResponseEntity<List<DateRange>> getAvailableLodgingReservationDates(@PathVariable int reservableId) throws Exception
 	{
-		List<Reservation> foundReservations = reservationService.findByEntityId(reservableId);
+		List<Reservation> foundReservations = reservationService.findByEntityIdAndCancelled(reservableId, false);
 		List<DateRange> occupiedDateRanges = new ArrayList<>();
 		for(Reservation rl : foundReservations)
 			occupiedDateRanges.add(rl.getDateRange());
@@ -67,11 +68,24 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	
 	@GetMapping("/reservations/{userId}")
 	//@PreAuthorize("#userId == authentication.principal.id")
-	public ResponseEntity<List<Reservation>> getAllReservables(@PathVariable int userId)
+	public ResponseEntity<List<Reservation>> getAllReservations(@PathVariable int userId)
 	{
 		return new ResponseEntity<>(
 				reservationService.findByUserId(userId), 
 				HttpStatus.OK);
+	}
+	
+	@PutMapping("/reservations/{reservationId}/cancel")
+	//@PreAuthorize("#userId == authentication.principal.id")
+	public ResponseEntity<String> cancelReservation(@PathVariable int reservationId)
+	{
+		if(reservationService.cancelReservation(reservationId) != null)
+			return new ResponseEntity<>(
+					"Reservation successfully cancelled!", 
+					HttpStatus.OK);
+		return new ResponseEntity<>(
+				"Reservation not found!", 
+				HttpStatus.NOT_FOUND);
 	}
 	
 	@PostMapping("/search")

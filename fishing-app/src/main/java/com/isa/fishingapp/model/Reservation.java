@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -27,6 +28,9 @@ public class Reservation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@Column(name = "reservation_type", insertable=false, updatable=false, nullable = false)
+    private String type;   
 	
 	@ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
@@ -91,6 +95,14 @@ public class Reservation {
 
 	public void setAmenities(Set<ReservableAmenity> amenities) {
 		this.amenities = amenities;
+	}
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Reservation() {

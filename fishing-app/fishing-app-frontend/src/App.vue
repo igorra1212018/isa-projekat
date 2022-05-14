@@ -2,6 +2,7 @@
   <div id="app">
     <nav class="navMenu navbar-dark bg-dark">
       <a href="/" style="float:left">Homepage</a>
+      <a :href="getUserReservationsHref" v-if="user">Reservations</a>
       <a :href="getUserProfileHref" v-if="user">Profile</a>
       <a href="/" v-if="user" v-on:click="logout()">Logout</a>
       <a href="/login" v-if="!user">Login</a>
@@ -23,7 +24,10 @@ export default {
   },
   computed: {
     getUserProfileHref() {
-      return "user/" + (JSON.parse(this.user)).id
+      return "/user/" + (JSON.parse(this.user)).id
+    },
+    getUserReservationsHref() {
+      return "/user/reservations/" + (JSON.parse(this.user)).id
     }
   },
   methods: {
@@ -76,6 +80,11 @@ body, html {
   text-align: right;
   width: 100%;
   font-size: 16px;
+}
+
+.navMenu a {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .navMenu a {

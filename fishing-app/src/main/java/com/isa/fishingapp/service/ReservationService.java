@@ -12,32 +12,42 @@ import com.isa.fishingapp.model.Reservation;
 @Service
 public class ReservationService {
 	@Autowired
-	private ReservationRepository reservationsRepository;
-	private String discriminatorString;
+	private ReservationRepository reservationRepository;
 	
 	public ReservationService() {
 	}
 	
-	public ReservationService(String discriminatorString) {
-		this.discriminatorString = discriminatorString;
-	}
-	
 	public List<Reservation> findByEntityId(int entityId)
 	{
-		return reservationsRepository.findByEntityId(entityId);
+		return reservationRepository.findByReservedEntity_Id(entityId);
+	}
+	
+	public List<Reservation> findByEntityIdAndCancelled(int entityId, boolean cancelled) {
+		return reservationRepository.findByReservedEntity_IdAndCancelled(entityId, cancelled);
 	}
 	
 	public List<Reservation> findAllReservationsInInterval(Integer entityId, DateRange dateRange)
 	{
-		return reservationsRepository.findReservationEntitiesInInterval(entityId, dateRange.getFromDate(), dateRange.getToDate());
+		return reservationRepository.findReservationEntitiesInInterval(entityId, dateRange.getFromDate(), dateRange.getToDate());
 	}
 	
 	public List<Reservation> findByUserId(Integer userId)
 	{
-		return reservationsRepository.findByUserId(userId);
+		return reservationRepository.findByUserId(userId);
+	}
+	
+	public Reservation cancelReservation(Integer reservationId)
+	{
+		Reservation reservationToCancel = reservationRepository.findById(reservationId).orElse(null);
+		if(reservationToCancel != null)
+		{
+			reservationToCancel.setCancelled(true);
+			reservationRepository.save(reservationToCancel);
+		}
+		return reservationToCancel;
 	}
 
 	public void save(Reservation reservation) {
-		reservationsRepository.save(reservation);
+		reservationRepository.save(reservation);
 	}
 }

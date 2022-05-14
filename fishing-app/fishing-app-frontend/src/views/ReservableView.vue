@@ -33,41 +33,6 @@
                     <h1 style="text-align: center">{{reservable.name}}</h1>
                     <p style="text-align: center; font-size: 16px">{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country}}</p>
                     <p class="reservable-description"><em>{{reservable.description}}</em></p>
-                    <!--<div class="row d-flex mt-4" v-if="user">
-                        <div class="col-md-3">
-                            <select name="year_from" id="year_from" v-model="selectedYear">
-                              <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <select name="month_from" id="month_from" v-model="selectedMonth">
-                              <option v-for="m in availableMonths" :value="m" :key="m">{{m}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <select name="day_from" id="day_from" v-model="selectedDay">
-                              <option v-for="d in getAvailableReservationDays" :value="d" :key="d">{{d}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row d-flex mt-4" v-if="user">
-                        <div class="col-md-3">
-                            <select name="selected_year_to" id="selected_year_to" v-model="selectedYearTo">
-                              <option v-for="y in availableYears" :value="y" :key="y">{{y}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <select name="selected_month_to" id="selected_month_to" v-model="selectedMonthTo">
-                              <option v-for="m in availableMonths" :value="m" :key="m">{{m}}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <select name="selected_day_to" id="selected_day_to" v-model="selectedDayTo">
-                              <option v-for="d in getAvailableReservationDaysTo" :value="d" :key="d">{{d}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="card-button" v-on:click="reserveReservable()">View</button>-->
                 </div>
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Services'">
                     <div class="row d-flex row-cols-md-3">
