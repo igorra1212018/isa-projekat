@@ -12,7 +12,7 @@
                 <input type="button" class="blue-button" value="Cancel" v-if="!r.cancelled" v-on:click="cancel(r.id)"/>
                 <div v-if="canReviewEntity(r.reservedEntity)">
                     <textarea cols="40" rows="5" v-model="r.reviewDescription"></textarea>
-                    <input type="button" class="blue-button" value="Review" v-if="!r.cancelled" v-on:click="review(r)"/>
+                    <input type="button" class="blue-button" value="Review" v-if="!r.cancelled" v-on:click="review(r.reservedEntity)"/>
                 </div>
             </div>
         </div>
@@ -56,6 +56,7 @@ export default {
         },
         review(reservable) {
             let review = {};
+            console.log(reservable)
             review.description = reservable.reviewDescription;
             review.rating = 4;
             review.reservableId = reservable.id;
@@ -63,7 +64,6 @@ export default {
             ReviewService.addReview(review);
         },
         canReviewEntity(reservable) {
-            console.log(reservable)
             if(reservable.reviews) {
                 for (let i = 0; i < reservable.reviews.length; i++) {
                     if (reservable.reviews[i].user.id == JSON.parse(this.user).id) {
