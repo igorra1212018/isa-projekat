@@ -58,7 +58,7 @@ public class UserController {
 	@PostAuthorize("returnObject.body.email == authentication.principal.email")
     public ResponseEntity<UserDTO> getUserById(@PathVariable int userId) {
 		return Optional
-	            .ofNullable( userService.getUserById(userId) )
+	            .ofNullable( userService.findById(userId) )
 	            .map( user -> ResponseEntity.ok().body(new UserDTO(user)) )
 	            .orElseGet( () -> ResponseEntity.notFound().build() );
     }

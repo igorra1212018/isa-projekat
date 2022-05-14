@@ -11,9 +11,8 @@ import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.ReservableAmenity;
 
 public interface ReservableRepository<T extends Reservable> extends JpaRepository<T, Integer> {
-	@Query(value = "SELECT * "
-			+ "FROM (SELECT * FROM reservable WHERE id = :id AND reservable_type = :discriminatorParameter) AS r ", nativeQuery = true)
-    Optional<T> findById(@Param("id") Integer id, @Param("discriminatorParameter") String discriminatorParameter);
+	
+    Optional<T> findById(Integer id);
 	
 	@Query(value = "SELECT * "
 			+ "FROM (SELECT * FROM reservable WHERE reservable_type = :discriminatorParameter) AS r ", nativeQuery = true)

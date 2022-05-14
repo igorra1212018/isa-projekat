@@ -10,6 +10,8 @@
                     <p>{{a.amenityName}}</p>>
                 </div>
                 <input type="button" class="blue-button" value="Cancel" v-if="!r.cancelled" v-on:click="cancel(r.id)"/>
+                <textarea cols="40" rows="5" v-model="r.reviewDescription"></textarea>
+                <input type="button" class="blue-button" value="Review" v-if="!r.cancelled" v-on:click="review(r)"/>
             </div>
         </div>
         <div class="col-md-2">
@@ -20,12 +22,15 @@
 <script>
 
 import ReservableService from '../services/ReservableService';
+import ReviewService from '../services/ReviewService';
 
 export default {
     name: 'UserReservations',
     data(){
         return {
-            user: {},
+            user: {
+                id: 0
+            },
             reservations: [],
             lodgingService: {}
         }
@@ -46,6 +51,14 @@ export default {
         },
         cancel(reservationId) {
             this.lodgingService.cancelReservation(reservationId)
+        },
+        review(reservable) {
+            let review = {};
+            review.description = reservable.reviewDescription;
+            review.rating = 4;
+            review.reservableId = reservable.id;
+            review.userId = JSON.parse(this.user).id;
+            ReviewService.addReview(review);
         }
     }
 }

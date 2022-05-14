@@ -47,7 +47,7 @@ public class UserService {
 	
 	public ResponseEntity<String> updateUser(UserProfileChangeDTO user)
 	{
-		User userToUpdate = getUserById(user.getId());
+		User userToUpdate = findById(user.getId());
 		if(userToUpdate == null) {
 			return new ResponseEntity<>(
 				      "Profile not found!", 
@@ -80,7 +80,7 @@ public class UserService {
 		return userRepository.findAll();
 	}
 	
-	public User getUserById(int id)
+	public User findById(int id)
 	{
 		Optional<User> foundUser = userRepository.findById(id);
 		if(foundUser.isEmpty())

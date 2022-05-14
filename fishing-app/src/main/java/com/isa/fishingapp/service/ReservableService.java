@@ -24,7 +24,7 @@ public class ReservableService<T extends Reservable> {
 	
 	public T findById(Integer id)
 	{
-		return reservableRepository.findById(id, discriminatorString).orElse(null);
+		return reservableRepository.findById(id).orElse(null);
 	}
 	
 	public List<T> findAll()

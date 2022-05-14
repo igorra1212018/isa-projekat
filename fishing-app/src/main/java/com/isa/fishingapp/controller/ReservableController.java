@@ -56,18 +56,8 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 				HttpStatus.OK);
 	}
 	
-	/*@GetMapping("/reservations/{reservableId}")
-	public ResponseEntity<List<ReserveReservableDTO>> getReservationsForReservable(@PathVariable int reservableId)
-	{
-		List<T> foundReservations = reservableService.findByReservableId(reservableId);
-		List<ReserveReservableDTO> foundReservationsDTO = ReserveReservableDTO.convertReservationListToDTO(foundReservations);
-		return new ResponseEntity<>(
-				foundReservationsDTO, 
-				HttpStatus.OK);
-	}*/
-	
 	@GetMapping("/reservations/{userId}")
-	//@PreAuthorize("#userId == authentication.principal.id")
+	@PreAuthorize("#userId == authentication.principal.id")
 	public ResponseEntity<List<Reservation>> getAllReservations(@PathVariable int userId)
 	{
 		return new ResponseEntity<>(

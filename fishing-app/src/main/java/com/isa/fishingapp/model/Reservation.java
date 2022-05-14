@@ -47,7 +47,7 @@ public class Reservation {
 				inverseJoinColumns = @JoinColumn(name = "amenity_id"))
 	private Set<ReservableAmenity> amenities = new HashSet<>();
 	
-	private boolean cancelled;
+	private boolean cancelled = false;
 
 	public boolean isCancelled() {
 		return cancelled;

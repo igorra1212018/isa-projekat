@@ -22,7 +22,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	
 	@Query(value = "SELECT * "
 			+ "FROM reservation "
-			+ "WHERE :entityId = reserved_entity_id AND NOT ((:dateFrom > to_date) OR (:dateTo < from_date)) AND !cancelled", nativeQuery = true)
+			+ "WHERE :entityId = reserved_entity_id AND NOT ((:dateFrom > to_date) OR (:dateTo < from_date)) AND cancelled = 'FALSE'", nativeQuery = true)
     List<Reservation> findReservationEntitiesInInterval(@Param("entityId") Integer entityId, @Param("dateFrom") LocalDateTime dateFrom, @Param("dateTo") LocalDateTime dateTo);
 	
 	@Query(value = "SELECT * "

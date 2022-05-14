@@ -1,38 +1,47 @@
 package com.isa.fishingapp.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "review")
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Review {
-    @Id
-    @SequenceGenerator(name = "review_sequence_generator", sequenceName = "review_sequence", initialValue = 100)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_sequence_generator")
+public class Review {
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
     private Integer id;
 
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(name = "rating")
+    
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "reservable_id")
+    private Reservable reservable;
+    
+    @Min(1)
+    @Max(5)
     private int rating;
+    @Column(length=4095)
+	private String description;
+    
+    private boolean approved = false;
 
-    protected Review() {
+    public Review() {
     }
 
-    protected Review(Integer id, User user, int rating) {
+    public Review(Integer id, User user, int rating) {
         this.id = id;
         this.user = user;
         this.rating = rating;
     }
 
-    protected Review(User user, int rating) {
+    public Review(User user, int rating) {
         this.user = user;
         this.rating = rating;
     }
 
-	public long getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -54,6 +63,30 @@ public abstract class Review {
 
 	public void setRating(int rating) {
 		this.rating = rating;
+	}
+
+	public Reservable getReservable() {
+		return reservable;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public boolean isApproved() {
+		return approved;
+	}
+
+	public void setReservable(Reservable reservable) {
+		this.reservable = reservable;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setApproved(boolean approved) {
+		this.approved = approved;
 	}
 }
 
