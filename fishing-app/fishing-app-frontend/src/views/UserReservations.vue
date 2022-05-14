@@ -10,8 +10,10 @@
                     <p>{{a.amenityName}}</p>>
                 </div>
                 <input type="button" class="blue-button" value="Cancel" v-if="!r.cancelled" v-on:click="cancel(r.id)"/>
-                <textarea cols="40" rows="5" v-model="r.reviewDescription"></textarea>
-                <input type="button" class="blue-button" value="Review" v-if="!r.cancelled" v-on:click="review(r)"/>
+                <div v-if="canReviewEntity(r.reservedEntity)">
+                    <textarea cols="40" rows="5" v-model="r.reviewDescription"></textarea>
+                    <input type="button" class="blue-button" value="Review" v-if="!r.cancelled" v-on:click="review(r)"/>
+                </div>
             </div>
         </div>
         <div class="col-md-2">
@@ -59,6 +61,17 @@ export default {
             review.reservableId = reservable.id;
             review.userId = JSON.parse(this.user).id;
             ReviewService.addReview(review);
+        },
+        canReviewEntity(reservable) {
+            console.log(reservable)
+            if(reservable.reviews) {
+                for (let i = 0; i < reservable.reviews.length; i++) {
+                    if (reservable.reviews[i].user.id == JSON.parse(this.user).id) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

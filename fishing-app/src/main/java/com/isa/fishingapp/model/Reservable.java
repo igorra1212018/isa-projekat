@@ -52,6 +52,10 @@ public abstract class Reservable {
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "reservable_id")
 	private Set<ReservableAmenity> amenities;
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "reservable_id")
+	private Set<Review> reviews;
 
 	public String getName() {
 		return name;
@@ -123,6 +127,14 @@ public abstract class Reservable {
 
 	public void setAmenities(Set<ReservableAmenity> amenities) {
 		this.amenities = amenities;
+	}
+	
+	public Set<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<Review> reviews) {
+		this.reviews = reviews;
 	}
 
 	@Transient

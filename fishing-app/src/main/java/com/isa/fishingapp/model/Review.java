@@ -4,6 +4,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "review")
 public class Review {
@@ -65,6 +67,7 @@ public class Review {
 		this.rating = rating;
 	}
 
+	@JsonIgnore
 	public Reservable getReservable() {
 		return reservable;
 	}
