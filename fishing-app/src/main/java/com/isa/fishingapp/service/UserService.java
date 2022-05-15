@@ -2,6 +2,7 @@ package com.isa.fishingapp.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,10 @@ import com.isa.fishingapp.dto.UserProfileChangeDTO;
 import com.isa.fishingapp.model.Role;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.model.UserCreationRequest;
+import com.isa.fishingapp.model.VerificationToken;
 import com.isa.fishingapp.model.enums.ERole;
 import com.isa.fishingapp.repository.RoleRepository;
+import com.isa.fishingapp.repository.TokenRepository;
 import com.isa.fishingapp.repository.UserCreationRequestRepository;
 import com.isa.fishingapp.repository.UserRepository;
 
@@ -26,6 +29,8 @@ public class UserService {
 	private UserCreationRequestRepository userCreationRequestRepository;
 	@Autowired
 	private RoleRepository roleRepository;
+	@Autowired
+	private TokenRepository tokenRepository;
 	
 	public User registerUser(User user)
 	{
@@ -101,4 +106,19 @@ public class UserService {
 	public boolean isEmailAvailable(String email) {
 		return (userRepository.findByEmail(email) == null);
 	}
+	
+    public void createVerificationTokenForUser(final User user, final String token) {
+        final VerificationToken myToken = new VerificationToken(token, user);
+        tokenRepository.save(myToken);
+    }
+
+    public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
+        VerificationToken vToken = tokenRepository.findByToken(existingVerificationToken).orElse(null);
+        if(vToken == null)
+        	return null;
+        vToken.updateToken(UUID.randomUUID()
+            .toString());
+        vToken = tokenRepository.save(vToken);
+        return vToken;
+    }
 }

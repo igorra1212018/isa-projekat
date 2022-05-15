@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -31,6 +34,7 @@ import com.isa.fishingapp.model.UserCreationRequest;
 import com.isa.fishingapp.model.enums.ERequestType;
 import com.isa.fishingapp.repository.RoleRepository;
 import com.isa.fishingapp.service.UserService;
+import com.isa.fishingapp.event.OnRegistrationCompleteEvent;
 
 @RestController
 @RequestMapping("/api/user")
@@ -46,6 +50,9 @@ public class UserController {
 	JwtUtils jwtUtils;
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	ApplicationEventPublisher eventPublisher;
 	
 	@GetMapping("/all")
 	@PreAuthorize("hasRole('ADMINISTRATOR')")
@@ -83,7 +90,7 @@ public class UserController {
 	
 	@PostMapping("/register")
 	@PreAuthorize("not(isAuthenticated())")
-	public ResponseEntity<String> register(@RequestBody UserDTO signUpRequest)
+	public ResponseEntity<String> register(@RequestBody UserDTO signUpRequest, HttpServletRequest request)
 	{
 		if (userService.findByEmail(signUpRequest.getEmail()) != null) {
 			return ResponseEntity
@@ -91,7 +98,12 @@ public class UserController {
 					.body("Error: Email is already taken!");
 		}
 		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
-		userService.registerUser(new User(signUpRequest));
+		User registeredUser = new User(signUpRequest);
+		userService.registerUser(registeredUser);
+		
+		String appUrl = request.getContextPath();
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registeredUser, 
+          request.getLocale(), appUrl));
 		return new ResponseEntity<>(
 			      "Registration successful!", 
 			      HttpStatus.OK);
