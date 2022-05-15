@@ -1,6 +1,8 @@
 package com.isa.fishingapp.controller;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
 
 import com.isa.fishingapp.dto.OwnerDTO;
 import com.isa.fishingapp.dto.UserDTO;
@@ -31,8 +34,10 @@ import com.isa.fishingapp.dto.UserProfileChangeDTO;
 import com.isa.fishingapp.jwt.JwtUtils;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.model.UserCreationRequest;
+import com.isa.fishingapp.model.VerificationToken;
 import com.isa.fishingapp.model.enums.ERequestType;
 import com.isa.fishingapp.repository.RoleRepository;
+import com.isa.fishingapp.repository.TokenRepository;
 import com.isa.fishingapp.service.UserService;
 import com.isa.fishingapp.event.OnRegistrationCompleteEvent;
 
@@ -50,6 +55,8 @@ public class UserController {
 	JwtUtils jwtUtils;
 	@Autowired
 	UserService userService;
+	@Autowired
+	TokenRepository tokenRepository;
 	
 	@Autowired
 	ApplicationEventPublisher eventPublisher;
@@ -139,5 +146,31 @@ public class UserController {
 		if(loggedUser != null)
 			return "redirect:/";
 		return "redirect:/register";
+	}
+	
+	@GetMapping("/registration_confirm")
+	public ResponseEntity<String> confirmRegistration(@RequestParam("token") String token) {
+	    System.out.println("GOT HERE");
+		
+	    VerificationToken verificationToken = tokenRepository.findByToken(token).orElse(null);
+	    if (verificationToken == null) {
+	    	return new ResponseEntity<>(
+				      "Verification token not found!", 
+				      HttpStatus.NOT_FOUND);
+	    }
+	    
+	    User user = verificationToken.getUser();
+	    Calendar cal = Calendar.getInstance();
+	    if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+	    	return new ResponseEntity<>(
+				      "Verification token expired!", 
+				      HttpStatus.BAD_REQUEST);
+	    } 
+	    
+	    user.setActivated(true); 
+	    userService.save(user); 
+	    return new ResponseEntity<>(
+			      "Successful verification!", 
+			      HttpStatus.OK);
 	}
 }

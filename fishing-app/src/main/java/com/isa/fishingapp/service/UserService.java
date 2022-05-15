@@ -40,6 +40,11 @@ public class UserService {
 		return userRepository.save(user);
 	}
 	
+	public User save(User user)
+	{
+		return userRepository.save(user);
+	}
+	
 	public User registerUser(User user, UserCreationRequest creationRequest)
 	{
 		Role userRole = roleRepository.findByName(ERole.LODGING_OWNER)
