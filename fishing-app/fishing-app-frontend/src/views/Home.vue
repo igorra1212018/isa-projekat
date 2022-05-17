@@ -57,11 +57,11 @@
               </div>    
               <ul class="card-stats" style="margin-bottom:20px">
                 <li>
-                  <strong>4</strong>
-                  Articles
+                  <strong>{{l.reviews.length}}</strong>
+                  Reviews
                 </li>
                 <li>
-                  <strong>5</strong>
+                  <strong>{{averageRating(l)}}</strong>
                   Rating
                 </li>
               </ul>   
@@ -90,14 +90,14 @@
               </div>    
               <ul class="card-stats" style="margin-bottom:20px">
                 <li>
-                  <strong>4</strong>
-                  Articles
+                  <strong>{{b.reviews.length}}</strong>
+                  Reviews
                 </li>
                 <li>
-                  <strong>5</strong>
+                  <strong>{{averageRating(b)}}</strong>
                   Rating
                 </li>
-              </ul>   
+              </ul>  
               <button class="card-button" v-on:click="viewBoat(b.id)">View</button>
             </article>
           </div>
@@ -123,14 +123,14 @@
               </div>    
               <ul class="card-stats" style="margin-bottom:20px">
                 <li>
-                  <strong>4</strong>
-                  Articles
+                  <strong>{{f.reviews.length}}</strong>
+                  Reviews
                 </li>
                 <li>
-                  <strong>5</strong>
+                  <strong>{{averageRating(f)}}</strong>
                   Rating
                 </li>
-              </ul>   
+              </ul>  
               <button class="card-button" v-on:click="viewFishingLesson(f.id)">View</button>
             </article>
           </div>
@@ -212,6 +212,15 @@ export default {
     },
     convertImageToBase64(byteArray) {
         return 'data:image/jpeg;base64,' + byteArray;
+    },
+    averageRating(r) {
+        if(!r.reviews || r.reviews.length == 0)
+            return "-"
+        let reviewSum = 0;
+        for (var i = 0; i < r.reviews.length; i++) { 
+            reviewSum +=  r.reviews[i].rating
+        }
+        return reviewSum/r.reviews.length
     }
   }
 }
