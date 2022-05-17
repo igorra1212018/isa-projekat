@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.isa.fishingapp.dto.ReservableSearchDTO;
 import com.isa.fishingapp.dto.ReserveLodgingDTO;
+import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.Reservation;
@@ -46,13 +47,31 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	@GetMapping("/get_available_reservation_dates/{reservableId}")
 	public ResponseEntity<List<DateRange>> getAvailableLodgingReservationDates(@PathVariable int reservableId) throws Exception
 	{
+		Reservable reservable = reservableService.findById(reservableId);
+		if(reservable == null)
+			return new ResponseEntity<>(
+					null, 
+					HttpStatus.NOT_FOUND);
+		
+		if(reservable.getAvailableDateRanges().isEmpty())
+			return new ResponseEntity<>(
+					null, 
+					HttpStatus.OK);
+		
 		List<Reservation> foundReservations = reservationService.findByEntityIdAndCancelled(reservableId, false);
 		List<DateRange> occupiedDateRanges = new ArrayList<>();
 		for(Reservation rl : foundReservations)
 			occupiedDateRanges.add(rl.getDateRange());
-		DateRange maximumDateRange = new DateRange(LocalDateTime.now(), (LocalDateTime.now().plusYears(2)));
+		
+		List<DateRange> availableDateRanges = new ArrayList<>();
+		for(AvailableDateRange a : reservable.getAvailableDateRanges()) {
+			List<DateRange> tmpAvailableDateRanges = a.getRange().splitByDateRange(occupiedDateRanges);
+			for(DateRange d : tmpAvailableDateRanges)
+				availableDateRanges.add(d);
+		}
+		//DateRange maximumDateRange = new DateRange(LocalDateTime.now(), (LocalDateTime.now().plusYears(2)));
 		return new ResponseEntity<>(
-				maximumDateRange.splitByDateRange(occupiedDateRanges), 
+				availableDateRanges, 
 				HttpStatus.OK);
 	}
 	

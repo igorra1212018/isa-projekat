@@ -41,6 +41,10 @@ public abstract class Reservable {
 	private Location address;
 	private int basePrice;
 	
+	@OneToMany(cascade = CascadeType.DETACH)
+	@JoinColumn(name = "reserable_id")
+	private Set<AvailableDateRange> availableDateRanges;
+	
 	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "primary_image_id")
 	private Image primaryImage;
@@ -135,6 +139,14 @@ public abstract class Reservable {
 
 	public void setReviews(Set<Review> reviews) {
 		this.reviews = reviews;
+	}
+
+	public Set<AvailableDateRange> getAvailableDateRanges() {
+		return availableDateRanges;
+	}
+
+	public void setAvailableDateRanges(Set<AvailableDateRange> availableDateRanges) {
+		this.availableDateRanges = availableDateRanges;
 	}
 
 	@Transient

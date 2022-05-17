@@ -29,7 +29,6 @@ public class ReservableService<T extends Reservable> {
 	
 	public List<T> findAll()
 	{
-		System.out.println(this.discriminatorString);
 		return reservableRepository.findAll(discriminatorString);
 	}
 	
