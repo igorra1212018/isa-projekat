@@ -10,7 +10,7 @@
                 <div class="pc-tab">
                     <input checked="checked" id="tab1" type="radio" v-model="selectedTab" value="Overview" />
                     <input id="tab2" type="radio" v-model="selectedTab" value="Services" />
-                    <input id="tab3" type="radio" v-model="selectedTab" value="Rules" />
+                    <input id="tab3" type="radio" v-model="selectedTab" value="Reviews" />
                     <input id="tab4" type="radio" v-model="selectedTab" value="Gallery" />
                     <nav>
                       <ul>
@@ -32,6 +32,7 @@
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Overview'">
                     <h1 style="text-align: center">{{reservable.name}}</h1>
                     <p style="text-align: center; font-size: 16px">{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country}}</p>
+                    <h4 style="text-align: center">{{averageRating}}</h4>
                     <p class="reservable-description"><em>{{reservable.description}}</em></p>
                 </div>
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Services'">
@@ -207,6 +208,15 @@ export default {
                 });
             }
             return availableDays
+        },
+        averageRating() {
+            if(!this.reservable.reviews || this.reservable.reviews.length == 0)
+                return "Unrated"
+            let reviewSum = 0;
+            for (var i = 0; i < this.reservable.reviews.length; i++) { 
+                reviewSum +=  this.reservable.reviews[i].rating
+            }
+            return reviewSum/this.reservable.reviews.length
         }
     }
 }
