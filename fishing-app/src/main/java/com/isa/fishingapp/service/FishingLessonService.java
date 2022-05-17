@@ -24,7 +24,7 @@ public class FishingLessonService extends ReservableService<FishingLesson> {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private ReservationService reservationsService;
+	private ReservationService reservationService;
 	
 	public FishingLessonService() {
 		super("FISHING_LESSON");
@@ -33,7 +33,7 @@ public class FishingLessonService extends ReservableService<FishingLesson> {
 	public ResponseEntity<String> reserve(ReserveReservableDTO reserveReservableDTO)
 	{
 		try {
-			if(!reservationsService.findAllReservationsInInterval(reserveReservableDTO.getReservableId(), new DateRange(reserveReservableDTO.getFromDate(), reserveReservableDTO.getToDate())).isEmpty())
+			if(!reservationService.findAllReservationsInInterval(reserveReservableDTO.getReservableId(), new DateRange(reserveReservableDTO.getFromDate(), reserveReservableDTO.getToDate())).isEmpty())
 				return new ResponseEntity<>(
 					      "Time period is already taken!", 
 					      HttpStatus.BAD_REQUEST);
@@ -57,7 +57,7 @@ public class FishingLessonService extends ReservableService<FishingLesson> {
 			}
 			reservation.setAmenities(reservedAmenities);
 			
-			reservationsService.save(reservation);
+			reservationService.save(reservation);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

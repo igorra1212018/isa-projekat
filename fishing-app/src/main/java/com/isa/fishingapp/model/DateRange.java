@@ -44,6 +44,12 @@ public class DateRange {
 		return true;
 	}
 	
+	public boolean hasWithinDateRange(DateRange dateRangeWithin) {
+		if((dateRangeWithin.getFromDate().isAfter(getFromDate()) || dateRangeWithin.getFromDate() == getFromDate()) && (dateRangeWithin.getToDate().isBefore(getToDate()) || dateRangeWithin.getToDate() == getToDate()))
+			return true;
+		return false;
+	}
+	
 	public List<DateRange> splitByDateRange(DateRange dateRangeToSplitBy) throws Exception {
 		List<DateRange> result = new ArrayList<>();
 		if(!dateRangesOverlap(this, dateRangeToSplitBy))

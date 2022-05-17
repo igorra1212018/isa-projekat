@@ -22,8 +22,6 @@ public class LodgingService extends ReservableService<Lodging> {
 	private UserRepository userRepository;
 	@Autowired
 	private ReservationService reservationsService;
-	@Autowired
-	private ReservationLodgingRepository reservationLodgingRepository;
 	
 	public LodgingService() {
 		super("LODGING");
@@ -56,7 +54,7 @@ public class LodgingService extends ReservableService<Lodging> {
 			}
 			reservation.setAmenities(reservedAmenities);
 			
-			reservationLodgingRepository.save(reservation);
+			reservationsService.save(reservation);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

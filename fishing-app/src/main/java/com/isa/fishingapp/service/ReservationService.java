@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.isa.fishingapp.repository.ReservationRepository;
+import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservation;
 
@@ -48,6 +49,8 @@ public class ReservationService {
 	}
 
 	public void save(Reservation reservation) {
-		reservationRepository.save(reservation);
+		for(AvailableDateRange r : reservation.getReservedEntity().getAvailableDateRanges())
+			if(r.getRange().hasWithinDateRange(reservation.getDateRange()))
+				reservationRepository.save(reservation);
 	}
 }
