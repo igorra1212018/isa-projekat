@@ -22,10 +22,15 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
 	@Query(value = "SELECT * "
 			+ "FROM reservable AS r "
 			+ "WHERE reservable_type = :discriminatorParameter "
-			+ "AND name LIKE CONCAT('%', :name, '%') "
-			+ "AND EXISTS ( SELECT 1 FROM available_date_range WHERE reserable_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) AND (:dateTo BETWEEN from_date AND to_date) )", nativeQuery = true)
+			+ "AND LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) "
+			+ "AND LOWER(city) LIKE LOWER(CONCAT('%', :city, '%')) "
+			+ "AND LOWER(country) LIKE LOWER(CONCAT('%', :country, '%')) "
+			+ "AND EXISTS ( SELECT 1 FROM available_date_range WHERE reserable_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) AND (:dateTo BETWEEN from_date AND to_date) ) "
+			+ "AND NOT EXISTS ( SELECT 1 FROM reservation WHERE reserved_entity_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) OR (:dateTo BETWEEN from_date AND to_date) )", nativeQuery = true)
     List<T> findBySearch(@Param("discriminatorParameter") String discriminatorParameter,
     		@Param("name") String name,
+    		@Param("city") String city,
+    		@Param("country") String country,
     		@Param("dateFrom") LocalDateTime dateFrom,
     		@Param("dateTo") LocalDateTime dateTo);
 	
