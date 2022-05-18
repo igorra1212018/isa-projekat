@@ -42,6 +42,12 @@
                   </label>
               </div>
           </div>
+          <label for="from_date">From:</label>
+          <input type="date" id="from_date" name="from_date"
+                 v-model="searchParameters.dateRange.fromDate">
+          <label for="to_date">From:</label>
+          <input type="date" id="to_date" name="to_date"
+                 v-model="searchParameters.dateRange.toDate">
           <input type="button" class="blue-button" value="Search" v-on:click="search()"/>
         </div>
       </div>
@@ -166,7 +172,8 @@ export default {
       boatService: {},
       fishingLessonService: {},
       searchParameters: {
-        location: {}
+        location: {},
+        dateRange: {},
       },
       currentUser: null,
       name: '',
@@ -201,6 +208,10 @@ export default {
        return address.address + " " + address.city + " " + address.country;
     },
     search() {
+        if(this.searchParameters.dateRange.fromDate)
+          this.searchParameters.dateRange.fromDate = new Date(this.searchParameters.dateRange.fromDate)
+        if(this.searchParameters.dateRange.toDate)
+          this.searchParameters.dateRange.toDate = new Date(this.searchParameters.dateRange.toDate)
         this.lodgingService.getAllReservablesSearch(this.searchParameters).then(res => {
           this.lodgings = res.data
           this.boatService.getAllReservablesSearch(this.searchParameters).then(res2 => {

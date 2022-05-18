@@ -2,13 +2,13 @@ package com.isa.fishingapp.dto;
 
 import java.time.LocalDateTime;
 
+import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Location;
 
 public class ReservableSearchDTO {
 	String name;
 	Location location;
-	LocalDateTime dateFrom;
-	LocalDateTime dateTo;
+	DateRange dateRange;
 	
 	public String getName() {
 		return name;
@@ -22,21 +22,15 @@ public class ReservableSearchDTO {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	public LocalDateTime getDateFrom() {
-		return dateFrom;
+	public DateRange getDateRange() {
+		return dateRange;
 	}
-	public LocalDateTime getDateTo() {
-		return dateTo;
-	}
-	public void setDateFrom(LocalDateTime dateFrom) {
-		this.dateFrom = dateFrom;
-	}
-	public void setDateTo(LocalDateTime dateTo) {
-		this.dateTo = dateTo;
+	public void setDateRange(DateRange dateRange) {
+		this.dateRange = dateRange;
 	}
 	@Override
 	public String toString() {
-		return "ReservableSearchDTO [name=" + name + ", location=" + location + ", dateFrom=" + dateFrom + ", dateTo="
-				+ dateTo + "]";
+		return "ReservableSearchDTO [name=" + name + ", location=" + location + ", dateRange=" + dateRange + "]";
 	}
+	
 }

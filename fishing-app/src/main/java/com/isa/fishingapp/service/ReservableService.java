@@ -35,9 +35,9 @@ public class ReservableService<T extends Reservable> {
 	public List<T> findAll(ReservableSearchDTO searchParameters)
 	{
 		System.out.println(searchParameters.toString());
-		if(searchParameters.getDateFrom() == null || searchParameters.getDateTo() == null)
+		if(searchParameters.getDateRange() == null || searchParameters.getDateRange().getFromDate() == null || searchParameters.getDateRange().getToDate() == null)
 			return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryContainingIgnoreCaseAndAddressCityContainingIgnoreCase(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCountry(), searchParameters.getLocation().getCity());
-		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), null, null);
+		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getDateRange().getFromDate(), searchParameters.getDateRange().getToDate());
 	}
 	
 	public T findByReservableId(Integer id)

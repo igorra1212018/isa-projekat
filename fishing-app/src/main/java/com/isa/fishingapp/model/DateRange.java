@@ -114,6 +114,9 @@ public class DateRange {
 			return false;
 		return true;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "DateRange [fromDate=" + fromDate + ", toDate=" + toDate + "]";
+	}
 }
