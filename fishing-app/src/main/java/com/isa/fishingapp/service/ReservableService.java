@@ -34,7 +34,10 @@ public class ReservableService<T extends Reservable> {
 	
 	public List<T> findAll(ReservableSearchDTO searchParameters)
 	{
-		return reservableRepository.findByName(searchParameters.getName(), discriminatorString);
+		System.out.println(searchParameters.toString());
+		if(searchParameters.getDateFrom() == null || searchParameters.getDateTo() == null)
+			return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryContainingIgnoreCaseAndAddressCityContainingIgnoreCase(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCountry(), searchParameters.getLocation().getCity());
+		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), null, null);
 	}
 	
 	public T findByReservableId(Integer id)

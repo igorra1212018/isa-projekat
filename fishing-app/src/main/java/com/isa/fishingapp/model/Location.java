@@ -45,5 +45,10 @@ public class Location {
 	public double getLongtitude() {
 		return longtitude;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Location [address=" + address + ", city=" + city + ", country=" + country + ", latitude=" + latitude
+				+ ", longtitude=" + longtitude + "]";
+	}
 }

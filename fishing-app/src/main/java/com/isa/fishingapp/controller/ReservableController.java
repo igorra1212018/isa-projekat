@@ -98,7 +98,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	}
 	
 	@PostMapping("/search")
-	public ResponseEntity<List<T>> getLodgings(@RequestBody ReservableSearchDTO searchParameters)
+	public ResponseEntity<List<T>> getReservables(@RequestBody ReservableSearchDTO searchParameters)
 	{
 		List<T> foundReservables = reservableService.findAll(searchParameters);
 		return new ResponseEntity<>(

@@ -30,6 +30,9 @@ public abstract class Reservable {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private Integer id;
 	
+	@Column(name = "reservable_type", insertable=false, updatable=false, nullable = false)
+	private String reservableType;
+	
 	@ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;

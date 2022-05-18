@@ -29,7 +29,15 @@
           <div class="row d-flex mt-5">
               <div class="col-md-12">
                   <label class="input_label">
-                      <input type="text" name="city" v-model="filterCity">
+                      <input type="text" name="country" v-model="searchParameters.location.country">
+                      <span class="keep_hovered">Country</span>
+                  </label>
+              </div>
+          </div>
+          <div class="row d-flex mt-5">
+              <div class="col-md-12">
+                  <label class="input_label">
+                      <input type="text" name="city" v-model="searchParameters.location.city">
                       <span class="keep_hovered">City</span>
                   </label>
               </div>
@@ -157,7 +165,9 @@ export default {
       lodgingService: {},
       boatService: {},
       fishingLessonService: {},
-      searchParameters: {},
+      searchParameters: {
+        location: {}
+      },
       currentUser: null,
       name: '',
       type: 'Lodgings',
@@ -232,7 +242,6 @@ export default {
       position: relative;
       margin-left: 20px;
       width:20%;
-      height: 500px;
       text-align:center;
       transition:.3s ease-in-out;
       z-index:0;
