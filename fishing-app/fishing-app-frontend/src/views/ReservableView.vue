@@ -65,7 +65,7 @@
             <div class="reservable-white-panel" v-if="user">
               <div class="reservable-side-panel-parameters">
                 <h2>Reserve</h2>
-                <v-date-picker v-model="range" mode="dateTime" :available-dates="availableReservableReservationDates" style="width: 100%; margin-bottom: 10px" is-range/>
+                <v-date-picker v-model="range" mode="dateTime" :available-dates="availableReservableReservationDates" :attributes='attributes' style="width: 100%; margin-bottom: 10px" is-range/>
                 <div v-for="a in reservable.amenities" :key="a.id">
                     <div v-if="a.price > 0">
                         <input type="checkbox" :value="a.id" v-bind:id="a.id" v-model="selectedAmenities">
@@ -95,8 +95,10 @@ export default {
             range: {},
             selectedAmenities: [],
             availableReservableReservationDates: [],
+            actions: [],
             reservationParameters: {},
-            selectedTab: 'Overview'
+            selectedTab: 'Overview',
+            attributes: []
         }
     },
     mounted: function() {
@@ -110,12 +112,24 @@ export default {
               this.availableReservableReservationDates.push({ start: new Date(value.fromDate[0], value.fromDate[1], value.fromDate[2], value.fromDate[3], value.fromDate[4]), end: new Date(value.toDate[0], value.toDate[1], value.toDate[2], value.toDate[3], value.toDate[4]) })
           })
         });
+        this.reservableService.getActionReservationsByReservable(1).then(res => {
+            this.actions = res.data
+            this.actions.forEach(value => {
+                console.log(value)
+                this.attributes.push({
+                    highlight: 'green',
+                    dates: {
+                        start: new Date(value.dateRange.fromDate[0], value.dateRange.fromDate[1], value.dateRange.fromDate[2]),
+                        end: new Date(value.dateRange.toDate[0], value.dateRange.toDate[1], value.dateRange.toDate[2])
+                    }
+                })
+            })
+        })
     },
     methods: {
         reserveReservable() {
             this.reservationParameters.reservableId = parseInt(this.$route.params.id)
             this.reservationParameters.userId = 1
-            console.log(this.range.start)
             this.reservationParameters.fromDate = this.range.start
             this.reservationParameters.fromDate.setMonth(this.reservationParameters.fromDate.getMonth() - 1)
             this.reservationParameters.toDate = this.range.end

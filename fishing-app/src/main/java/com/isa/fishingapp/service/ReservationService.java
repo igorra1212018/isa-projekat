@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.isa.fishingapp.repository.ActionRepository;
 import com.isa.fishingapp.repository.ReservationRepository;
+import com.isa.fishingapp.model.Action;
 import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservation;
@@ -14,6 +16,8 @@ import com.isa.fishingapp.model.Reservation;
 public class ReservationService {
 	@Autowired
 	private ReservationRepository reservationRepository;
+	@Autowired
+	private ActionRepository actionRepository;
 	
 	public ReservationService() {
 	}
@@ -35,6 +39,11 @@ public class ReservationService {
 	public List<Reservation> findByUserId(Integer userId)
 	{
 		return reservationRepository.findByUserId(userId);
+	}
+	
+	public List<Action> findByReservable_IdAndAvailable(Integer reservableId)
+	{
+		return actionRepository.findByReservable_IdAndAvailable(reservableId);
 	}
 	
 	public Reservation cancelReservation(Integer reservationId)

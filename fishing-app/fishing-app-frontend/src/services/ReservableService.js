@@ -32,6 +32,10 @@ export default class ReservableService{
         return axios.get(this.CONTROLLER_ENDPOINT + 'reservations/' + userId, { headers: authHeader() });
     }
 
+    getActionReservationsByReservable(reservableId){
+        return axios.get(this.CONTROLLER_ENDPOINT + 'reservations/actions/' + reservableId, { headers: authHeader() });
+    }
+
     getAvailableReservablesReservationDates(id){
         return axios.get(this.CONTROLLER_ENDPOINT + 'get_available_reservation_dates/' + id);
     }

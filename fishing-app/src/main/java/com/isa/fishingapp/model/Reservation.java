@@ -40,6 +40,9 @@ public class Reservation {
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "reserved_entity_id")
     private Reservable reservedEntity;
+	@ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "action_id")
+    private Action action;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "reservation_amenities", 
@@ -103,6 +106,14 @@ public class Reservation {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Action getAction() {
+		return action;
+	}
+
+	public void setAction(Action action) {
+		this.action = action;
 	}
 
 	public Reservation() {

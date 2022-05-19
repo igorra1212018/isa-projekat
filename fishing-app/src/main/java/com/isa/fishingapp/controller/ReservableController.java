@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.isa.fishingapp.dto.ReservableSearchDTO;
+import com.isa.fishingapp.model.Action;
 import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservable;
@@ -82,6 +83,15 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	{
 		return new ResponseEntity<>(
 				reservationService.findByUserId(userId), 
+				HttpStatus.OK);
+	}
+	
+	@GetMapping("/reservations/actions/{reservableId}")
+	@PreAuthorize("permitAll")
+	public ResponseEntity<List<Action>> getAllActionReservations(@PathVariable int reservableId)
+	{
+		return new ResponseEntity<>(
+				reservationService.findByReservable_IdAndAvailable(reservableId), 
 				HttpStatus.OK);
 	}
 	
