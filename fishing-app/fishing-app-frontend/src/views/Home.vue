@@ -73,20 +73,7 @@
                 <label for='sort_price_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
               </div>
           </div>
-          <div class="row d-flex mt-5">
-              <div class="col-md-6">
-                  <label class="input_label">
-                      <input type="date" id="from_date" name="from_date" v-model="searchParameters.dateRange.fromDate">
-                      <span class="keep_hovered">Date From</span>
-                  </label>
-              </div>
-              <div class="col-md-6">
-                  <label class="input_label">
-                      <input type="date" id="to_date" name="to_date" v-model="searchParameters.dateRange.toDate">
-                      <span class="keep_hovered">Date To</span>
-                  </label>
-              </div>
-          </div>
+          <v-date-picker v-model="range" :min-date='new Date()' style="width: 100%; margin-bottom: 10px" is-range/>
           <input type="button" class="blue-button" value="Search" v-on:click="search()"/>
         </div>
       </div>
@@ -158,8 +145,17 @@ export default {
       reservableService: {},
       searchParameters: {
         name: '',
-        location: {},
+        location: {
+          country: {
+            id: 0,
+            name: "Everywhere"
+          }
+        },
         dateRange: {},
+      },
+      range: {
+        fromDate: {},
+        toDate: {}
       },
       currentUser: null,
       countries: [],
@@ -219,18 +215,15 @@ export default {
     search() {
         this.searchParameters.sortType = this.currentSort.split("_")[0]
         this.searchParameters.sortDir = this.currentSort.split("_")[1]
-        if(this.searchParameters.dateRange.fromDate)
-          this.searchParameters.dateRange.fromDate = new Date(this.searchParameters.dateRange.fromDate)
-        if(this.searchParameters.dateRange.toDate)
-          this.searchParameters.dateRange.toDate = new Date(this.searchParameters.dateRange.toDate)
+        console.log(this.range.start)
+        this.searchParameters.dateRange.fromDate = new Date(this.range.start)
+        this.searchParameters.dateRange.toDate = new Date(this.range.end)
+          
         this.reservableService.getAllReservablesSearch(this.searchParameters, this.$route.params.page).then(res => {
           this.reservables = res.data.content
           this.totalPages = res.data.totalPages
           this.firstPage = res.data.first
           this.lastPage = res.data.last
-          let oldType = this.$route.params.type
-          console.log(oldType)
-          console.log(this.type)
           this.$router.push("/home/" + this.type + "/all/0")
         })
     },
