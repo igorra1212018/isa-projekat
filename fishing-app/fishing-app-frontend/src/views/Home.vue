@@ -104,7 +104,7 @@
                 <span>Status</span>   
                   <address style="margin-top:10px">
                     <span class="icon-pin" aria-hidden="true"></span>
-                    {{getFullAddress(r.address)}} <flag :iso="r.address.country.iso" />
+                    {{getFullAddress(r.address)}} <flag class="small-flag" :iso="r.address.country.iso" />
                   </address>
                 </header>
               </div>    
@@ -171,7 +171,13 @@ export default {
       currentSort:'name_ascending',
       totalPages: 1,
       firstPage: false,
-      lastPage: false
+      lastPage: false,
+      disabledDates: {
+        "daysOfMonth": [
+          1,
+          6
+        ]
+      }
     }
   },
   mounted: function() {
@@ -260,6 +266,9 @@ export default {
 </script>
 
 <style>
+  .small-flag {
+    box-shadow: 0 0 1px 1px #75707096;
+  }
   .filter-panel{
       background-color: rgba(255,255, 255, 1);
       position: relative;

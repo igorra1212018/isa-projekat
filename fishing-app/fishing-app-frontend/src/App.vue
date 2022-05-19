@@ -50,6 +50,7 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap');
+@import '~@sum.cumo/vue-datepicker/dist/Datepicker.css';
 
 #app {
   font-family: 'Roboto', sans-serif;
