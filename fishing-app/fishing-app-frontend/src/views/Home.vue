@@ -37,7 +37,10 @@
           <div class="row d-flex mt-5">
               <div class="col-md-6">
                   <label class="input_label">
-                      <input type="text" name="country" v-model="searchParameters.location.country">
+                      <select name="countries" id="countries" v-model="searchParameters.location.country">
+                        <option :value="defaultCountry">Everywhere</option>
+                        <option v-for="c in countries" :key="c.id" :value="c">{{c.name}}</option>
+                      </select>
                       <span class="keep_hovered">Country</span>
                   </label>
               </div>
@@ -142,6 +145,7 @@
 <script>
 
 import ReservableService from '../services/ReservableService';
+import UserService from '../services/UserService';
 
 export default {
   name: 'Home',
@@ -158,6 +162,11 @@ export default {
         dateRange: {},
       },
       currentUser: null,
+      countries: [],
+      defaultCountry: {
+        id: 0,
+        name: "Everywhere"
+      },
       type: '',
       currentSort:'name_ascending',
       totalPages: 1,
@@ -191,6 +200,9 @@ export default {
   methods: {
     loadData() {
       this.reservableService = new ReservableService(this.$route.params.type)
+      UserService.getCountries().then((response) => {
+        this.countries = response.data;   
+      });
       this.searchParameters.sortType = this.currentSort.split("_")[0]
       this.searchParameters.sortDir = this.currentSort.split("_")[1]
       this.reservableService.getAllReservablesSearch(this.searchParameters, this.$route.query.page).then(res => {

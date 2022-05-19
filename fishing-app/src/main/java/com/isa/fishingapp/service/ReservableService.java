@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.isa.fishingapp.dto.ReservableSearchDTO;
+import com.isa.fishingapp.model.Country;
 import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.repository.ReservableRepository;
 
@@ -39,10 +39,17 @@ public class ReservableService<T extends Reservable> {
 	{
 		if(searchParameters == null)
 			return reservableRepository.findAll(pageable);
-		if(searchParameters.getDateRange() == null || searchParameters.getDateRange().getFromDate() == null || searchParameters.getDateRange().getToDate() == null)
-			return reservableRepository.findAll(pageable);
-			//return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryNameAndAddressCityContainingIgnoreCase(discriminatorString, searchParameters.getName(), null, searchParameters.getLocation().getCity(), pageable);
-		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), "", searchParameters.getDateRange().getFromDate(), searchParameters.getDateRange().getToDate(), pageable);
+		Country country = searchParameters.getLocation().getCountry();
+		Integer countryId = null;
+		System.out.println(searchParameters);
+		if(country != null)
+			countryId = country.getId();
+		if(searchParameters.getDateRange() == null || searchParameters.getDateRange().getFromDate() == null || searchParameters.getDateRange().getToDate() == null) {
+			if(countryId != null && countryId != 0)
+				return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryIdAndAddressCityContainingIgnoreCase(discriminatorString, searchParameters.getName(), countryId, searchParameters.getLocation().getCity(), pageable);
+			return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCityContainingIgnoreCase(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), pageable);
+		}
+		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), countryId, searchParameters.getDateRange().getFromDate(), searchParameters.getDateRange().getToDate(), pageable);
 	}
 	
 	public T findByReservableId(Integer id)

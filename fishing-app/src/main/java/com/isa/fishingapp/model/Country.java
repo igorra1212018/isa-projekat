@@ -65,4 +65,10 @@ public class Country {
 	public void setPhoneCode(Integer phoneCode) {
 		this.phoneCode = phoneCode;
 	}
+	@Override
+	public String toString() {
+		return "Country [id=" + id + ", iso=" + iso + ", name=" + name + ", shortName=" + shortName + ", iso3=" + iso3
+				+ ", numCode=" + numCode + ", phoneCode=" + phoneCode + "]";
+	}
+	
 }

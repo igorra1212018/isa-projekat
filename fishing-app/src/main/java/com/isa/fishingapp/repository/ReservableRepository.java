@@ -30,18 +30,19 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
 			+ "WHERE reservable_type = :discriminatorParameter "
 			+ "AND LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) "
 			+ "AND LOWER(city) LIKE LOWER(CONCAT('%', :city, '%')) "
-			+ "AND LOWER(country) LIKE LOWER(CONCAT('%', :country, '%')) "
+			+ "AND country_id = :countryId OR :countryId = 0 "
 			+ "AND EXISTS ( SELECT 1 FROM available_date_range WHERE reserable_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) AND (:dateTo BETWEEN from_date AND to_date) ) "
 			+ "AND NOT EXISTS ( SELECT 1 FROM reservation WHERE reserved_entity_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) OR (:dateTo BETWEEN from_date AND to_date) )", nativeQuery = true)
     Page<T> findBySearch(@Param("discriminatorParameter") String discriminatorParameter,
     		@Param("name") String name,
     		@Param("city") String city,
-    		@Param("country") String country,
+    		@Param("countryId") Integer countryId,
     		@Param("dateFrom") LocalDateTime dateFrom,
     		@Param("dateTo") LocalDateTime dateTo, 
     		Pageable pageable);
 	
-	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryNameAndAddressCityContainingIgnoreCase(String reservableType, String name, String country, String city, Pageable pageable);
+	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCityContainingIgnoreCase(String reservableType, String name, String city, Pageable pageable);
+	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryIdAndAddressCityContainingIgnoreCase(String reservableType, String name, Integer countryId, String city, Pageable pageable);
 	
 	@Query(value = "SELECT new ReservableAmenity(id, amenityIcon, amenityName, price) "
 			+ "FROM ReservableAmenity WHERE id = :id ")
