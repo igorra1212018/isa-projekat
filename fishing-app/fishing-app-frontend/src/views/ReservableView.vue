@@ -31,7 +31,7 @@
                 </div>
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Overview'">
                     <h1 style="text-align: center">{{reservable.name}}</h1>
-                    <p style="text-align: center; font-size: 16px">{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country}}</p>
+                    <p style="text-align: center; font-size: 16px">{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country.name}}</p>
                     <h4 style="text-align: center">{{averageRating}}</h4>
                     <p class="reservable-description"><em>{{reservable.description}}</em></p>
                 </div>
