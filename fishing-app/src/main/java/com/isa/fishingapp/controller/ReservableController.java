@@ -23,6 +23,7 @@ import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.Reservation;
+import com.isa.fishingapp.repository.ActionRepository;
 import com.isa.fishingapp.service.ReservableService;
 import com.isa.fishingapp.service.ReservationService;
 
@@ -31,6 +32,8 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	ReservableService<T> reservableService;
 	@Autowired
 	ReservationService reservationService;
+	@Autowired
+	ActionRepository actionRepository;
 	
 	@GetMapping("/all")
 	@PreAuthorize("permitAll")
@@ -61,9 +64,12 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 					HttpStatus.OK);
 		
 		List<Reservation> foundReservations = reservationService.findByEntityIdAndCancelled(reservableId, false);
+		List<Action> foundActions = actionRepository.findByReservable_IdAndAvailable(reservableId); // Actions are reserved via a separate system
 		List<DateRange> occupiedDateRanges = new ArrayList<>();
 		for(Reservation rl : foundReservations)
 			occupiedDateRanges.add(rl.getDateRange());
+		for(Action a : foundActions)
+			occupiedDateRanges.add(a.getDateRange());
 		
 		List<DateRange> availableDateRanges = new ArrayList<>();
 		for(AvailableDateRange a : reservable.getAvailableDateRanges()) {
