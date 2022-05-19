@@ -6,15 +6,15 @@
           <h2>Search</h2>
           <div class="row d-flex mt-5">
             <div class="col-md-4">
-                <input type='radio' id='lodgings' checked='checked' name='radio' class="blue_option" v-model="type" value="lodging">
+                <input type='radio' id='lodgings' checked='checked' name='type' class="blue_option" v-model="type" value="lodging">
                 <label for='lodgings'><font-awesome-icon icon="fa-solid fa-house" /></label>
             </div>
             <div class="col-md-4">
-                <input type='radio' id='boats' name='radio' class="blue_option" v-model="type" value="boat">
+                <input type='radio' id='boats' name='type' class="blue_option" v-model="type" value="boat">
                 <label for='boats'><font-awesome-icon icon="fa-solid fa-ship" size="lg"/></label>
             </div>
             <div class="col-md-4">
-                <input type='radio' id='lessons' name='radio' class="blue_option" v-model="type" value="fishinglesson">
+                <input type='radio' id='lessons' name='type' class="blue_option" v-model="type" value="fishinglesson">
                 <label for='lessons'><font-awesome-icon icon="fa-solid fa-fish-fins" /></label>
             </div>
           </div>
@@ -132,9 +132,9 @@
         </div>
         <nav style="width: 50%; margin: 0 auto;">
           <ul class="pagination">
-            <li class="page-item" v-if="!firstPage"><a class="page-link" :href="'/home/' + $route.params.type + '?page=' + getPreviousPage()">Previous</a></li>
-            <li class="page-item" v-for="p in totalPages" :key="p"><a class="page-link" :href="'/home/' + $route.params.type + '?page=' + getPage(p)">{{p}}</a></li>
-            <li class="page-item" v-if="!lastPage"><a class="page-link" :href="'/home/' + $route.params.type + '?page=' + getNextPage()">Next</a></li>
+            <li class="page-item" v-if="!firstPage"><a class="page-link" v-on:click="goToPage(getPreviousPage())">Previous</a></li>
+            <li class="page-item" v-for="p in totalPages" :key="p"><a class="page-link" v-on:click="goToPage(getPage(p))">{{p}}</a></li>
+            <li class="page-item" v-if="!lastPage"><a class="page-link" v-on:click="goToPage(getNextPage())">Next</a></li>
           </ul>
         </nav>
       </div>
@@ -178,20 +178,16 @@ export default {
     this.loadData();
   },
   watch: {
-    type(newType, oldType) {
-      if (newType != oldType) {
-        this.searchParameters = {
-          name: '',
-          location: {},
-          dateRange: {},
-        }
-        this.$router.push("/home/" + newType + "?page=0")
-      }
-    },
     '$route.params': {
       handler(newRoute, oldRoute) {
         if(newRoute != oldRoute) {
-          this.loadData()
+          this.reservableService = new ReservableService(this.$route.params.type)
+          this.reservableService.getAllReservablesSearch(this.searchParameters, this.$route.params.page).then(res => {
+            this.reservables = res.data.content
+            this.totalPages = res.data.totalPages
+            this.firstPage = res.data.first
+            this.lastPage = res.data.last
+          });
         }
       },
       deep: true
@@ -200,12 +196,11 @@ export default {
   methods: {
     loadData() {
       this.reservableService = new ReservableService(this.$route.params.type)
+      this.type = this.$route.params.type
       UserService.getCountries().then((response) => {
         this.countries = response.data;   
       });
-      this.searchParameters.sortType = this.currentSort.split("_")[0]
-      this.searchParameters.sortDir = this.currentSort.split("_")[1]
-      this.reservableService.getAllReservablesSearch(this.searchParameters, this.$route.query.page).then(res => {
+      this.reservableService.getAllReservablesSearch(this.searchParameters, this.$route.params.page).then(res => {
         this.reservables = res.data.content
         this.totalPages = res.data.totalPages
         this.firstPage = res.data.first
@@ -222,12 +217,15 @@ export default {
           this.searchParameters.dateRange.fromDate = new Date(this.searchParameters.dateRange.fromDate)
         if(this.searchParameters.dateRange.toDate)
           this.searchParameters.dateRange.toDate = new Date(this.searchParameters.dateRange.toDate)
-        this.reservableService.getAllReservablesSearch(this.searchParameters, this.$route.query.page).then(res => {
+        this.reservableService.getAllReservablesSearch(this.searchParameters, this.$route.params.page).then(res => {
           this.reservables = res.data.content
           this.totalPages = res.data.totalPages
           this.firstPage = res.data.first
           this.lastPage = res.data.last
-          this.$router.push("/home/" + this.$route.params.type + "?page=0")
+          let oldType = this.$route.params.type
+          console.log(oldType)
+          console.log(this.type)
+          this.$router.push("/home/" + this.type + "/all/0")
         })
     },
     viewReservable(reservable) {
@@ -246,13 +244,16 @@ export default {
         return reviewSum/r.reviews.length
     },
     getPreviousPage() {
-      return parseInt(this.$route.query.page) - 1
+      return parseInt(this.$route.params.page) - 1
     },
     getNextPage() {
-      return parseInt(this.$route.query.page) + 1
+      return parseInt(this.$route.params.page) + 1
     },
     getPage(p) {
       return parseInt(p) - 1
+    },
+    goToPage(page) {
+      this.$router.push("/home/" + this.$route.params.type + "/all/" + page)
     }
   }
 }

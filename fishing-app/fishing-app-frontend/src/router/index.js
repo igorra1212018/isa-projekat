@@ -18,10 +18,10 @@ const routes = [
   },
   {
     path: '/home',
-    redirect: '/home/lodging?page=0',
+    redirect: '/home/lodging/all/0',
   },
   {
-    path: '/home/:type',
+    path: '/home/:type/all/:page',
     name: 'Home',
     component: Home
   },
