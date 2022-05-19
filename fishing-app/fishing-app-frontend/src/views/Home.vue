@@ -6,15 +6,15 @@
           <h2>Search</h2>
           <div class="row d-flex mt-5">
             <div class="col-md-4">
-                <input type='radio' id='lodgings' checked='checked' name='radio' class="blue_option" v-model="type" value="Lodgings">
+                <input type='radio' id='lodgings' checked='checked' name='radio' class="blue_option" v-model="type" value="lodging">
                 <label for='lodgings'><font-awesome-icon icon="fa-solid fa-house" /></label>
             </div>
             <div class="col-md-4">
-                <input type='radio' id='boats' name='radio' class="blue_option" v-model="type" value="Boats">
+                <input type='radio' id='boats' name='radio' class="blue_option" v-model="type" value="boat">
                 <label for='boats'><font-awesome-icon icon="fa-solid fa-ship" size="lg"/></label>
             </div>
             <div class="col-md-4">
-                <input type='radio' id='lessons' name='radio' class="blue_option" v-model="type" value="Lessons">
+                <input type='radio' id='lessons' name='radio' class="blue_option" v-model="type" value="fishinglesson">
                 <label for='lessons'><font-awesome-icon icon="fa-solid fa-fish-fins" /></label>
             </div>
           </div>
@@ -51,104 +51,45 @@
           <input type="button" class="blue-button" value="Search" v-on:click="search()"/>
         </div>
       </div>
-      <div v-if="type == 'Lodgings'" style="width: 100%; height: 100%">
+      <div style="width: 100%; height: 100%">
         <div class="row row-cols-md-3" style = "width: 75%; margin-left: 50px">
-          <div class="col" v-for="l in lodgings" :key="l.id">
+          <div class="col" v-for="r in reservables" :key="r.id">
             <article class="entity_card">
               <figure class="card-image">
-                <img :src="convertImageToBase64(l.primaryImage.data)" alt="" >
+                <img :src="convertImageToBase64(r.primaryImage.data)" alt="" >
               </figure>   
               <div class="card-content">
                 <header class="card-header-restaurant">
-                <h2>{{l.name}}</h2>
+                <h2>{{r.name}}</h2>
                 <br />
                 <span>Status</span>   
                   <address style="margin-top:10px">
                     <span class="icon-pin" aria-hidden="true"></span>
-                    {{getFullAddress(l.address)}}
+                    {{getFullAddress(r.address)}}
                   </address>
                 </header>
               </div>    
               <ul class="card-stats" style="margin-bottom:20px">
                 <li>
-                  <strong>{{l.reviews.length}}</strong>
+                  <strong>{{r.reviews.length}}</strong>
                   Reviews
                 </li>
                 <li>
-                  <strong>{{averageRating(l)}}</strong>
+                  <strong>{{averageRating(r)}}</strong>
                   Rating
                 </li>
               </ul>   
-              <button class="card-button" v-on:click="viewLodging(l.id)">View</button>
+              <button class="card-button" v-on:click="viewReservable(r)">View</button>
             </article>
           </div>
         </div>
-      </div>
-      <div v-if="type == 'Boats'" style="width: 100%; height: 100%">
-        <div class="row row-cols-md-2" style = "width: 75%; margin-left: 50px" v-for="b in boats" :key="b.id">
-          <div class="col">
-            <article class="entity_card">
-              <figure class="card-image">
-                <img src="../resources/DefaultLodgingIcon.jpg" alt="" />
-              </figure>   
-              <div class="card-content">
-                <header class="card-header-restaurant">
-                <h2>{{b.name}}</h2>
-                <br />
-                <span>Status</span>   
-                  <address style="margin-top:10px">
-                    <span class="icon-pin" aria-hidden="true"></span>
-                    {{getFullAddress(b.address)}}
-                  </address>
-                </header>
-              </div>    
-              <ul class="card-stats" style="margin-bottom:20px">
-                <li>
-                  <strong>{{b.reviews.length}}</strong>
-                  Reviews
-                </li>
-                <li>
-                  <strong>{{averageRating(b)}}</strong>
-                  Rating
-                </li>
-              </ul>  
-              <button class="card-button" v-on:click="viewBoat(b.id)">View</button>
-            </article>
-          </div>
-        </div>
-      </div>
-      <div v-if="type == 'Lessons'" style="width: 100%; height: 100%">
-        <div class="row row-cols-md-2" style = "width: 75%; margin-left: 50px" v-for="f in fishingLessons" :key="f.id">
-          <div class="col">
-            <article class="entity_card">
-              <figure class="card-image">
-                <img src="../resources/DefaultLodgingIcon.jpg" alt="" />
-              </figure>   
-              <div class="card-content">
-                <header class="card-header-restaurant">
-                <h2>{{f.name}}</h2>
-                <br />
-                <span>Status</span>   
-                  <address style="margin-top:10px">
-                    <span class="icon-pin" aria-hidden="true"></span>
-                    {{getFullAddress(f.address)}}
-                  </address>
-                </header>
-              </div>    
-              <ul class="card-stats" style="margin-bottom:20px">
-                <li>
-                  <strong>{{f.reviews.length}}</strong>
-                  Reviews
-                </li>
-                <li>
-                  <strong>{{averageRating(f)}}</strong>
-                  Rating
-                </li>
-              </ul>  
-              <button class="card-button" v-on:click="viewFishingLesson(f.id)">View</button>
-            </article>
-          </div>
-        </div>
+        <nav style="width: 50%; margin: 0 auto;">
+          <ul class="pagination">
+            <li class="page-item" v-if="!firstPage"><a class="page-link" :href="'/home/' + $route.params.type + '?page=' + getPreviousPage()">Previous</a></li>
+            <li class="page-item" v-for="p in totalPages" :key="p"><a class="page-link" :href="'/home/' + $route.params.type + '?page=' + getPage(p)">{{p}}</a></li>
+            <li class="page-item" v-if="!lastPage"><a class="page-link" :href="'/home/' + $route.params.type + '?page=' + getNextPage()">Next</a></li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
@@ -165,19 +106,16 @@ export default {
   },
   data: function () {
     return {
-      lodgings: {},
-      boats: {},
-      fishingLessons: {},
-      lodgingService: {},
-      boatService: {},
-      fishingLessonService: {},
+      reservables: {},
+      reservableService: {},
       searchParameters: {
+        name: '',
         location: {},
         dateRange: {},
       },
       currentUser: null,
       name: '',
-      type: 'Lodgings',
+      type: 'lodging',
       location: '',
       rating: '',
       open: false,
@@ -186,24 +124,41 @@ export default {
       filterCity: "",
       currentSort:'status',
       currentSortDir:'desc',
-      filterRatingFrom: ''
+      filterRatingFrom: '',
+      totalPages: 1,
+      firstPage: false,
+      lastPage: false
     }
   },
   mounted: function() {
-    this.lodgingService = new ReservableService('lodging')
-    this.boatService = new ReservableService('boat')
-    this.fishingLessonService = new ReservableService('fishinglesson')
-    this.lodgingService.getAllReservables().then(res => {
-      this.lodgings = res.data
-      this.boatService.getAllReservables().then(res2 => {
-        this.boats = res2.data
-        this.fishingLessonService.getAllReservables().then(res3 => {
-          this.fishingLessons = res3.data
-        });
-      });
-    });
+    this.loadData();
+  },
+  watch: {
+    type(newType, oldType) {
+      if (newType != oldType) {
+        this.$router.push("/home/" + newType + "?page=0")
+      }
+    },
+    '$route.params': {
+      handler(newRoute, oldRoute) {
+        if(newRoute != oldRoute) {
+          this.loadData()
+        }
+      },
+      deep: true
+    }
   },
   methods: {
+    loadData() {
+      console.log("TEST")
+      this.reservableService = new ReservableService(this.$route.params.type)
+      this.reservableService.getAllReservablesSearch(this.searchParameters, this.$route.query.page).then(res => {
+        this.reservables = res.data.content
+        this.totalPages = res.data.totalPages
+        this.firstPage = res.data.first
+        this.lastPage = res.data.last
+      });
+    },
     getFullAddress: function (address) {
        return address.address + " " + address.city + " " + address.country;
     },
@@ -212,24 +167,16 @@ export default {
           this.searchParameters.dateRange.fromDate = new Date(this.searchParameters.dateRange.fromDate)
         if(this.searchParameters.dateRange.toDate)
           this.searchParameters.dateRange.toDate = new Date(this.searchParameters.dateRange.toDate)
-        this.lodgingService.getAllReservablesSearch(this.searchParameters).then(res => {
-          this.lodgings = res.data
-          this.boatService.getAllReservablesSearch(this.searchParameters).then(res2 => {
-            this.boats = res2.data
-            this.fishingLessonService.getAllReservablesSearch(this.searchParameters).then(res3 => {
-              this.fishingLessons = res3.data
-            });
-          });
-        });
+        this.reservableService.getAllReservablesSearch(this.searchParameters, this.$route.query.page).then(res => {
+          this.reservables = res.data.content
+          this.totalPages = res.data.totalPages
+          this.firstPage = res.data.first
+          this.lastPage = res.data.last
+          this.$router.push("/home/" + this.$route.params.type + "/0")
+        })
     },
-    viewLodging(lodgingId) {
-      window.location.href = "http://localhost:8081/reservable/lodging/" + lodgingId;
-    },
-    viewBoat(boatId) {
-      window.location.href = "http://localhost:8081/reservable/boat/" + boatId;
-    },
-    viewFishingLesson(boatId) {
-      window.location.href = "http://localhost:8081/reservable/fishinglesson/" + boatId;
+    viewReservable(reservable) {
+      window.location.href = "http://localhost:8081/reservable/" + this.$route.params.type + "/" + reservable.id;
     },
     convertImageToBase64(byteArray) {
         return 'data:image/jpeg;base64,' + byteArray;
@@ -238,10 +185,19 @@ export default {
         if(!r.reviews || r.reviews.length == 0)
             return "-"
         let reviewSum = 0;
-        for (var i = 0; i < r.reviews.length; i++) { 
-            reviewSum +=  r.reviews[i].rating
+        for (const element of r.reviews) { 
+            reviewSum +=  element.rating
         }
         return reviewSum/r.reviews.length
+    },
+    getPreviousPage() {
+      return parseInt(this.$route.query.page) - 1
+    },
+    getNextPage() {
+      return parseInt(this.$route.query.page) + 1
+    },
+    getPage(p) {
+      return parseInt(p) - 1
     }
   }
 }

@@ -8,15 +8,20 @@ export default class ReservableService{
     CONTROLLER_ENDPOINT = ''
 
     constructor(CONTROLLER_ENDPOINT) {
-        this.CONTROLLER_ENDPOINT = USER_API_BASE_URL + CONTROLLER_ENDPOINT + '/'
+        if(CONTROLLER_ENDPOINT == 'lodging' || CONTROLLER_ENDPOINT == 'boat' || CONTROLLER_ENDPOINT == 'fishinglesson')
+            this.CONTROLLER_ENDPOINT = USER_API_BASE_URL + CONTROLLER_ENDPOINT + '/'
+        else
+            this.CONTROLLER_ENDPOINT = USER_API_BASE_URL + 'lodging/'
     }
 
     getAllReservables(){
         return axios.get(this.CONTROLLER_ENDPOINT + 'all', { headers: authHeader() });
     }
 
-    getAllReservablesSearch(searchParameters){
-        return axios.post(this.CONTROLLER_ENDPOINT + 'search', searchParameters);
+    getAllReservablesSearch(searchParameters, page){
+        if(page == null)
+            page = 0
+        return axios.post(this.CONTROLLER_ENDPOINT + 'search/' + page, searchParameters);
     }
 
     getReservable(id){

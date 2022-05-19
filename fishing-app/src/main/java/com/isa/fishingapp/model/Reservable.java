@@ -151,6 +151,14 @@ public abstract class Reservable {
 	public void setAvailableDateRanges(Set<AvailableDateRange> availableDateRanges) {
 		this.availableDateRanges = availableDateRanges;
 	}
+	
+	public String getReservableType() {
+		return reservableType;
+	}
+
+	public void setReservableType(String reservableType) {
+		this.reservableType = reservableType;
+	}
 
 	@Transient
 	public String getDiscriminatorValue(){

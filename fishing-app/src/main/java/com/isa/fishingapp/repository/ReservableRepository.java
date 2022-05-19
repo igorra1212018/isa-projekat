@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +22,10 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
     List<T> findAll(@Param("discriminatorParameter") String discriminatorParameter);
 	
 	@Query(value = "SELECT * "
+			+ "FROM (SELECT * FROM reservable WHERE reservable_type = :discriminatorParameter) AS r ", nativeQuery = true)
+    Page<T> findAll(@Param("discriminatorParameter") String discriminatorParameter, Pageable pageable);
+	
+	@Query(value = "SELECT * "
 			+ "FROM reservable AS r "
 			+ "WHERE reservable_type = :discriminatorParameter "
 			+ "AND LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) "
@@ -27,14 +33,15 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
 			+ "AND LOWER(country) LIKE LOWER(CONCAT('%', :country, '%')) "
 			+ "AND EXISTS ( SELECT 1 FROM available_date_range WHERE reserable_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) AND (:dateTo BETWEEN from_date AND to_date) ) "
 			+ "AND NOT EXISTS ( SELECT 1 FROM reservation WHERE reserved_entity_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) OR (:dateTo BETWEEN from_date AND to_date) )", nativeQuery = true)
-    List<T> findBySearch(@Param("discriminatorParameter") String discriminatorParameter,
+    Page<T> findBySearch(@Param("discriminatorParameter") String discriminatorParameter,
     		@Param("name") String name,
     		@Param("city") String city,
     		@Param("country") String country,
     		@Param("dateFrom") LocalDateTime dateFrom,
-    		@Param("dateTo") LocalDateTime dateTo);
+    		@Param("dateTo") LocalDateTime dateTo, 
+    		Pageable pageable);
 	
-	List<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryContainingIgnoreCaseAndAddressCityContainingIgnoreCase(String reservableType, String name, String country, String city);
+	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryContainingIgnoreCaseAndAddressCityContainingIgnoreCase(String reservableType, String name, String country, String city, Pageable pageable);
 	
 	@Query(value = "SELECT new ReservableAmenity(id, amenityIcon, amenityName, price) "
 			+ "FROM ReservableAmenity WHERE id = :id ")
