@@ -40,9 +40,12 @@ public abstract class Reservable {
 	private String name;
 	@Column(length=4095)
 	private String description;
+	@Column(length=4095)
+	private String rules;
 	@Embedded
 	private Location address;
-	private int basePrice;
+	private int price;
+	private int capacity;
 	
 	@OneToMany(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "reserable_id")
@@ -104,8 +107,8 @@ public abstract class Reservable {
 		this.primaryImage = primaryImage;
 	}
 
-	public int getBasePrice() {
-		return basePrice;
+	public int getPrice() {
+		return price;
 	}
 
 	public void setId(Integer id) {
@@ -124,8 +127,8 @@ public abstract class Reservable {
 		this.address = address;
 	}
 
-	public void setBasePrice(int basePrice) {
-		this.basePrice = basePrice;
+	public void setPrice(int basePrice) {
+		this.price = basePrice;
 	}
 
 	public Set<ReservableAmenity> getAmenities() {
@@ -158,6 +161,22 @@ public abstract class Reservable {
 
 	public void setReservableType(String reservableType) {
 		this.reservableType = reservableType;
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	public String getRules() {
+		return rules;
+	}
+
+	public void setRules(String rules) {
+		this.rules = rules;
 	}
 
 	@Transient

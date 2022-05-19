@@ -8,12 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.isa.fishingapp.dto.ReserveLodgingDTO;
+import com.isa.fishingapp.dto.ReserveReservableDTO;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Lodging;
 import com.isa.fishingapp.model.ReservableAmenity;
 import com.isa.fishingapp.model.ReservationLodging;
-import com.isa.fishingapp.repository.ReservationLodgingRepository;
 import com.isa.fishingapp.repository.UserRepository;
 
 @Service
@@ -27,7 +26,7 @@ public class LodgingService extends ReservableService<Lodging> {
 		super("LODGING");
 	}
 	
-	public ResponseEntity<String> reserveLodging(ReserveLodgingDTO reserveLodgingDTO)
+	public ResponseEntity<String> reserveLodging(ReserveReservableDTO reserveLodgingDTO)
 	{
 		try {
 			if(!reservationsService.findAllReservationsInInterval(reserveLodgingDTO.getReservableId(), new DateRange(reserveLodgingDTO.getFromDate(), reserveLodgingDTO.getToDate())).isEmpty())

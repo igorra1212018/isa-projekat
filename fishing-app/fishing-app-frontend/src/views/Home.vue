@@ -19,35 +19,71 @@
             </div>
           </div>
           <div class="row d-flex mt-5">
-              <div class="col-md-12">
+              <div class="col-md-8">
                   <label class="input_label">
                       <input type="text" name="name" v-model="searchParameters.name">
                       <span class="keep_hovered">Name</span>
                   </label>
               </div>
+              <div class="col-md-2">
+                <input type='radio' id='sort_name_ascending' name='sort' class="blue_option" v-model="currentSort" value="name_ascending">
+                <label for='sort_name_ascending'><font-awesome-icon icon="fa-solid fa-sort-up" /></label>
+              </div>
+              <div class="col-md-2">
+                <input type='radio' id='sort_name_descending' name='sort' class="blue_option" v-model="currentSort" value="name_descending">
+                <label for='sort_name_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
+              </div>
           </div>
           <div class="row d-flex mt-5">
-              <div class="col-md-12">
+              <div class="col-md-6">
                   <label class="input_label">
                       <input type="text" name="country" v-model="searchParameters.location.country">
                       <span class="keep_hovered">Country</span>
                   </label>
               </div>
-          </div>
-          <div class="row d-flex mt-5">
-              <div class="col-md-12">
+              <div class="col-md-6">
                   <label class="input_label">
                       <input type="text" name="city" v-model="searchParameters.location.city">
                       <span class="keep_hovered">City</span>
                   </label>
               </div>
           </div>
-          <label for="from_date">From:</label>
-          <input type="date" id="from_date" name="from_date"
-                 v-model="searchParameters.dateRange.fromDate">
-          <label for="to_date">From:</label>
-          <input type="date" id="to_date" name="to_date"
-                 v-model="searchParameters.dateRange.toDate">
+          <div class="row d-flex mt-5">
+              <div class="col-md-4">
+                  <label class="input_label">
+                      <input type="number" min="0" name="fromPrice" v-model="searchParameters.fromPrice">
+                      <span class="keep_hovered">Price From</span>
+                  </label>
+              </div>
+              <div class="col-md-4">
+                  <label class="input_label">
+                      <input type="number" min="0" name="toPrice" v-model="searchParameters.toPrice">
+                      <span class="keep_hovered">Price To</span>
+                  </label>
+              </div>
+              <div class="col-md-2">
+                <input type='radio' id='sort_price_ascending' name='sort' class="blue_option" v-model="currentSort" value="price_ascending">
+                <label for='sort_price_ascending'><font-awesome-icon icon="fa-solid fa-sort-up" /></label>
+              </div>
+              <div class="col-md-2">
+                <input type='radio' id='sort_price_descending' name='sort' class="blue_option" v-model="currentSort" value="price_descending">
+                <label for='sort_price_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
+              </div>
+          </div>
+          <div class="row d-flex mt-5">
+              <div class="col-md-6">
+                  <label class="input_label">
+                      <input type="date" id="from_date" name="from_date" v-model="searchParameters.dateRange.fromDate">
+                      <span class="keep_hovered">Date From</span>
+                  </label>
+              </div>
+              <div class="col-md-6">
+                  <label class="input_label">
+                      <input type="date" id="to_date" name="to_date" v-model="searchParameters.dateRange.toDate">
+                      <span class="keep_hovered">Date To</span>
+                  </label>
+              </div>
+          </div>
           <input type="button" class="blue-button" value="Search" v-on:click="search()"/>
         </div>
       </div>
@@ -70,6 +106,14 @@
                 </header>
               </div>    
               <ul class="card-stats" style="margin-bottom:20px">
+                <li>
+                  <strong>{{r.capacity}}<font-awesome-icon icon="fa-solid fa-person" /></strong>
+                  Capacity
+                </li>
+                <li>
+                  <strong>{{r.price}}$/<font-awesome-icon icon="fa-solid fa-sun" /></strong>
+                  Price
+                </li>
                 <li>
                   <strong>{{r.reviews.length}}</strong>
                   Reviews
@@ -114,17 +158,8 @@ export default {
         dateRange: {},
       },
       currentUser: null,
-      name: '',
-      type: 'lodging',
-      location: '',
-      rating: '',
-      open: false,
-      filterName: "",
-      filterType: "",
-      filterCity: "",
-      currentSort:'status',
-      currentSortDir:'desc',
-      filterRatingFrom: '',
+      type: '',
+      currentSort:'name_ascending',
       totalPages: 1,
       firstPage: false,
       lastPage: false
@@ -155,8 +190,9 @@ export default {
   },
   methods: {
     loadData() {
-      console.log("TEST")
       this.reservableService = new ReservableService(this.$route.params.type)
+      this.searchParameters.sortType = this.currentSort.split("_")[0]
+      this.searchParameters.sortDir = this.currentSort.split("_")[1]
       this.reservableService.getAllReservablesSearch(this.searchParameters, this.$route.query.page).then(res => {
         this.reservables = res.data.content
         this.totalPages = res.data.totalPages
@@ -168,6 +204,8 @@ export default {
        return address.address + " " + address.city + " " + address.country;
     },
     search() {
+        this.searchParameters.sortType = this.currentSort.split("_")[0]
+        this.searchParameters.sortDir = this.currentSort.split("_")[1]
         if(this.searchParameters.dateRange.fromDate)
           this.searchParameters.dateRange.fromDate = new Date(this.searchParameters.dateRange.fromDate)
         if(this.searchParameters.dateRange.toDate)
@@ -181,7 +219,7 @@ export default {
         })
     },
     viewReservable(reservable) {
-      window.location.href = "http://localhost:8081/reservable/" + this.$route.params.type + "/" + reservable.id;
+      window.location.href = "http://localhost:8081/reservable/" + this.$route.params.type.split("?")[0] + "/" + reservable.id;
     },
     convertImageToBase64(byteArray) {
         return 'data:image/jpeg;base64,' + byteArray;
@@ -213,7 +251,7 @@ export default {
       background-color: rgba(255,255, 255, 1);
       position: relative;
       margin-left: 20px;
-      width:20%;
+      width:30%;
       text-align:center;
       transition:.3s ease-in-out;
       z-index:0;
@@ -239,7 +277,7 @@ export default {
   }
   .card-image {
     border-radius: .3125em .3125em 0 0;
-    width: 360px;
+    width: 100%;
     height: 202px;
     margin: 0;
     overflow: hidden;

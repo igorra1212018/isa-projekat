@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isa.fishingapp.service.LodgingService;
 import com.isa.fishingapp.service.ReservationService;
 import com.isa.fishingapp.dto.LodgingSearchDTO;
-import com.isa.fishingapp.dto.ReserveLodgingDTO;
+import com.isa.fishingapp.dto.ReserveReservableDTO;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Lodging;
 import com.isa.fishingapp.model.ReservationLodging;
@@ -36,7 +36,7 @@ public class LodgingsController extends ReservableController<Lodging, Reservatio
 	
 	@PostMapping("/reserve")
 	@PreAuthorize("hasRole('ROLE_CUSTOMER')")
-	public ResponseEntity<String> reserveLodging(@RequestBody ReserveLodgingDTO reservationParameters)
+	public ResponseEntity<String> reserveLodging(@RequestBody ReserveReservableDTO reservationParameters)
 	{
 		return lodgingService.reserveLodging(reservationParameters);
 	}

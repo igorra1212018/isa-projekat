@@ -100,4 +100,5 @@ body, html {
 .navMenu a:hover {
   color: rgba(0,95,255,1);
 }
+
 </style>

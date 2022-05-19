@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.isa.fishingapp.dto.ReserveLodgingDTO;
 import com.isa.fishingapp.dto.ReserveReservableDTO;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.FishingLesson;

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.isa.fishingapp.dto.ReservableSearchDTO;
-import com.isa.fishingapp.dto.ReserveLodgingDTO;
 import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservable;
@@ -102,7 +102,13 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	@PostMapping("/search/{page}")
 	public ResponseEntity<Page<T>> getReservables(@RequestBody(required=false) ReservableSearchDTO searchParameters, @PathVariable int page)
 	{
-		Page<T> foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 1));
+		Page<T> foundReservables;
+		if(searchParameters != null && searchParameters.getSortType() != null && searchParameters.getSortDir() != null && searchParameters.getSortDir().equals("descending"))
+			foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 1, Sort.by(searchParameters.getSortType()).descending()));
+		else if(searchParameters != null && searchParameters.getSortType() != null && searchParameters.getSortDir() != null)
+			foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 1, Sort.by(searchParameters.getSortType()).ascending()));
+		else
+			foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 1));
 		return new ResponseEntity<>(
 					foundReservables, 
 					HttpStatus.OK);
