@@ -136,6 +136,11 @@ export default {
   watch: {
     type(newType, oldType) {
       if (newType != oldType) {
+        this.searchParameters = {
+          name: '',
+          location: {},
+          dateRange: {},
+        }
         this.$router.push("/home/" + newType + "?page=0")
       }
     },
@@ -172,7 +177,7 @@ export default {
           this.totalPages = res.data.totalPages
           this.firstPage = res.data.first
           this.lastPage = res.data.last
-          this.$router.push("/home/" + this.$route.params.type + "/0")
+          this.$router.push("/home/" + this.$route.params.type + "?page=0")
         })
     },
     viewReservable(reservable) {
