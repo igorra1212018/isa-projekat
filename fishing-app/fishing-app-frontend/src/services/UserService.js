@@ -9,6 +9,10 @@ class UserService{
         return axios.get(USER_API_BASE_URL + 'all');
     }
 
+    getCountries(){
+      return axios.get(USER_API_BASE_URL + 'countries/all');
+    }
+
     getUser(id){
         return axios.get(USER_API_BASE_URL + id, { headers: authHeader() })
     }

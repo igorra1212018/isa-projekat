@@ -2,8 +2,6 @@ package com.isa.fishingapp.controller;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,16 +24,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
 import com.isa.fishingapp.dto.OwnerDTO;
 import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
 import com.isa.fishingapp.jwt.JwtUtils;
+import com.isa.fishingapp.model.Country;
+import com.isa.fishingapp.model.Location;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.model.UserCreationRequest;
 import com.isa.fishingapp.model.VerificationToken;
 import com.isa.fishingapp.model.enums.ERequestType;
+import com.isa.fishingapp.repository.CountryRepository;
 import com.isa.fishingapp.repository.RoleRepository;
 import com.isa.fishingapp.repository.TokenRepository;
 import com.isa.fishingapp.service.UserService;
@@ -56,6 +56,8 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	@Autowired
+	CountryRepository countryRepository;
+	@Autowired
 	TokenRepository tokenRepository;
 	
 	@Autowired
@@ -66,6 +68,13 @@ public class UserController {
 	public List<User> getUsers(Model model)
 	{
 		return userService.getAllUsers();
+	}
+	
+	@GetMapping("/countries/all")
+	@PreAuthorize("permitAll")
+	public List<Country> getCountries()
+	{
+		return countryRepository.findAll();
 	}
 	
 	@GetMapping("/{userId}")
@@ -106,6 +115,12 @@ public class UserController {
 		}
 		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
 		User registeredUser = new User(signUpRequest);
+		Country country = countryRepository.findById(signUpRequest.getCountry().getId()).orElse(null);
+		if(country == null)
+			return ResponseEntity
+					.badRequest()
+					.body("Error: Country does not exist!");
+		registeredUser.setResidence(new Location(signUpRequest.getAddress(), signUpRequest.getCity(), country, 0, 0));
 		userService.registerUser(registeredUser);
 		
 		String appUrl = request.getContextPath();

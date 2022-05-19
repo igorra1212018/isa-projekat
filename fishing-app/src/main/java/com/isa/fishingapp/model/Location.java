@@ -1,24 +1,31 @@
 package com.isa.fishingapp.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Embeddable
 public class Location {
 	private final String address;
 	private final String city;
-	private final String country;
+	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "country_id")
+	private Country country;
+	
 	private final double latitude;
 	private final double longtitude;
 	
 	public Location() {
 		this.address = "";
 		this.city = "";
-		this.country = ""; 
+		this.country = null;
 		this.latitude = 0;
 		this.longtitude = 0;
 	}
 	
-	public Location(String address, String city, String country, double latitude, double longtitude) {
+	public Location(String address, String city, Country country, double latitude, double longtitude) {
 		this.address = address;
 		this.city = city;
 		this.country = country;
@@ -34,7 +41,7 @@ public class Location {
 		return city;
 	}
 
-	public String getCountry() {
+	public Country getCountry() {
 		return country;
 	}
 

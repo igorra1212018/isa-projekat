@@ -66,7 +66,7 @@ public class User {
 		this.password = user.getPassword();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
-		this.residence = new Location(user.getAddress(), user.getCity(), user.getCountry(), 0, 0);
+		//this.residence = new Location(user.getAddress(), user.getCity(), user.getCountry(), 0, 0);
 		this.contactPhone = user.getContactPhone();
 	}
 	
@@ -78,7 +78,7 @@ public class User {
 			this.password = user.getNewPassword();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
-		this.residence = new Location(user.getAddress(), user.getCity(), user.getCountry(), 0, 0);
+		//this.residence = new Location(user.getAddress(), user.getCity(), null, 0, 0);
 		this.contactPhone = user.getContactPhone();
 	}
 	

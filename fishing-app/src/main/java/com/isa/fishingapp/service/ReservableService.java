@@ -40,8 +40,9 @@ public class ReservableService<T extends Reservable> {
 		if(searchParameters == null)
 			return reservableRepository.findAll(pageable);
 		if(searchParameters.getDateRange() == null || searchParameters.getDateRange().getFromDate() == null || searchParameters.getDateRange().getToDate() == null)
-			return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryContainingIgnoreCaseAndAddressCityContainingIgnoreCase(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCountry(), searchParameters.getLocation().getCity(), pageable);
-		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), searchParameters.getLocation().getCountry(), searchParameters.getDateRange().getFromDate(), searchParameters.getDateRange().getToDate(), pageable);
+			return reservableRepository.findAll(pageable);
+			//return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryNameAndAddressCityContainingIgnoreCase(discriminatorString, searchParameters.getName(), null, searchParameters.getLocation().getCity(), pageable);
+		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), "", searchParameters.getDateRange().getFromDate(), searchParameters.getDateRange().getToDate(), pageable);
 	}
 	
 	public T findByReservableId(Integer id)

@@ -68,7 +68,13 @@
                 </div>
             </div>
             <div class="row d-flex mt-4">
-                <div class="col-md-12">
+                <div class="col-md-2">
+                    <label class="input_label">
+                        <input type="text" name="phone-prefix" v-model="user.country.phoneCode" readonly disabled>
+                        <span class="keep_hovered">Prefix</span>
+                    </label>
+                </div>
+                <div class="col-md-10">
                     <label class="input_label">
                         <input type="text" name="birth-date" v-model="user.contactPhone" required="required">
                         <span class="keep_hovered">Contact Phone</span>
@@ -90,7 +96,9 @@
                 </div>
                 <div class="col-md-4">
                     <label class="input_label">
-                        <input type="text" name="residence-country" v-model="user.country" required="required">
+                        <select name="countries" id="countries" v-model="user.country">
+                          <option v-for="c in countries" :key="c.id" :value="c">{{c.name}}</option>
+                        </select>
                         <span class="keep_hovered">Country</span>
                     </label>
                 </div>
@@ -108,10 +116,18 @@ export default {
     name: 'Registration',
     data(){
         return {
-            user: {},
+            user: {
+                country: {}
+            },
             confirmPassword: "",
-            emailAvailable: true
+            emailAvailable: true,
+            countries: []
         }
+    },
+    mounted: function() {
+        UserService.getCountries().then((response) => {
+            this.countries = response.data;   
+        });
     },
     methods: {
         registerUser(){

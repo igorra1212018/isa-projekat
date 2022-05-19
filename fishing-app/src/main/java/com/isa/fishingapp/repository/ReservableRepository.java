@@ -41,7 +41,7 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
     		@Param("dateTo") LocalDateTime dateTo, 
     		Pageable pageable);
 	
-	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryContainingIgnoreCaseAndAddressCityContainingIgnoreCase(String reservableType, String name, String country, String city, Pageable pageable);
+	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryNameAndAddressCityContainingIgnoreCase(String reservableType, String name, String country, String city, Pageable pageable);
 	
 	@Query(value = "SELECT new ReservableAmenity(id, amenityIcon, amenityName, price) "
 			+ "FROM ReservableAmenity WHERE id = :id ")

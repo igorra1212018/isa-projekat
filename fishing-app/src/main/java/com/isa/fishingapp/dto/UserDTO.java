@@ -1,5 +1,6 @@
 package com.isa.fishingapp.dto;
 
+import com.isa.fishingapp.model.Country;
 import com.isa.fishingapp.model.User;
 
 public class UserDTO {
@@ -10,7 +11,7 @@ public class UserDTO {
 	String lastName;
 	String address;
 	String city;
-	String country;
+	Country country;
 	String contactPhone;
 	String gender;
 
@@ -49,7 +50,7 @@ public class UserDTO {
 	public String getCity() {
 		return city;
 	}
-	public String getCountry() {
+	public Country getCountry() {
 		return country;
 	}
 	public String getContactPhone() {
@@ -76,7 +77,7 @@ public class UserDTO {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public void setCountry(String country) {
+	public void setCountry(Country country) {
 		this.country = country;
 	}
 	public void setContactPhone(String contactPhone) {

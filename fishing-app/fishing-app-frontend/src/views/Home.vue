@@ -101,7 +101,7 @@
                 <span>Status</span>   
                   <address style="margin-top:10px">
                     <span class="icon-pin" aria-hidden="true"></span>
-                    {{getFullAddress(r.address)}}
+                    {{getFullAddress(r.address)}} <flag :iso="r.address.country.iso" />
                   </address>
                 </header>
               </div>    
@@ -201,7 +201,7 @@ export default {
       });
     },
     getFullAddress: function (address) {
-       return address.address + " " + address.city + " " + address.country;
+       return address.address + " " + address.city + " " + address.country.name;
     },
     search() {
         this.searchParameters.sortType = this.currentSort.split("_")[0]
