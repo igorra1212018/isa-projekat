@@ -13,12 +13,15 @@ import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Lodging;
 import com.isa.fishingapp.model.ReservableAmenity;
 import com.isa.fishingapp.model.ReservationLodging;
+import com.isa.fishingapp.repository.ActionRepository;
 import com.isa.fishingapp.repository.UserRepository;
 
 @Service
 public class LodgingService extends ReservableService<Lodging> {
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private ActionRepository actionRepository;
 	@Autowired
 	private ReservationService reservationsService;
 	
@@ -38,9 +41,13 @@ public class LodgingService extends ReservableService<Lodging> {
 				      "Date range is invalid!", 
 				      HttpStatus.BAD_REQUEST);
 		}
+		System.out.println("GOT HERE 1");
 		ReservationLodging reservation;
 		try {
 			reservation = new ReservationLodging(userRepository.getById(reserveLodgingDTO.getUserId()), new DateRange(reserveLodgingDTO.getFromDate(), reserveLodgingDTO.getToDate()), findById(reserveLodgingDTO.getReservableId()));
+			System.out.println("GOT HERE 2");
+			if(reserveLodgingDTO.getActionId() != null)
+				reservation.setAction(actionRepository.findById(reserveLodgingDTO.getActionId()).orElse(null));
 			
 			Set<ReservableAmenity> reservedAmenities = new HashSet<ReservableAmenity>();
 			if(reserveLodgingDTO.getAmenities() != null && !reserveLodgingDTO.getAmenities().isEmpty()) {

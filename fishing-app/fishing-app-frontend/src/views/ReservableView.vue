@@ -9,7 +9,7 @@
                 </div>
                 <div class="pc-tab">
                     <input checked="checked" id="tab1" type="radio" v-model="selectedTab" value="Overview" />
-                    <input id="tab2" type="radio" v-model="selectedTab" value="Services" />
+                    <input id="tab2" type="radio" v-model="selectedTab" value="Actions" />
                     <input id="tab3" type="radio" v-model="selectedTab" value="Reviews" />
                     <input id="tab4" type="radio" v-model="selectedTab" value="Gallery" />
                     <nav>
@@ -18,10 +18,10 @@
                           <label for="tab1" style="width: 25%"><h5>Overview</h5></label>
                         </li>
                         <li class="reservable-view-tab">
-                          <label for="tab2" style="width: 25%"><h5>Services</h5></label>
+                          <label for="tab2" style="width: 25%"><h5>Actions</h5></label>
                         </li>
                         <li class="reservable-view-tab">
-                          <label for="tab3" style="width: 25%"><h5>Rules</h5></label>
+                          <label for="tab3" style="width: 25%"><h5>Reviews</h5></label>
                         </li>
                         <li class="reservable-view-tab">
                           <label for="tab4" style="width: 25%"><h5>Gallery</h5></label>
@@ -33,9 +33,7 @@
                     <h1 style="text-align: center">{{reservable.name}}</h1>
                     <p style="text-align: center; font-size: 16px">{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country.name}}</p>
                     <h4 style="text-align: center">{{averageRating}}</h4>
-                    <p class="reservable-description"><em>{{reservable.description}}</em></p>
-                </div>
-                <div class="reservable-view-content-area" v-if="selectedTab == 'Services'">
+                    <p class="reservable-description" style="border-bottom: solid 1px gray;"><em>{{reservable.description}}</em></p>
                     <div class="row d-flex row-cols-md-3">
                         <div class="col" v-for="a in reservable.amenities" :key="a.id">
                             <div class="amenity-card">
@@ -48,6 +46,13 @@
                                 <h5 v-if="a.price <= 0"><em>Free</em></h5>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="reservable-view-content-area" v-if="selectedTab == 'Actions'">
+                    <div class="row d-flex" v-for="a in actions" :key="a.id">
+                        <p>{{a.discount}}</p>
+                        <p>{{a.dateRange.fromDate}} - {{a.dateRange.toDate}}</p>
+                        <input type="button" class="blue-button" value="Reserve" v-on:click="reserveAction(a)"/>
                     </div>
                 </div>
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Gallery'">
@@ -129,10 +134,21 @@ export default {
     methods: {
         reserveReservable() {
             this.reservationParameters.reservableId = parseInt(this.$route.params.id)
-            this.reservationParameters.userId = 1
+            this.reservationParameters.userId = JSON.parse(this.user).id
             this.reservationParameters.fromDate = this.range.start
             this.reservationParameters.fromDate.setMonth(this.reservationParameters.fromDate.getMonth() - 1)
             this.reservationParameters.toDate = this.range.end
+            this.reservationParameters.toDate.setMonth(this.reservationParameters.toDate.getMonth() - 1)
+            this.reservationParameters.amenities = this.selectedAmenities;
+            this.reservableService.reserveReservable(this.reservationParameters)
+        },
+        reserveAction(a) {
+            this.reservationParameters.reservableId = parseInt(this.$route.params.id)
+            this.reservationParameters.userId = JSON.parse(this.user).id
+            this.reservationParameters.actionId = a.id
+            this.reservationParameters.fromDate = new Date(a.dateRange.fromDate[0], a.dateRange.fromDate[1], a.dateRange.fromDate[2], a.dateRange.fromDate[3], a.dateRange.fromDate[4])
+            this.reservationParameters.fromDate.setMonth(this.reservationParameters.fromDate.getMonth() - 1)
+            this.reservationParameters.toDate = new Date(a.dateRange.toDate[0], a.dateRange.toDate[1], a.dateRange.toDate[2], a.dateRange.toDate[3], a.dateRange.toDate[4])
             this.reservationParameters.toDate.setMonth(this.reservationParameters.toDate.getMonth() - 1)
             this.reservationParameters.amenities = this.selectedAmenities;
             this.reservableService.reserveReservable(this.reservationParameters)
