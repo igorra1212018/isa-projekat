@@ -5,6 +5,7 @@ import Users from '../views/Users.vue'
 import Registration from '../views/Registration.vue'
 import UserProfile from '../views/UserProfile.vue'
 import UserReservations from '../views/UserReservations.vue'
+import ComplaintsView from '../views/ComplaintsView.vue'
 import ReservableView from '../views/ReservableView.vue'
 import Login from '../views/Login.vue'
 import Unauthorized from '../views/Unauthorized.vue'
@@ -37,6 +38,14 @@ const routes = [
     path: '/user/:id',
     name: 'UserProfile',
     component: UserProfile,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/complaints',
+    name: 'ComplaintsView',
+    component: ComplaintsView,
     meta: {
       requiresAuth: true
     }

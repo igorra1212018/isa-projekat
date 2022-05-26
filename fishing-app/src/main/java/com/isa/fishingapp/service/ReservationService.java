@@ -22,6 +22,11 @@ public class ReservationService {
 	public ReservationService() {
 	}
 	
+	public Reservation findById(int id)
+	{
+		return reservationRepository.findById(id).orElse(null);
+	}
+	
 	public List<Reservation> findByEntityId(int entityId)
 	{
 		return reservationRepository.findByReservedEntity_Id(entityId);

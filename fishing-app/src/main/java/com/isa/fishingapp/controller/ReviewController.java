@@ -44,9 +44,7 @@ public class ReviewController {
 					"User or reservable does not exist!", 
 					HttpStatus.NOT_FOUND);
 		}
-		System.out.println("GOT HERE 1");
 		Review review = new Review();
-		System.out.println("GOT HERE 2");
 		review.setDescription(reviewDTO.getDescription());
 		review.setUser(user);
 		review.setReservable(reservable);

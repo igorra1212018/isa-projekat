@@ -31,7 +31,7 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
 			+ "AND LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) "
 			+ "AND LOWER(city) LIKE LOWER(CONCAT('%', :city, '%')) "
 			+ "AND country_id = :countryId OR :countryId = 0 "
-			+ "AND EXISTS ( SELECT 1 FROM available_date_range WHERE reserable_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) AND (:dateTo BETWEEN from_date AND to_date) ) "
+			+ "AND EXISTS ( SELECT 1 FROM available_date_range WHERE reservable_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) AND (:dateTo BETWEEN from_date AND to_date) ) "
 			+ "AND NOT EXISTS ( SELECT 1 FROM reservation WHERE reserved_entity_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) OR (:dateTo BETWEEN from_date AND to_date) )", nativeQuery = true)
     Page<T> findBySearch(@Param("discriminatorParameter") String discriminatorParameter,
     		@Param("name") String name,

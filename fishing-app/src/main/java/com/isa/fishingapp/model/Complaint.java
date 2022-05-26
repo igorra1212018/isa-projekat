@@ -3,7 +3,10 @@ package com.isa.fishingapp.model;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.isa.fishingapp.model.enums.ERequestApproval;
 
+@Entity
+@Table(name="complaint")
 public class Complaint {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
@@ -13,9 +16,9 @@ public class Complaint {
     @JoinColumn(name = "user_id")
     private User user;
     
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "reservable_id")
-    private Reservable reservable;
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "reservation_id")
+    private Reservation reservation;
     
     @Column(length=4095)
 	private String description;
@@ -23,7 +26,7 @@ public class Complaint {
     @Column(length=4095)
    	private String response;
     
-    private boolean approved = false;
+    private ERequestApproval approved = ERequestApproval.PENDING;
 
     public Complaint() {
     }
@@ -54,28 +57,20 @@ public class Complaint {
 	}
 
 	@JsonIgnore
-	public Reservable getReservable() {
-		return reservable;
+	public Reservation getReservation() {
+		return reservation;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public boolean isApproved() {
-		return approved;
-	}
-
-	public void setReservable(Reservable reservable) {
-		this.reservable = reservable;
+	public void setReservation(Reservation reservation) {
+		this.reservation = reservation;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public void setApproved(boolean approved) {
-		this.approved = approved;
 	}
 
 	public String getResponse() {
@@ -85,4 +80,13 @@ public class Complaint {
 	public void setResponse(String response) {
 		this.response = response;
 	}
+
+	public ERequestApproval getApproved() {
+		return approved;
+	}
+
+	public void setApproved(ERequestApproval approved) {
+		this.approved = approved;
+	}
+	
 }

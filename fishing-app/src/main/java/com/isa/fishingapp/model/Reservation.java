@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.InheritanceType;
 
@@ -49,6 +50,9 @@ public class Reservation {
 				joinColumns = @JoinColumn(name = "reservation_id"), 
 				inverseJoinColumns = @JoinColumn(name = "amenity_id"))
 	private Set<ReservableAmenity> amenities = new HashSet<>();
+	
+	@OneToOne(mappedBy = "reservation")
+    private Complaint complaint;
 	
 	private boolean cancelled = false;
 
@@ -114,6 +118,14 @@ public class Reservation {
 
 	public void setAction(Action action) {
 		this.action = action;
+	}
+
+	public Complaint getComplaint() {
+		return complaint;
+	}
+
+	public void setComplaint(Complaint complaint) {
+		this.complaint = complaint;
 	}
 
 	public Reservation() {
