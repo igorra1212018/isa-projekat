@@ -133,7 +133,7 @@ public class UserController {
 	
 	@PostMapping("/register_owner")
 	@PreAuthorize("not(isAuthenticated())")
-	public ResponseEntity<String> registerOwner(@RequestBody OwnerDTO signUpRequest) throws Exception
+	public ResponseEntity<String> registerOwner(@RequestBody OwnerDTO signUpRequest, HttpServletRequest request) throws Exception
 	{
 		if (userService.findByEmail(signUpRequest.getEmail()) != null) {
 			return ResponseEntity
@@ -142,7 +142,16 @@ public class UserController {
 		}
 		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
 		User createdUser = new User(signUpRequest);
+		Country country = countryRepository.findById(signUpRequest.getCountry().getId()).orElse(null);
+		if(country == null)
+			return ResponseEntity
+					.badRequest()
+					.body("Error: Country does not exist!");
+		createdUser.setResidence(new Location(signUpRequest.getAddress(), signUpRequest.getCity(), country, 0, 0));
 		userService.registerUser(createdUser, new UserCreationRequest(createdUser, ERequestType.LODGING_OWNER, signUpRequest.getApplicationDetails()));
+		String appUrl = request.getContextPath();
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(createdUser, 
+          request.getLocale(), appUrl));
 		return new ResponseEntity<>(
 			      "Registration successful!", 
 			      HttpStatus.OK);
