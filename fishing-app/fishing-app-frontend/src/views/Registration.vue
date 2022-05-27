@@ -63,7 +63,7 @@
                     <label for='boat_owner'>Captain</label>
                 </div>
                 <div class="col-md-6">
-                    <input type='radio' id='instructor' name='radio' class="blue_option" v-model="user.role" value="INSTRUCTOR">
+                    <input type='radio' id='instructor' name='radio' class="blue_option" v-model="user.role" value="FISHING_INSTRUCTOR">
                     <label for='instructor'>Instructor</label>
                 </div>
             </div>
