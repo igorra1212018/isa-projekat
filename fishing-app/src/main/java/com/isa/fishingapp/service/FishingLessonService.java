@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.isa.fishingapp.dto.FishingLessonDTO;
 import com.isa.fishingapp.dto.ReserveReservableDTO;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.FishingLesson;
@@ -63,6 +64,17 @@ public class FishingLessonService extends ReservableService<FishingLesson> {
 		}
 		return new ResponseEntity<>(
 			      "Lodging reservation successful!", 
+			      HttpStatus.OK);
+	}
+
+	public ResponseEntity<String> add(FishingLessonDTO fishingLesson) {
+		FishingLesson lesson = new FishingLesson(fishingLesson);
+		lesson.setOwner(userRepository.getById(Integer.parseInt(fishingLesson.getUserId())));
+		reservableRepository.save(lesson);
+		System.out.println(lesson);
+		System.out.println("------------TU SAM ----------------");
+		return new ResponseEntity<>(
+			      "Fishing lesson added successfully!", 
 			      HttpStatus.OK);
 	}
 }

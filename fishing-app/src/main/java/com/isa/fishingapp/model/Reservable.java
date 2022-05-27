@@ -31,21 +31,21 @@ public abstract class Reservable {
 	private Integer id;
 	
 	@Column(name = "reservable_type", insertable=false, updatable=false, nullable = false)
-	private String reservableType;
+	protected String reservableType;
 	
 	@ManyToOne
     @JoinColumn(name = "owner_id")
-    private User owner;
+    protected User owner;
 	
-	private String name;
+	protected String name;
 	@Column(length=4095)
-	private String description;
+	protected String description;
 	@Column(length=4095)
-	private String rules;
+	protected String rules;
 	@Embedded
-	private Location address;
-	private int price;
-	private int capacity;
+	protected Location address;
+	protected int price;
+	protected int capacity;
 	
 	@OneToMany(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "reserable_id")

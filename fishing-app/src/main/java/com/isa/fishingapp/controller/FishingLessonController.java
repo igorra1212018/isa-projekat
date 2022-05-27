@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isa.fishingapp.service.FishingLessonService;
 import com.isa.fishingapp.service.ReservationService;
+import com.isa.fishingapp.dto.FishingLessonDTO;
 import com.isa.fishingapp.dto.ReserveReservableDTO;
 import com.isa.fishingapp.model.FishingLesson;
 import com.isa.fishingapp.model.ReservationFishingLesson;
@@ -29,5 +30,13 @@ public class FishingLessonController extends ReservableController<FishingLesson,
 	public ResponseEntity<String> reserveFishingLesson(@RequestBody ReserveReservableDTO reservationParameters)
 	{
 		return fishingLessonService.reserve(reservationParameters);
+	}
+	
+	@PostMapping("/add")
+	@PreAuthorize("hasRole('ROLE_FISHING_INSTRUCTOR')")
+	public ResponseEntity<String> addFishingLesson(@RequestBody FishingLessonDTO fishingLesson)
+	{
+		System.out.println(fishingLesson.getUserId());
+		return fishingLessonService.add(fishingLesson);
 	}
 }

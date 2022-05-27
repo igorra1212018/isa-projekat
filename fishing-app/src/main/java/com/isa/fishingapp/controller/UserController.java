@@ -35,6 +35,7 @@ import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.model.UserCreationRequest;
 import com.isa.fishingapp.model.VerificationToken;
 import com.isa.fishingapp.model.enums.ERequestType;
+import com.isa.fishingapp.model.enums.ERole;
 import com.isa.fishingapp.repository.CountryRepository;
 import com.isa.fishingapp.repository.RoleRepository;
 import com.isa.fishingapp.repository.TokenRepository;
@@ -148,7 +149,15 @@ public class UserController {
 					.badRequest()
 					.body("Error: Country does not exist!");
 		createdUser.setResidence(new Location(signUpRequest.getAddress(), signUpRequest.getCity(), country, 0, 0));
-		userService.registerUser(createdUser, new UserCreationRequest(createdUser, ERequestType.LODGING_OWNER, signUpRequest.getApplicationDetails()));
+		
+		ERequestType type = null;
+		if(signUpRequest.getRole().equals("BOAT_OWNER")) type = ERequestType.BOAT_OWNER;
+		if(signUpRequest.getRole().equals("LODGING_OWNER")) type = ERequestType.LODGING_OWNER;
+		if(signUpRequest.getRole().equals("FISHING_INSTRUCTOR")) type = ERequestType.FISHING_INSTRUCTOR;
+		
+		createdUser.addRole(roleRepository.findByName(ERole.valueOf(signUpRequest.getRole())).get());
+			
+		userService.registerUser(createdUser, new UserCreationRequest(createdUser, type, signUpRequest.getApplicationDetails()));
 		String appUrl = request.getContextPath();
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(createdUser, 
           request.getLocale(), appUrl));

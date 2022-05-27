@@ -9,6 +9,7 @@ import ComplaintsView from '../views/ComplaintsView.vue'
 import ReservableView from '../views/ReservableView.vue'
 import Login from '../views/Login.vue'
 import Unauthorized from '../views/Unauthorized.vue'
+import AddFishingLesson from '../views/AddFishingLesson.vue'
 
 Vue.use(VueRouter)
 
@@ -77,6 +78,11 @@ const routes = [
     path: '/unauthorized',
     name: 'Unauthorized',
     component: Unauthorized
+  },
+  {
+    path: '/addFishingLesson',
+    name: 'AddFishingLesson',
+    component: AddFishingLesson
   },
 ]
 

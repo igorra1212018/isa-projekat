@@ -154,6 +154,10 @@ public class User {
 	public void setRoles(Set<Role> userRoles) {
 		this.roles = userRoles;
 	}
+	
+	public void addRole(Role role) {
+		this.roles.add(role);
+	}
 
 	@Override
 	public int hashCode() {
