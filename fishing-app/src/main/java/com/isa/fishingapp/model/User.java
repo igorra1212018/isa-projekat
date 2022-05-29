@@ -82,6 +82,21 @@ public class User {
 		this.contactPhone = user.getContactPhone();
 	}
 	
+	
+	
+	public User(@NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(max = 120) String password,
+			String firstName, String lastName, String contactPhone, boolean activated) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.residence = new Location();
+		this.contactPhone = contactPhone;
+		this.roles = new HashSet<Role>();
+		this.activated = activated;
+	}
+
 	public Integer getId() {
 		return id;
 	}

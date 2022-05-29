@@ -6,7 +6,7 @@ const USER_API_BASE_URL = 'http://localhost:8080/api/user/';
 class UserService{
 
     getUsers(){
-        return axios.get(USER_API_BASE_URL + 'all');
+        return axios.get(USER_API_BASE_URL + 'all', { headers: authHeader() });
     }
 
     getCountries(){
@@ -58,6 +58,14 @@ class UserService{
     updateUser(user){
         return axios.post(USER_API_BASE_URL + 'edit', user);
     }
+
+	async changeActivation(email) {
+		return axios.post(USER_API_BASE_URL + 'changeActivation', email, { headers: authHeader() })
+				.then()
+				.catch(err => {
+                console.error(err);
+            })
+	}
 }
 
 export default new UserService();

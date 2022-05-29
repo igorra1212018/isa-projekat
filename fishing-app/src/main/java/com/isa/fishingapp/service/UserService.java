@@ -126,4 +126,15 @@ public class UserService {
         vToken = tokenRepository.save(vToken);
         return vToken;
     }
+    
+    public void changeActivation(String email) {
+    	email = email.replace("%40", "@");
+    	email = email.replace("=", "");
+    	System.out.println(email);
+    	System.out.println(userRepository.findByEmail(email).get());
+    	User user = userRepository.findByEmail(email).get();
+    	user.setActivated(!user.isActivated());
+    	System.out.println(userRepository.findByEmail(email).get());
+    	userRepository.save(user);
+    }
 }

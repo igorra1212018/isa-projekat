@@ -10,6 +10,7 @@ import ReservableView from '../views/ReservableView.vue'
 import Login from '../views/Login.vue'
 import Unauthorized from '../views/Unauthorized.vue'
 import AddFishingLesson from '../views/AddFishingLesson.vue'
+import AdminReviewSignUpRequests from '../views/AdminReviewSignUpRequests.vue'
 
 Vue.use(VueRouter)
 
@@ -83,6 +84,11 @@ const routes = [
     path: '/addFishingLesson',
     name: 'AddFishingLesson',
     component: AddFishingLesson
+  },
+  {
+    path: '/adminReviewSignUpRequests',
+    name: 'AdminReviewSignUpRequests',
+    component: AdminReviewSignUpRequests
   },
 ]
 

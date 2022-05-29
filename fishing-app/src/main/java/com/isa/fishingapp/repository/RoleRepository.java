@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import com.isa.fishingapp.model.Role;
 import com.isa.fishingapp.model.enums.ERole;
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface RoleRepository extends JpaRepository<Role, Integer> {
 	Optional<Role> findByName(ERole name);
 }

@@ -65,9 +65,10 @@ public class UserController {
 	ApplicationEventPublisher eventPublisher;
 	
 	@GetMapping("/all")
-	@PreAuthorize("hasRole('ADMINISTRATOR')")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
 	public List<User> getUsers(Model model)
 	{
+		System.out.println(userService.getAllUsers());
 		return userService.getAllUsers();
 	}
 	
@@ -204,6 +205,17 @@ public class UserController {
 	    userService.save(user); 
 	    return new ResponseEntity<>(
 			      "Successful verification!", 
+			      HttpStatus.OK);
+	}
+	
+	@PostMapping("/changeActivation")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<String> changeActivation(@RequestBody String email)
+	{
+		userService.changeActivation(email);
+
+		return new ResponseEntity<>(
+			      "Changed status!",
 			      HttpStatus.OK);
 	}
 }
