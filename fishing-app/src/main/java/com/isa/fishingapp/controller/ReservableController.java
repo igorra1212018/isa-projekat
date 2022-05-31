@@ -16,14 +16,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.isa.fishingapp.dto.ActionDTO;
 import com.isa.fishingapp.dto.ReservableSearchDTO;
 import com.isa.fishingapp.model.Action;
 import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.Reservation;
-import com.isa.fishingapp.repository.ActionRepository;
+import com.isa.fishingapp.service.ActionService;
 import com.isa.fishingapp.service.ReservableService;
 import com.isa.fishingapp.service.ReservationService;
 
@@ -33,7 +35,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	@Autowired
 	ReservationService reservationService;
 	@Autowired
-	ActionRepository actionRepository;
+	ActionService actionService;
 	
 	@GetMapping("/all")
 	@PreAuthorize("permitAll")
@@ -64,7 +66,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 					HttpStatus.OK);
 		
 		List<Reservation> foundReservations = reservationService.findByEntityIdAndCancelled(reservableId, false);
-		List<Action> foundActions = actionRepository.findByReservable_IdAndAvailable(reservableId); // Actions are reserved via a separate system
+		List<Action> foundActions = actionService.findByReservable_IdAndAvailable(reservableId); // Actions are reserved via a separate system
 		List<DateRange> occupiedDateRanges = new ArrayList<>();
 		for(Reservation rl : foundReservations)
 			occupiedDateRanges.add(rl.getDateRange());
@@ -97,7 +99,25 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	public ResponseEntity<List<Action>> getAllActionReservations(@PathVariable int reservableId)
 	{
 		return new ResponseEntity<>(
-				reservationService.findByReservable_IdAndAvailable(reservableId), 
+				actionService.findByReservable_IdAndAvailable(reservableId), 
+				HttpStatus.OK);
+	}
+	
+	@PostMapping("/reservations/actions")
+	@PreAuthorize("permitAll")
+	public ResponseEntity<String> addAction(@RequestBody ActionDTO actionDTO) throws Exception
+	{
+		Action action = new Action();
+		action.setDateRange(new DateRange(actionDTO.getFromDate(), actionDTO.getToDate()));
+		action.setDiscount(actionDTO.getDiscount());
+		action.setReservable(reservableService.findById(actionDTO.getReservableId()));
+		if(action.getReservable() == null)
+			return new ResponseEntity<>(
+					"Reservable not found!", 
+					HttpStatus.NOT_FOUND);
+		actionService.save(action);
+		return new ResponseEntity<>(
+				"Action added!", 
 				HttpStatus.OK);
 	}
 	
@@ -127,5 +147,18 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 		return new ResponseEntity<>(
 					foundReservables, 
 					HttpStatus.OK);
+	}
+	
+	@GetMapping("/subscribers")
+	//@PreAuthorize("#userId == authentication.principal.id")
+	public ResponseEntity<String> isSubscriberOfReservable(@RequestParam Integer userId, @RequestParam Integer reservableId)
+	{
+		if(reservableService.isUserSubscribed(userId, reservableId))
+			return new ResponseEntity<>(
+					"SUBSCRIBED", 
+					HttpStatus.OK);
+		return new ResponseEntity<>(
+				"NOT_SUBSCRIBED", 
+				HttpStatus.OK);
 	}
 }

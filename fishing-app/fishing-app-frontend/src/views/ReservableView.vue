@@ -117,7 +117,7 @@ export default {
               this.availableReservableReservationDates.push({ start: new Date(value.fromDate[0], value.fromDate[1], value.fromDate[2], value.fromDate[3], value.fromDate[4]), end: new Date(value.toDate[0], value.toDate[1], value.toDate[2], value.toDate[3], value.toDate[4]) })
           })
         });
-        this.reservableService.getActionReservationsByReservable(1).then(res => {
+        this.reservableService.getActionReservationsByReservable(this.$route.params.id).then(res => {
             this.actions = res.data
             this.actions.forEach(value => {
                 console.log(value)

@@ -61,4 +61,11 @@ public class ReservableService<T extends Reservable> {
 	{
 		return reservableRepository.save(reservable);
 	}
+	
+	public boolean isUserSubscribed(Integer userId, Integer reservableId)
+	{
+		if(reservableRepository.isUserSubscribed(userId, reservableId).orElse(null) != null)
+			return true;
+		return false;
+	}
 }

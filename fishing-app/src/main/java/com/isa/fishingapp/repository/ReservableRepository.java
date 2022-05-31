@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.ReservableAmenity;
+import com.isa.fishingapp.model.User;
 
 public interface ReservableRepository<T extends Reservable> extends JpaRepository<T, Integer> {
 	
@@ -47,4 +48,8 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
 	@Query(value = "SELECT new ReservableAmenity(id, amenityIcon, amenityName, price) "
 			+ "FROM ReservableAmenity WHERE id = :id ")
 	Optional<ReservableAmenity> findReservableAmenityById(@Param("id") Integer id);
+	
+	@Query(value = "SELECT user_id "
+			+ "FROM user_subscriptions WHERE user_id = :user_id AND reservable_id = :reservable_id ", nativeQuery = true)
+	Optional<Integer> isUserSubscribed(@Param("user_id") Integer user_id, @Param("reservable_id") Integer reservable_id);
 }

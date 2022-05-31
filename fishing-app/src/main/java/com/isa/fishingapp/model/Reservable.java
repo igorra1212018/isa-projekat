@@ -16,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -66,6 +68,12 @@ public abstract class Reservable {
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "reservable_id")
 	private Set<Review> reviews;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(	name = "user_subscriptions", 
+				joinColumns = @JoinColumn(name = "user_id"), 
+				inverseJoinColumns = @JoinColumn(name = "reservable_id"))
+	private Set<User> subscribers;
 
 	public String getName() {
 		return name;
@@ -177,6 +185,14 @@ public abstract class Reservable {
 
 	public void setRules(String rules) {
 		this.rules = rules;
+	}
+
+	public Set<User> getSubscribers() {
+		return subscribers;
+	}
+
+	public void setSubscribers(Set<User> subscribers) {
+		this.subscribers = subscribers;
 	}
 
 	@Transient
