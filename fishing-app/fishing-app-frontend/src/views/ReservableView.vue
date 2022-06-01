@@ -145,7 +145,9 @@ export default {
             this.reservationParameters.toDate = this.range.end
             this.reservationParameters.toDate.setMonth(this.reservationParameters.toDate.getMonth() - 1)
             this.reservationParameters.amenities = this.selectedAmenities;
-            this.reservableService.reserveReservable(this.reservationParameters)
+            this.reservableService.reserveReservable(this.reservationParameters).then(() => {
+                this.$router.go();
+            })
         },
         reserveAction(a) {
             this.reservationParameters.reservableId = parseInt(this.$route.params.id)
@@ -156,7 +158,9 @@ export default {
             this.reservationParameters.toDate = new Date(a.dateRange.toDate[0], a.dateRange.toDate[1], a.dateRange.toDate[2], a.dateRange.toDate[3], a.dateRange.toDate[4])
             this.reservationParameters.toDate.setMonth(this.reservationParameters.toDate.getMonth() - 1)
             this.reservationParameters.amenities = this.selectedAmenities;
-            this.reservableService.reserveReservable(this.reservationParameters)
+            this.reservableService.reserveReservable(this.reservationParameters).then(() => {
+                this.$router.go();
+            })
         },
         subscribe() {
             if(this.user && this.reservable)
