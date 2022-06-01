@@ -1,6 +1,7 @@
 package com.isa.fishingapp.model;
 
 import java.beans.Transient;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -73,7 +74,7 @@ public abstract class Reservable {
 	@JoinTable(	name = "user_subscriptions", 
 				joinColumns = @JoinColumn(name = "user_id"), 
 				inverseJoinColumns = @JoinColumn(name = "reservable_id"))
-	private Set<User> subscribers;
+	private Set<User> subscribers = new HashSet<>();
 
 	public String getName() {
 		return name;

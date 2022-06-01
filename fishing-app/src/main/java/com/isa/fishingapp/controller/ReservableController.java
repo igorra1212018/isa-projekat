@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,15 +26,19 @@ import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.Reservation;
+import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.service.ActionService;
 import com.isa.fishingapp.service.ReservableService;
 import com.isa.fishingapp.service.ReservationService;
+import com.isa.fishingapp.service.UserService;
 
 public abstract class ReservableController<T extends Reservable, Y extends Reservation> {
 	@Autowired
 	ReservableService<T> reservableService;
 	@Autowired
 	ReservationService reservationService;
+	@Autowired
+	UserService userService;
 	@Autowired
 	ActionService actionService;
 	
@@ -150,7 +155,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	}
 	
 	@GetMapping("/subscribers")
-	//@PreAuthorize("#userId == authentication.principal.id")
+	@PreAuthorize("hasRole('CUSTOMER') and #userId == authentication.principal.id")
 	public ResponseEntity<String> isSubscriberOfReservable(@RequestParam Integer userId, @RequestParam Integer reservableId)
 	{
 		if(reservableService.isUserSubscribed(userId, reservableId))
@@ -159,6 +164,40 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 					HttpStatus.OK);
 		return new ResponseEntity<>(
 				"NOT_SUBSCRIBED", 
+				HttpStatus.OK);
+	}
+	
+	@PutMapping("/subscribers")
+	@PreAuthorize("hasRole('CUSTOMER') and #userId == authentication.principal.id")
+	public ResponseEntity<String> subscribeUserToReservable(@RequestParam Integer userId, @RequestParam Integer reservableId)
+	{
+		User user = userService.findById(userId);
+		T reservable = reservableService.findById(reservableId);
+		if(reservable == null || user == null)
+			return new ResponseEntity<>(
+					"NOT FOUND", 
+					HttpStatus.NOT_FOUND);
+		reservable.getSubscribers().add(user);
+		reservableService.save(reservable);
+		return new ResponseEntity<>(
+				"Successfully subscribed!", 
+				HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/subscribers")
+	@PreAuthorize("hasRole('CUSTOMER') and #userId == authentication.principal.id")
+	public ResponseEntity<String> unsubscribeUserToReservable(@RequestParam Integer userId, @RequestParam Integer reservableId)
+	{
+		User user = userService.findById(userId);
+		T reservable = reservableService.findById(reservableId);
+		if(reservable == null || user == null)
+			return new ResponseEntity<>(
+					"NOT FOUND", 
+					HttpStatus.NOT_FOUND);
+		reservable.getSubscribers().remove(user);
+		reservableService.save(reservable);
+		return new ResponseEntity<>(
+				"Successfully unsubscribed!", 
 				HttpStatus.OK);
 	}
 }

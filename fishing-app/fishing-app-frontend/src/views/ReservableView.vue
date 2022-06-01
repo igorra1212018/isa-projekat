@@ -6,6 +6,8 @@
             <div class="reservable-white-panel">
                 <div style="width: 100%; height: 400px;" v-if="reservable.primaryImage && reservable.primaryImage.data">
                     <img :src="convertImageToBase64(reservable.primaryImage.data)" style="width: 100%; height: 400px">
+                    <input style="position: absolute; right: 36%; bottom: 53%" type="button" class="blue-button" value="Subscribe" v-if="this.user && this.subscribed != 'SUBSCRIBED'" v-on:click="subscribe()"/>
+                    <input style="position: absolute; right: 36%; bottom: 53%" type="button" class="blue-button" value="Unsubscribe" v-if="this.user && this.subscribed == 'SUBSCRIBED'" v-on:click="unsubscribe()"/>
                 </div>
                 <div class="pc-tab">
                     <input checked="checked" id="tab1" type="radio" v-model="selectedTab" value="Overview" />
@@ -103,15 +105,19 @@ export default {
             actions: [],
             reservationParameters: {},
             selectedTab: 'Overview',
-            attributes: []
+            attributes: [],
+            subscribed: "NOT_SUBSCRIBER"
         }
     },
     mounted: function() {
         this.reservableService = new ReservableService(this.$route.params.reservable_type);
         this.reservableService.getReservable(this.$route.params.id).then(res => {
-          this.reservable = res.data
+            this.reservable = res.data
+            this.user = localStorage.getItem('user');
+            this.reservableService.isSubscriberOf(JSON.parse(this.user).id, this.reservable.id).then(res2 => {
+                this.subscribed = res2.data
+            })
         });
-        this.user = localStorage.getItem('user');
         this.reservableService.getAvailableReservablesReservationDates(this.$route.params.id).then(res => {
           res.data.forEach(value => {
               this.availableReservableReservationDates.push({ start: new Date(value.fromDate[0], value.fromDate[1], value.fromDate[2], value.fromDate[3], value.fromDate[4]), end: new Date(value.toDate[0], value.toDate[1], value.toDate[2], value.toDate[3], value.toDate[4]) })
@@ -120,7 +126,6 @@ export default {
         this.reservableService.getActionReservationsByReservable(this.$route.params.id).then(res => {
             this.actions = res.data
             this.actions.forEach(value => {
-                console.log(value)
                 this.attributes.push({
                     highlight: 'green',
                     dates: {
@@ -152,6 +157,18 @@ export default {
             this.reservationParameters.toDate.setMonth(this.reservationParameters.toDate.getMonth() - 1)
             this.reservationParameters.amenities = this.selectedAmenities;
             this.reservableService.reserveReservable(this.reservationParameters)
+        },
+        subscribe() {
+            if(this.user && this.reservable)
+                this.reservableService.subscribeUserToReservable(JSON.parse(this.user).id, this.reservable.id).then(() => {
+                    this.$router.go();
+                })
+        },
+        unsubscribe() {
+            if(this.user && this.reservable)
+                this.reservableService.unsubscribeUserToReservable(JSON.parse(this.user).id, this.reservable.id).then(() => {
+                    this.$router.go();
+                })
         },
         convertImageToBase64(byteArray) {
             return 'data:image/jpeg;base64,' + byteArray;
