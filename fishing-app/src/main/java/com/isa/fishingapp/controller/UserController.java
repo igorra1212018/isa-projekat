@@ -163,18 +163,8 @@ public class UserController {
 		return userService.updateUser(user);
 	}
 	
-	@PostMapping("/login")
-	public String login(@ModelAttribute User user)
-	{
-		User loggedUser = userService.authenticate(user.getEmail(), user.getPassword());
-		if(loggedUser != null)
-			return "redirect:/";
-		return "redirect:/register";
-	}
-	
 	@GetMapping("/registration_confirm")
 	public ResponseEntity<String> confirmRegistration(@RequestParam("token") String token) {
-	    System.out.println("GOT HERE");
 		
 	    VerificationToken verificationToken = tokenRepository.findByToken(token).orElse(null);
 	    if (verificationToken == null) {
