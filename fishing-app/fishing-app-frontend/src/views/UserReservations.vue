@@ -24,7 +24,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
+            <div style="background-color: white">
+                <h2>Subscriptions</h2>
+                <div v-for="s in subscriptions" :key="s.id">
+                    <p>{{s.name}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
         </div>
     </div>
 </template>
@@ -42,6 +50,7 @@ export default {
                 id: 0
             },
             reservations: [],
+            subscriptions: [],
             lodgingService: {}
         }
     },
@@ -54,6 +63,9 @@ export default {
             this.lodgingService = new ReservableService('lodging')
             this.lodgingService.getReservationsByUser(this.$route.params.id).then(res => {
               this.reservations = res.data
+            });
+            this.lodgingService.getAllSubscribedReservables(this.$route.params.id).then(res => {
+              this.subscriptions = res.data
             });
         },
         convertImageToBase64(byteArray) {

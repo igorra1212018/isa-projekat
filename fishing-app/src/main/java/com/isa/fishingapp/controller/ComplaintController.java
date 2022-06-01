@@ -37,8 +37,7 @@ public class ComplaintController {
 	
 	@GetMapping
 	@ResponseBody
-	public ResponseEntity<List<Complaint>> getComplaints(@RequestParam(required = false, name = "userId") Integer userId) { 
-		System.out.println("GOT HERE");
+	public ResponseEntity<List<Complaint>> getComplaints(@RequestParam(required = false, name = "userId") Integer userId) {
 	    if(userId == null)
 	    	return new ResponseEntity<>(
 					complaintService.findAll(), 

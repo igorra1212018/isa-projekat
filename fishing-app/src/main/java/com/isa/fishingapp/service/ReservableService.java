@@ -68,6 +68,10 @@ public class ReservableService<T extends Reservable> {
 			return true;
 		return false;
 	}
+	
+	public List<T> findAllBySubscribedUser(Integer userId) {
+		return reservableRepository.findAllBySubscribedUser(userId);
+	}
 
 	public void save(T reservable) {
 		reservableRepository.save(reservable);

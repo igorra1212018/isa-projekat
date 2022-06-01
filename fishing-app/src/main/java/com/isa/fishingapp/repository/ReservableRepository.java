@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.ReservableAmenity;
-import com.isa.fishingapp.model.User;
 
 public interface ReservableRepository<T extends Reservable> extends JpaRepository<T, Integer> {
 	
@@ -52,4 +51,9 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
 	@Query(value = "SELECT user_id "
 			+ "FROM user_subscriptions WHERE user_id = :user_id AND reservable_id = :reservable_id ", nativeQuery = true)
 	Optional<Integer> isUserSubscribed(@Param("user_id") Integer user_id, @Param("reservable_id") Integer reservable_id);
+	
+	@Query(value = "SELECT * "
+			+ "FROM reservable AS r "
+			+ "WHERE EXISTS ( SELECT 1 FROM user_subscriptions WHERE user_id = :user_id AND r.id = reservable_id)", nativeQuery = true)
+	List<T> findAllBySubscribedUser(@Param("user_id") Integer user_id);
 }

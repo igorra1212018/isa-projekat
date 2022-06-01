@@ -52,6 +52,10 @@ export default class ReservableService{
         return axios.get(this.CONTROLLER_ENDPOINT + 'subscribers?userId=' + userId + '&reservableId=' + reservableId, { headers: authHeader() });
     }
 
+    getAllSubscribedReservables(userId){
+        return axios.get(this.CONTROLLER_ENDPOINT + 'subscribers?userId=' + userId, { headers: authHeader() });
+    }
+
     subscribeUserToReservable(userId, reservableId) {
         return axios.put(this.CONTROLLER_ENDPOINT + 'subscribers?userId=' + userId + '&reservableId=' + reservableId, "", { headers: authHeader() });
     }

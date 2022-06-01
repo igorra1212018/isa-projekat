@@ -156,15 +156,20 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	
 	@GetMapping("/subscribers")
 	@PreAuthorize("hasRole('CUSTOMER') and #userId == authentication.principal.id")
-	public ResponseEntity<String> isSubscriberOfReservable(@RequestParam Integer userId, @RequestParam Integer reservableId)
+	public ResponseEntity<?> getAllSubscribedReservables(@RequestParam Integer userId, @RequestParam(required = false, name = "reservableId") Integer reservableId)
 	{
-		if(reservableService.isUserSubscribed(userId, reservableId))
+		if(reservableId != null) {
+			if(reservableService.isUserSubscribed(userId, reservableId))
+				return new ResponseEntity<>(
+						"SUBSCRIBED", 
+						HttpStatus.OK);
 			return new ResponseEntity<>(
-					"SUBSCRIBED", 
+					"NOT_SUBSCRIBED", 
 					HttpStatus.OK);
+		}
 		return new ResponseEntity<>(
-				"NOT_SUBSCRIBED", 
-				HttpStatus.OK);
+			reservableService.findAllBySubscribedUser(userId), 
+			HttpStatus.OK);
 	}
 	
 	@PutMapping("/subscribers")
