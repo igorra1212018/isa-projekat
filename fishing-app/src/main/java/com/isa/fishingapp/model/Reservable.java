@@ -30,7 +30,7 @@ import javax.persistence.Table;
 @Table(name="reservable")
 public abstract class Reservable {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@Column(name = "reservable_type", insertable=false, updatable=false, nullable = false)

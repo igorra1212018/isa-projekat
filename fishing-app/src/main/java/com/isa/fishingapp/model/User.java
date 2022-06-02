@@ -1,5 +1,6 @@
 package com.isa.fishingapp.model;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,6 +49,9 @@ public class User {
 	@Embedded
 	Location residence;
 	String contactPhone;
+	
+	Integer penaltyPoints = 0;
+	LocalDateTime lastPenaltyPointDate;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
@@ -153,6 +157,22 @@ public class User {
 
 	public void setRoles(Set<Role> userRoles) {
 		this.roles = userRoles;
+	}
+
+	public Integer getPenaltyPoints() {
+		return penaltyPoints;
+	}
+
+	public void setPenaltyPoints(Integer penaltyPoints) {
+		this.penaltyPoints = penaltyPoints;
+	}
+
+	public LocalDateTime getLastPenaltyPointDate() {
+		return lastPenaltyPointDate;
+	}
+
+	public void setLastPenaltyPointDate(LocalDateTime lastPenaltyPointDate) {
+		this.lastPenaltyPointDate = lastPenaltyPointDate;
 	}
 
 	@Override
