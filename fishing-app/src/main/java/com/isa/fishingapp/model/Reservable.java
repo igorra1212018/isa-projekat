@@ -51,7 +51,7 @@ public abstract class Reservable {
 	private int capacity;
 	
 	@OneToMany(cascade = CascadeType.DETACH)
-	@JoinColumn(name = "reserable_id")
+	@JoinColumn(name = "reservable_id")
 	private Set<AvailableDateRange> availableDateRanges;
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
