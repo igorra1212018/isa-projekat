@@ -31,6 +31,8 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
 			+ "AND LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) "
 			+ "AND LOWER(city) LIKE LOWER(CONCAT('%', :city, '%')) "
 			+ "AND country_id = :countryId OR :countryId = 0 "
+			+ "AND price BETWEEN :priceFrom AND :priceTo "
+			+ "AND capacity BETWEEN :capacityFrom AND :capacityTo "
 			+ "AND EXISTS ( SELECT 1 FROM available_date_range WHERE reservable_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) AND (:dateTo BETWEEN from_date AND to_date) ) "
 			+ "AND NOT EXISTS ( SELECT 1 FROM reservation WHERE reserved_entity_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) OR (:dateTo BETWEEN from_date AND to_date) )", nativeQuery = true)
     Page<T> findBySearch(@Param("discriminatorParameter") String discriminatorParameter,
@@ -38,11 +40,19 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
     		@Param("city") String city,
     		@Param("countryId") Integer countryId,
     		@Param("dateFrom") LocalDateTime dateFrom,
-    		@Param("dateTo") LocalDateTime dateTo, 
+    		@Param("dateTo") LocalDateTime dateTo,
+    		@Param("priceFrom") Integer priceFrom,
+    		@Param("priceTo") Integer priceTo,
+    		@Param("capacityFrom") Integer capacityFrom,
+    		@Param("capacityTo") Integer capacityTo,
     		Pageable pageable);
 	
 	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCityContainingIgnoreCase(String reservableType, String name, String city, Pageable pageable);
 	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryIdAndAddressCityContainingIgnoreCase(String reservableType, String name, Integer countryId, String city, Pageable pageable);
+	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCityContainingIgnoreCaseAndPriceBetween(String reservableType, String name, String city, Integer fromPrice, Integer toPrice, Pageable pageable);
+	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryIdAndAddressCityContainingIgnoreCaseAndPriceBetween(String reservableType, String name, Integer countryId, String city, Integer fromPrice, Integer toPrice, Pageable pageable);
+	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCityContainingIgnoreCaseAndPriceBetweenAndCapacityBetween(String reservableType, String name, String city, Integer fromPrice, Integer toPrice, Integer fromCapacity, Integer toCapacity, Pageable pageable);
+	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryIdAndAddressCityContainingIgnoreCaseAndPriceBetweenAndCapacityBetween(String reservableType, String name, Integer countryId, String city, Integer fromPrice, Integer toPrice, Integer fromCapacity, Integer toCapacity, Pageable pageable);
 	
 	@Query(value = "SELECT new ReservableAmenity(id, amenityIcon, amenityName, price) "
 			+ "FROM ReservableAmenity WHERE id = :id ")

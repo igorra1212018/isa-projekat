@@ -73,6 +73,28 @@
                 <label for='sort_price_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
               </div>
           </div>
+          <div class="row d-flex mt-5">
+              <div class="col-md-4">
+                  <label class="input_label">
+                      <input type="number" min="0" name="fromCapacity" v-model="searchParameters.fromCapacity">
+                      <span class="keep_hovered">Capacity From</span>
+                  </label>
+              </div>
+              <div class="col-md-4">
+                  <label class="input_label">
+                      <input type="number" min="0" name="toCapacity" v-model="searchParameters.toCapacity">
+                      <span class="keep_hovered">Capacity To</span>
+                  </label>
+              </div>
+              <div class="col-md-2">
+                <input type='radio' id='sort_capacity_ascending' name='sort' class="blue_option" v-model="currentSort" value="capacity_ascending">
+                <label for='sort_capacity_ascending'><font-awesome-icon icon="fa-solid fa-sort-up" /></label>
+              </div>
+              <div class="col-md-2">
+                <input type='radio' id='sort_capacity_descending' name='sort' class="blue_option" v-model="currentSort" value="capacity_descending">
+                <label for='sort_capacity_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
+              </div>
+          </div>
           <v-date-picker v-model="range" :min-date='new Date()' style="width: 100%; margin-bottom: 10px" is-range/>
           <input type="button" class="blue-button" value="Search" v-on:click="search()"/>
         </div>

@@ -9,6 +9,10 @@ public class ReservableSearchDTO {
 	String name;
 	Location location;
 	DateRange dateRange;
+	Integer fromPrice = 0;
+	Integer toPrice = 10000;
+	Integer fromCapacity = 0;
+	Integer toCapacity = 100;
 	String sortType = "name";
 	String sortDir = "ascending";
 	
@@ -42,9 +46,34 @@ public class ReservableSearchDTO {
 	public void setSortDir(String sortDir) {
 		this.sortDir = sortDir;
 	}
+	public Integer getFromPrice() {
+		return fromPrice;
+	}
+	public void setFromPrice(Integer fromPrice) {
+		this.fromPrice = fromPrice;
+	}
+	public Integer getToPrice() {
+		return toPrice;
+	}
+	public void setToPrice(Integer toPrice) {
+		this.toPrice = toPrice;
+	}
+	public Integer getFromCapacity() {
+		return fromCapacity;
+	}
+	public void setFromCapacity(Integer fromCapacity) {
+		this.fromCapacity = fromCapacity;
+	}
+	public Integer getToCapacity() {
+		return toCapacity;
+	}
+	public void setToCapacity(Integer toCapacity) {
+		this.toCapacity = toCapacity;
+	}
 	@Override
 	public String toString() {
-		return "ReservableSearchDTO [name=" + name + ", location=" + location + ", dateRange=" + dateRange + "]";
+		return "ReservableSearchDTO [name=" + name + ", location=" + location + ", dateRange=" + dateRange
+				+ ", fromPrice=" + fromPrice + ", toPrice=" + toPrice + ", fromCapacity=" + fromCapacity
+				+ ", toCapacity=" + toCapacity + ", sortType=" + sortType + ", sortDir=" + sortDir + "]";
 	}
-	
 }
