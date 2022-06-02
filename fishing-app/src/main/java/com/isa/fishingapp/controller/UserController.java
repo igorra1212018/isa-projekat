@@ -77,7 +77,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/{userId}")
-	@PostAuthorize("returnObject.body.email == authentication.principal.email")
+	@PreAuthorize("#userId == authentication.principal.id")
     public ResponseEntity<UserDTO> getUserById(@PathVariable int userId) {
 		return Optional
 	            .ofNullable( userService.findById(userId) )
@@ -157,8 +157,17 @@ public class UserController {
 	}
 	
 	@PostMapping("/edit")
+	@PreAuthorize("isAuthenticated() and #user.id == authentication.principal.id")
 	public ResponseEntity<String> editUserProfile(@RequestBody UserProfileChangeDTO user)
 	{
+		//Sanitization to prevent JSON parser attacks on the country database
+		Country country = countryRepository.findById(user.getCountry().getId()).orElse(null);
+		if(country == null)
+			return new ResponseEntity<>(
+				      "Country not found!", 
+				      HttpStatus.NOT_FOUND);
+		user.setCountry(country);
+		
 		return userService.updateUser(user);
 	}
 	

@@ -68,12 +68,14 @@ public class UserService {
 				      "Not Authorized", 
 				      HttpStatus.UNAUTHORIZED);
 		}
+		boolean wasUserActivated = userToUpdate.isActivated();
 		String oldPassword = "";
 		if(user.getNewPassword() == null || user.getNewPassword().isBlank())
 			oldPassword = userToUpdate.getPassword();
 		userToUpdate = new User(user);
 		if(!oldPassword.isBlank())
 			userToUpdate.setPassword(oldPassword);
+		userToUpdate.setActivated(wasUserActivated);
 		userRepository.save(userToUpdate);
 		return new ResponseEntity<>(
 			      "Profile edit successful!", 
