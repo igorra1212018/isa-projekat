@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isa.fishingapp.dto.OwnerDTO;
 import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
+import com.isa.fishingapp.event.OnRegistrationCompleteEvent;
 import com.isa.fishingapp.jwt.JwtUtils;
 import com.isa.fishingapp.model.Country;
 import com.isa.fishingapp.model.Location;
@@ -40,7 +41,6 @@ import com.isa.fishingapp.repository.CountryRepository;
 import com.isa.fishingapp.repository.RoleRepository;
 import com.isa.fishingapp.repository.TokenRepository;
 import com.isa.fishingapp.service.UserService;
-import com.isa.fishingapp.event.OnRegistrationCompleteEvent;
 
 @RestController
 @RequestMapping("/api/user")
@@ -218,4 +218,33 @@ public class UserController {
 			      "Changed status!",
 			      HttpStatus.OK);
 	}
+	
+	@GetMapping("/getAllUserCreationRequests")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public List<UserCreationRequest> getAllUserCreationRequests(){
+
+		return userService.getAllUserCreationRequests();
+	}
+	
+	@PostMapping("/{id}/approveRequest")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<String> approveRequest(@PathVariable int id)
+	{
+		return userService.approveRequest(id);
+	}
+	
+	@PostMapping("/{id}/rejectRequest")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<String> rejectRequest(@PathVariable int id, @RequestBody String description)
+	{
+		return userService.rejectRequest(id, description);
+	}
+	
+	@PostMapping("/registerAdmin")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR') and authentication.principal.email == 'admin@gmail.com'")
+	public ResponseEntity<String> registerAdmin(@RequestBody OwnerDTO user)
+	{	
+		return userService.registerAdmin(user);
+	}
+	
 }

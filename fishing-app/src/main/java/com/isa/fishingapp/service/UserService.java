@@ -7,14 +7,22 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.isa.fishingapp.dto.OwnerDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
+import com.isa.fishingapp.event.OnRegistrationCompleteEvent;
+import com.isa.fishingapp.model.Country;
+import com.isa.fishingapp.model.Location;
 import com.isa.fishingapp.model.Role;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.model.UserCreationRequest;
 import com.isa.fishingapp.model.VerificationToken;
+import com.isa.fishingapp.model.enums.ERequestApproval;
+import com.isa.fishingapp.model.enums.ERequestType;
 import com.isa.fishingapp.model.enums.ERole;
+import com.isa.fishingapp.repository.CountryRepository;
 import com.isa.fishingapp.repository.RoleRepository;
 import com.isa.fishingapp.repository.TokenRepository;
 import com.isa.fishingapp.repository.UserCreationRequestRepository;
@@ -31,6 +39,10 @@ public class UserService {
 	private RoleRepository roleRepository;
 	@Autowired
 	private TokenRepository tokenRepository;
+	@Autowired
+	private PasswordEncoder encoder;
+	@Autowired
+	CountryRepository countryRepository;
 	
 	public User registerUser(User user)
 	{
@@ -82,7 +94,10 @@ public class UserService {
 	
 	public User authenticate(String email, String password)
 	{
-		return userRepository.findByEmailAndPassword(email, password).orElse(null);
+		User user = userRepository.findByEmailAndPassword(email, password).orElse(null);
+		if(user != null && !user.isActivated())
+			return null;
+		return user;
 	}
 	
 	public List<User> getAllUsers()
@@ -137,4 +152,63 @@ public class UserService {
     	System.out.println(userRepository.findByEmail(email).get());
     	userRepository.save(user);
     }
+
+	public List<UserCreationRequest> getAllUserCreationRequests() {
+	
+		return userCreationRequestRepository.findAll();
+	}
+
+	public ResponseEntity<String> approveRequest(int id) {
+		UserCreationRequest request = userCreationRequestRepository.getById(id);
+		request.setRequestApproval(ERequestApproval.APPROVED);
+		request.getUser().setActivated(true);
+		userCreationRequestRepository.save(request);
+		
+		return new ResponseEntity<>(
+			      "Request approved!", 
+			      HttpStatus.OK);
+	}
+
+	public ResponseEntity<String> rejectRequest(int id, String description) {
+		
+		description.substring(0, description.length() - 1);
+		System.out.println(description);
+		UserCreationRequest request = userCreationRequestRepository.getById(id);
+		request.setRejectionResponse(description);
+		request.setRequestApproval(ERequestApproval.REJECTED);
+		userCreationRequestRepository.save(request);
+		
+		return new ResponseEntity<>(
+			      "Request approved!", 
+			      HttpStatus.OK);
+	}
+
+	public ResponseEntity<String> registerAdmin(OwnerDTO user) {
+		
+		
+		if (userRepository.findByEmail(user.getEmail()).orElse(null) != null) {
+			System.out.println(user.getEmail());
+			return ResponseEntity
+					.badRequest()
+					.body("Error: Email is already taken!");
+		}
+		user.setPassword(encoder.encode(user.getPassword()));
+		User createdUser = new User(user);
+		Country country = countryRepository.findById(user.getCountry().getId()).orElse(null);
+		if(country == null)
+			return ResponseEntity
+					.badRequest()
+					.body("Error: Country does not exist!");
+		createdUser.setResidence(new Location(user.getAddress(), user.getCity(), country, 0, 0));
+
+		createdUser.addRole(roleRepository.findByName(ERole.ADMINISTRATOR).get());
+			
+		userRepository.save(createdUser);
+//		String appUrl = request.getContextPath();
+//        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(createdUser, 
+//          request.getLocale(), appUrl));
+		return new ResponseEntity<>(
+			      "Registration successful!", 
+			      HttpStatus.OK);
+	}
 }

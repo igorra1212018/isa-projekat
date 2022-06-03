@@ -61,4 +61,20 @@ public class ReservableService<T extends Reservable> {
 	{
 		return reservableRepository.save(reservable);
 	}
+
+	public Object deleteReservable(int reservableId) {
+
+		Reservable reservableToDelete = reservableRepository.findById(reservableId).orElse(null);
+		if(reservableToDelete != null)
+		{
+			reservableRepository.deleteById(reservableId);
+			return 1;
+		}
+		return null;
+	}
+
+	public List<T> getAllReservablesByUser(int id) {
+
+		return reservableRepository.findByOwnerId(discriminatorString, id);
+	}
 }

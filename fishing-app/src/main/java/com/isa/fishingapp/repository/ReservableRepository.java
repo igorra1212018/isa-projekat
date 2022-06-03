@@ -47,4 +47,12 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
 	@Query(value = "SELECT new ReservableAmenity(id, amenityIcon, amenityName, price) "
 			+ "FROM ReservableAmenity WHERE id = :id ")
 	Optional<ReservableAmenity> findReservableAmenityById(@Param("id") Integer id);
+
+	@Query(value = "SELECT * "
+			+ "FROM reservable "
+			+ "WHERE reservable_type = :discriminatorParameter "
+			+ "AND owner_id = :id", nativeQuery = true)
+	List<T> findByOwnerId(@Param("discriminatorParameter") String discriminatorParameter, @Param("id") int id);
+	
+	
 }

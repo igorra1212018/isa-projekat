@@ -46,7 +46,7 @@
 import UserService from '../services/UserService';
 
 export default {
-    name: 'AdminReviewSignUpRequest',
+    name: 'AdminViewUsers',
     data(){
         return {
 			users: [],
@@ -69,12 +69,14 @@ export default {
             return 'data:image/jpeg;base64,' + byteArray;
         },
         changeActivation(email) {
+			//darko
 			console.log(email);
 			this.users = [];
 			UserService.changeActivation(email).then();
 			this.getUsers().then();
 			this.$forceUpdate();
 			this.componentKey += 1;
+			window.location.reload();
         },
         getUsers(){
 			UserService.getUsers().then(response => {

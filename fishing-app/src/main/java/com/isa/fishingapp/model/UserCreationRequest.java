@@ -30,6 +30,8 @@ public class UserCreationRequest {
 	String requestDescription;
 	String rejectionResponse;
 	
+	public UserCreationRequest() {}
+	
 	public UserCreationRequest(User user, ERequestType requestType, String requestDescription) {
 		this.user = user;
 		this.setRequestType(requestType);
@@ -52,4 +54,38 @@ public class UserCreationRequest {
 	public void setRequestApproval(ERequestApproval requestApproval) {
 		this.requestApproval = requestApproval;
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getRequestDescription() {
+		return requestDescription;
+	}
+
+	public void setRequestDescription(String requestDescription) {
+		this.requestDescription = requestDescription;
+	}
+
+	public String getRejectionResponse() {
+		return rejectionResponse;
+	}
+
+	public void setRejectionResponse(String rejectionResponse) {
+		this.rejectionResponse = rejectionResponse;
+	}
+	
+	
 }

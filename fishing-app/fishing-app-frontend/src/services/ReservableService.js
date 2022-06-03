@@ -47,4 +47,16 @@ export default class ReservableService{
     cancelReservation(reservationId){
         return axios.put(this.CONTROLLER_ENDPOINT + 'reservations/' + reservationId + '/cancel', reservationId, { headers: authHeader() });
     }
+
+	deleteReservation(id){
+        return axios.delete(this.CONTROLLER_ENDPOINT + 'reservations/' + id + '/delete', { headers: authHeader() });
+    }
+
+    getAllReservablesByUser(id){
+        return axios.get(this.CONTROLLER_ENDPOINT + 'all/' + id, { headers: authHeader() });
+    }
+
+    deleteReservable(id) {
+        return axios.delete(this.CONTROLLER_ENDPOINT + id + '/delete', { headers: authHeader() });
+    }
 }

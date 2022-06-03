@@ -10,7 +10,12 @@ import ReservableView from '../views/ReservableView.vue'
 import Login from '../views/Login.vue'
 import Unauthorized from '../views/Unauthorized.vue'
 import AddFishingLesson from '../views/AddFishingLesson.vue'
-import AdminReviewSignUpRequests from '../views/AdminReviewSignUpRequests.vue'
+import AdminViewUsers from '../views/AdminViewUsers.vue'
+import AdminReservables from '../views/AdminReservables.vue'
+import AdminViewUserRequests from '../views/AdminViewUserRequests.vue'
+import AdminRegisterNewAdmin from '../views/AdminRegisterNewAdmin.vue'
+import UserViewReservables from '../views/UserViewReservables.vue'
+import EditFishingLesson from '../views/EditFishingLesson.vue'
 
 Vue.use(VueRouter)
 
@@ -86,9 +91,34 @@ const routes = [
     component: AddFishingLesson
   },
   {
-    path: '/adminReviewSignUpRequests',
-    name: 'AdminReviewSignUpRequests',
-    component: AdminReviewSignUpRequests
+    path: '/adminViewUsers',
+    name: 'AdminViewUsers',
+    component: AdminViewUsers
+  },
+  {
+    path: '/adminReservables',
+    name: 'AdminReservables',
+    component: AdminReservables
+  },
+  {
+    path: '/adminViewUserRequests',
+    name: 'AdminViewUserRequests',
+    component: AdminViewUserRequests
+  },
+  {
+    path: '/adminRegisterNewAdmin',
+    name: 'AdminRegisterNewAdmin',
+    component: AdminRegisterNewAdmin
+  },
+  {
+    path: '/userViewReservables',
+    name: 'UserViewReservables',
+    component: UserViewReservables
+  },
+  {
+    path: '/reservables/fishinglesson/:id/edit',
+    name: 'EditFishingLesson',
+    component: EditFishingLesson
   },
 ]
 

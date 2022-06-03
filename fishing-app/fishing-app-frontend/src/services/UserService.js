@@ -59,12 +59,40 @@ class UserService{
         return axios.post(USER_API_BASE_URL + 'edit', user);
     }
 
-	async changeActivation(email) {
+	changeActivation(email) {
 		return axios.post(USER_API_BASE_URL + 'changeActivation', email, { headers: authHeader() })
 				.then()
 				.catch(err => {
                 console.error(err);
             })
+	}
+	
+	getAllUserCreationRequests(){
+		return axios.get(USER_API_BASE_URL + 'getAllUserCreationRequests', { headers: authHeader() })
+				.then()
+				.catch(err => {
+                console.error(err);
+            })
+	}
+	
+	approveRequest(id) {
+		return axios.post(USER_API_BASE_URL + id + '/approveRequest', {}, { headers: authHeader() })
+				.then()
+				.catch(err => {
+                console.error(err);
+            })
+	}
+	
+	rejectRequest(id, description) {
+		return axios.post(USER_API_BASE_URL + id + '/rejectRequest', description, { headers: authHeader() })
+				.then()
+				.catch(err => {
+                console.error(err);
+            })
+	}
+	
+	registerAdmin(user) {
+		return axios.post(USER_API_BASE_URL + 'registerAdmin', user, { headers: authHeader() });
 	}
 }
 

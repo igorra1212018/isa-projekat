@@ -10,12 +10,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.isa.fishingapp.dto.ReservableSearchDTO;
 import com.isa.fishingapp.model.Action;
@@ -26,6 +31,8 @@ import com.isa.fishingapp.model.Reservation;
 import com.isa.fishingapp.repository.ActionRepository;
 import com.isa.fishingapp.service.ReservableService;
 import com.isa.fishingapp.service.ReservationService;
+import com.isa.fishingapp.service.UserDetailsImpl;
+import com.isa.fishingapp.service.UserDetailsServiceImpl;
 
 public abstract class ReservableController<T extends Reservable, Y extends Reservation> {
 	@Autowired
@@ -34,6 +41,9 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	ReservationService reservationService;
 	@Autowired
 	ActionRepository actionRepository;
+	@Autowired
+	UserDetailsServiceImpl userDetailsServiceImpl;
+
 	
 	@GetMapping("/all")
 	@PreAuthorize("permitAll")
@@ -127,5 +137,39 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 		return new ResponseEntity<>(
 					foundReservables, 
 					HttpStatus.OK);
+	}
+	
+	@DeleteMapping("{reservableId}/delete")
+//	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<String> deleteReservable(@PathVariable int reservableId)
+	{
+		
+		int ownerId = reservableService.findById(reservableId).getOwner().getId();
+//		UserDetails details = userDetailsServiceImpl.loadUserByUsername(null)
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println(auth.getDetails());
+		System.out.println(auth.getName());
+		System.out.println(auth.getPrincipal());
+//		if (auth == null || !auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMINISTRATOR"))) 
+//			return new ResponseEntity<>(
+//					"UNAUTHORIZED!!", 
+//					HttpStatus.UNAUTHORIZED);
+		
+		
+		if(reservableService.deleteReservable(reservableId) != null)
+			return new ResponseEntity<>(
+					"Reservable successfully deleted!", 
+					HttpStatus.OK);
+		return new ResponseEntity<>(
+				"Reservable not found!", 
+				HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping("/all/{id}")
+	@PreAuthorize("authentication.principal.id == #id")
+	public List<T> getAllReservablesByUser(@PathVariable int id)
+	{
+		return reservableService.getAllReservablesByUser(id);
 	}
 }

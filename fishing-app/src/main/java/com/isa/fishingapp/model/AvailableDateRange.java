@@ -23,6 +23,8 @@ public class AvailableDateRange {
 	@ManyToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "reservable_id")
 	Reservable reservable;
+	
+	Integer userId;
 
 	public Integer getId() {
 		return id;

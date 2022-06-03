@@ -13,6 +13,8 @@ public class FishingLesson extends Reservable {
 	private String cancelCondition;
 	private String biography;
 	
+	public FishingLesson() {};
+	
 	public FishingLesson(FishingLessonDTO fishingLessonDTO) {
 		this.name = fishingLessonDTO.getName();
 		this.description = fishingLessonDTO.getDescription();

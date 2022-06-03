@@ -9,6 +9,14 @@ class FishingLessonService{
 		return axios.post(BASE_URL + 'add', fishingLesson , { headers: authHeader() });
 	}
 
+	getFishingLesson(id) {
+		return axios.get(BASE_URL + id, { headers: authHeader() });
+	}
+
+	editFishingLesson(fishingLesson) {
+		return axios.put(BASE_URL + 'edit', fishingLesson , { headers: authHeader() });
+	}
+
 }
 
 export default new FishingLessonService();
