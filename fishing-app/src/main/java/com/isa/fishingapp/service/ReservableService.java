@@ -45,10 +45,10 @@ public class ReservableService<T extends Reservable> {
 			countryId = country.getId();
 		if(searchParameters.getDateRange() == null || searchParameters.getDateRange().getFromDate() == null || searchParameters.getDateRange().getToDate() == null) {
 			if(countryId != null && countryId != 0)
-				return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryIdAndAddressCityContainingIgnoreCaseAndPriceBetweenAndCapacityBetween(discriminatorString, searchParameters.getName(), countryId, searchParameters.getLocation().getCity(), searchParameters.getFromPrice(), searchParameters.getToPrice(), searchParameters.getFromCapacity(), searchParameters.getToCapacity(), pageable);
-			return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCityContainingIgnoreCaseAndPriceBetweenAndCapacityBetween(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), searchParameters.getFromPrice(), searchParameters.getToPrice(), searchParameters.getFromCapacity(), searchParameters.getToCapacity(), pageable);
+				return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), searchParameters.getLocation().getCountry().getId() , searchParameters.getFromPrice(), searchParameters.getToPrice(), searchParameters.getFromCapacity(), searchParameters.getToCapacity(), searchParameters.getFromRating(), searchParameters.getToRating(), pageable);
+			return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), searchParameters.getFromPrice(), searchParameters.getToPrice(), searchParameters.getFromCapacity(), searchParameters.getToCapacity(), searchParameters.getFromRating(), searchParameters.getToRating(), pageable);
 		}
-		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), countryId, searchParameters.getDateRange().getFromDate(), searchParameters.getDateRange().getToDate(), searchParameters.getFromPrice(), searchParameters.getToPrice(), searchParameters.getFromCapacity(), searchParameters.getToCapacity(), pageable);
+		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), countryId, searchParameters.getDateRange().getFromDate(), searchParameters.getDateRange().getToDate(), searchParameters.getFromPrice(), searchParameters.getToPrice(), searchParameters.getFromCapacity(), searchParameters.getToCapacity(), searchParameters.getFromRating(), searchParameters.getToRating(), pageable);
 	}
 	
 	public T findByReservableId(Integer id)

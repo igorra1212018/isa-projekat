@@ -27,15 +27,15 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
 	
 	@Query(value = "SELECT * "
 			+ "FROM reservable AS r "
-			+ "WHERE reservable_type = :discriminatorParameter "
-			+ "AND LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) "
-			+ "AND LOWER(city) LIKE LOWER(CONCAT('%', :city, '%')) "
-			+ "AND country_id = :countryId OR :countryId = 0 "
-			+ "AND price BETWEEN :priceFrom AND :priceTo "
-			+ "AND capacity BETWEEN :capacityFrom AND :capacityTo "
-			//+ "AND EXISTS ( SELECT 1 FROM (SELECT AVG(review_table.rating) AS avg_rating FROM review AS review_table WHERE review_table.reservable_id = r.id) AS avg_rating_table WHERE avg_rating_table.avg_rating >= 3 ) "
-			+ "AND EXISTS ( SELECT 1 FROM available_date_range WHERE reservable_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) AND (:dateTo BETWEEN from_date AND to_date) ) "
-			+ "AND NOT EXISTS ( SELECT 1 FROM reservation WHERE reserved_entity_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) OR (:dateTo BETWEEN from_date AND to_date) )", nativeQuery = true)
+			+ "WHERE (reservable_type = :discriminatorParameter) "
+			+ "AND (LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) ) "
+			+ "AND (LOWER(city) LIKE LOWER(CONCAT('%', :city, '%')) ) "
+			+ "AND (country_id = :countryId OR :countryId = 0 		) "
+			+ "AND (price BETWEEN :priceFrom AND :priceTo 			) "
+			+ "AND (capacity BETWEEN :capacityFrom AND :capacityTo 	) "
+			+ "AND (EXISTS ( SELECT 1 FROM (SELECT AVG(review_table.rating) AS avg_rating FROM review AS review_table WHERE review_table.reservable_id = r.id) AS avg_rating_table WHERE avg_rating_table.avg_rating BETWEEN :ratingFrom AND :ratingTo ) OR :ratingFrom = 0) "
+			+ "AND (EXISTS ( SELECT 1 FROM available_date_range WHERE reservable_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) AND (:dateTo BETWEEN from_date AND to_date) ) ) "
+			+ "AND (NOT EXISTS ( SELECT 1 FROM reservation WHERE ((:dateFrom BETWEEN from_date AND to_date) OR (:dateTo BETWEEN from_date AND to_date) OR (from_date BETWEEN :dateFrom AND :dateTo) OR (to_date BETWEEN :dateFrom AND :dateTo) ) ) )", nativeQuery = true)
     Page<T> findBySearch(@Param("discriminatorParameter") String discriminatorParameter,
     		@Param("name") String name,
     		@Param("city") String city,
@@ -46,12 +46,56 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
     		@Param("priceTo") Integer priceTo,
     		@Param("capacityFrom") Integer capacityFrom,
     		@Param("capacityTo") Integer capacityTo,
+    		@Param("ratingFrom") Integer ratingFrom,
+    		@Param("ratingTo") Integer ratingTo,
+    		Pageable pageable);
+	
+	@Query(value = "SELECT * "
+			+ "FROM reservable AS r "
+			+ "WHERE (reservable_type = :discriminatorParameter) "
+			+ "AND (LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) ) "
+			+ "AND (LOWER(city) LIKE LOWER(CONCAT('%', :city, '%')) ) "
+			+ "AND (country_id = :countryId OR :countryId = 0 		) "
+			+ "AND (price BETWEEN :priceFrom AND :priceTo 			) "
+			+ "AND (capacity BETWEEN :capacityFrom AND :capacityTo 	) "
+			+ "AND (EXISTS ( SELECT 1 FROM (SELECT AVG(review_table.rating) AS avg_rating FROM review AS review_table WHERE review_table.reservable_id = r.id) AS avg_rating_table WHERE avg_rating_table.avg_rating BETWEEN :ratingFrom AND :ratingTo ) OR :ratingFrom = 0)", nativeQuery = true)
+    Page<T> findBySearch(@Param("discriminatorParameter") String discriminatorParameter,
+    		@Param("name") String name,
+    		@Param("city") String city,
+    		@Param("countryId") Integer countryId,
+    		@Param("priceFrom") Integer priceFrom,
+    		@Param("priceTo") Integer priceTo,
+    		@Param("capacityFrom") Integer capacityFrom,
+    		@Param("capacityTo") Integer capacityTo,
+    		@Param("ratingFrom") Integer ratingFrom,
+    		@Param("ratingTo") Integer ratingTo,
+    		Pageable pageable);
+	
+	@Query(value = "SELECT * "
+			+ "FROM reservable AS r "
+			+ "WHERE (reservable_type = :discriminatorParameter) "
+			+ "AND (LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')) ) "
+			+ "AND (LOWER(city) LIKE LOWER(CONCAT('%', :city, '%')) ) "
+			+ "AND (price BETWEEN :priceFrom AND :priceTo 			) "
+			+ "AND (capacity BETWEEN :capacityFrom AND :capacityTo 	) "
+			+ "AND (EXISTS ( SELECT 1 FROM (SELECT AVG(review_table.rating) AS avg_rating FROM review AS review_table WHERE review_table.reservable_id = r.id) AS avg_rating_table WHERE avg_rating_table.avg_rating BETWEEN :ratingFrom AND :ratingTo ) OR :ratingFrom = 0) ", nativeQuery = true)
+    Page<T> findBySearch(@Param("discriminatorParameter") String discriminatorParameter,
+    		@Param("name") String name,
+    		@Param("city") String city,
+    		@Param("priceFrom") Integer priceFrom,
+    		@Param("priceTo") Integer priceTo,
+    		@Param("capacityFrom") Integer capacityFrom,
+    		@Param("capacityTo") Integer capacityTo,
+    		@Param("ratingFrom") Integer ratingFrom,
+    		@Param("ratingTo") Integer ratingTo,
     		Pageable pageable);
 	
 	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCityContainingIgnoreCase(String reservableType, String name, String city, Pageable pageable);
 	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryIdAndAddressCityContainingIgnoreCase(String reservableType, String name, Integer countryId, String city, Pageable pageable);
 	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCityContainingIgnoreCaseAndPriceBetween(String reservableType, String name, String city, Integer fromPrice, Integer toPrice, Pageable pageable);
 	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryIdAndAddressCityContainingIgnoreCaseAndPriceBetween(String reservableType, String name, Integer countryId, String city, Integer fromPrice, Integer toPrice, Pageable pageable);
+	
+	
 	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCityContainingIgnoreCaseAndPriceBetweenAndCapacityBetween(String reservableType, String name, String city, Integer fromPrice, Integer toPrice, Integer fromCapacity, Integer toCapacity, Pageable pageable);
 	Page<T> findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryIdAndAddressCityContainingIgnoreCaseAndPriceBetweenAndCapacityBetween(String reservableType, String name, Integer countryId, String city, Integer fromPrice, Integer toPrice, Integer fromCapacity, Integer toCapacity, Pageable pageable);
 	

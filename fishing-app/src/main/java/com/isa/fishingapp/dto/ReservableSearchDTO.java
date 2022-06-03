@@ -1,7 +1,5 @@
 package com.isa.fishingapp.dto;
 
-import java.time.LocalDateTime;
-
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Location;
 
@@ -13,6 +11,8 @@ public class ReservableSearchDTO {
 	Integer toPrice = 10000;
 	Integer fromCapacity = 0;
 	Integer toCapacity = 100;
+	Integer fromRating = 0;
+	Integer toRating = 6;
 	String sortType = "name";
 	String sortDir = "ascending";
 	
@@ -69,6 +69,18 @@ public class ReservableSearchDTO {
 	}
 	public void setToCapacity(Integer toCapacity) {
 		this.toCapacity = toCapacity;
+	}
+	public Integer getFromRating() {
+		return fromRating;
+	}
+	public void setFromRating(Integer fromRating) {
+		this.fromRating = fromRating;
+	}
+	public Integer getToRating() {
+		return toRating;
+	}
+	public void setToRating(Integer toRating) {
+		this.toRating = toRating;
 	}
 	@Override
 	public String toString() {
