@@ -33,6 +33,7 @@ public interface ReservableRepository<T extends Reservable> extends JpaRepositor
 			+ "AND country_id = :countryId OR :countryId = 0 "
 			+ "AND price BETWEEN :priceFrom AND :priceTo "
 			+ "AND capacity BETWEEN :capacityFrom AND :capacityTo "
+			//+ "AND EXISTS ( SELECT 1 FROM (SELECT AVG(review_table.rating) AS avg_rating FROM review AS review_table WHERE review_table.reservable_id = r.id) AS avg_rating_table WHERE avg_rating_table.avg_rating >= 3 ) "
 			+ "AND EXISTS ( SELECT 1 FROM available_date_range WHERE reservable_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) AND (:dateTo BETWEEN from_date AND to_date) ) "
 			+ "AND NOT EXISTS ( SELECT 1 FROM reservation WHERE reserved_entity_id = r.id AND (:dateFrom BETWEEN from_date AND to_date) OR (:dateTo BETWEEN from_date AND to_date) )", nativeQuery = true)
     Page<T> findBySearch(@Param("discriminatorParameter") String discriminatorParameter,

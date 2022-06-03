@@ -12,15 +12,22 @@
                     <em v-if="r.cancelled" style="color: rgb(228, 40, 40)">Cancelled</em>
                     <p>{{new Date(r.dateRange.fromDate[0], r.dateRange.fromDate[1], r.dateRange.fromDate[2])}} - {{new Date(r.dateRange.toDate[0], r.dateRange.toDate[1], r.dateRange.toDate[2])}}</p>
                     <div v-for="a in r.amenities" :key="a.id">
-                        <p>{{a.amenityName}}</p>>
+                        <p>{{a.amenityName}}</p>
+                    </div>
+                    <div v-if="canReviewReservation(r) && canReviewEntity(r.reservedEntity)">
+                        <textarea cols="40" rows="5" v-model="r.reviewDescription"></textarea>
+                        <select name="rating" id="rating" v-model="r.rating">
+                            <option :value="1">1</option>
+                            <option :value="2">2</option>
+                            <option :value="3">3</option>
+                            <option :value="4">4</option>
+                            <option :value="5">5</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <input type="button" class="user-reservations-red-button" value="Cancel" v-if="canCancelReservation(r)" v-on:click="cancel(r.id)"/>
-                    <div v-if="canReviewReservation(r) && canReviewEntity(r.reservedEntity)">
-                        <textarea cols="40" rows="5" v-model="r.reviewDescription"></textarea>
-                        <input type="button" class="user-reservations-blue-button" value="Review" v-if="!r.cancelled" v-on:click="review(r.reservedEntity)"/>
-                    </div>
+                    <input type="button" class="user-reservations-blue-button" value="Review" v-if="!r.cancelled" v-on:click="review(r)"/>
                 </div>
             </div>
         </div>
@@ -76,12 +83,12 @@ export default {
                 this.$router.go();
             })
         },
-        review(reservable) {
+        review(reservation) {
             let review = {};
-            console.log(reservable)
-            review.description = reservable.reviewDescription;
-            review.rating = 4;
-            review.reservableId = reservable.id;
+            console.log(reservation)
+            review.description = reservation.reviewDescription;
+            review.rating = reservation.rating;
+            review.reservableId = reservation.reservedEntity.id;
             review.userId = JSON.parse(this.user).id;
             ReviewService.addReview(review);
         },
@@ -92,7 +99,7 @@ export default {
             return false
         },
         canReviewReservation(reservation) {
-            if(!reservation.cancelled && reservation.dateRange.toDate < new Date()) 
+            if(!reservation.cancelled && new Date(reservation.dateRange.toDate[0], reservation.dateRange.toDate[1], reservation.dateRange.toDate[2]) < new Date()) 
                 return true
             return false;
         },
