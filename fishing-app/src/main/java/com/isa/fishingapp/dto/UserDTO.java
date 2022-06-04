@@ -1,7 +1,10 @@
 package com.isa.fishingapp.dto;
 
+import java.util.Set;
+
 import com.isa.fishingapp.model.Country;
 import com.isa.fishingapp.model.User;
+import com.isa.fishingapp.model.UserDeletionRequest;
 
 public class UserDTO {
 	Integer id;
@@ -14,6 +17,7 @@ public class UserDTO {
 	Country country;
 	String contactPhone;
 	String gender;
+	Set<UserDeletionRequest> deletionRequests;
 
 	public UserDTO() {
 	}
@@ -27,6 +31,7 @@ public class UserDTO {
 		this.city = user.getResidence().getCity();
 		this.country = user.getResidence().getCountry();
 		this.contactPhone = user.getContactPhone();
+		this.deletionRequests = user.getDeletionRequests();
 	}
 	
 	public Integer getId() {
@@ -89,4 +94,11 @@ public class UserDTO {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
+	public Set<UserDeletionRequest> getDeletionRequests() {
+		return deletionRequests;
+	}
+	public void setDeletionRequests(Set<UserDeletionRequest> deletionRequests) {
+		this.deletionRequests = deletionRequests;
+	}
+	
 }

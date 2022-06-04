@@ -83,6 +83,14 @@ class UserService{
 	registerAdmin(user) {
 		return axios.post(USER_API_BASE_URL + 'registerAdmin', user, { headers: authHeader() });
 	}
+
+    requestDeletion(deletionRequest) {
+		return axios.post(USER_API_BASE_URL + 'requestDeletion', deletionRequest, { headers: authHeader() })
+				.then()
+				.catch(err => {
+                console.error(err);
+            })
+	}
 }
 
 export default new UserService();

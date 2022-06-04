@@ -1,5 +1,10 @@
 <template>
     <div class="white-panel">
+        <div class="deletion-request-side-panel">
+			<h3>REQUEST DELETION</h3>
+            <textarea cols="40" rows="5" v-model="deletionRequest.description"></textarea>
+            <input type="button" class="user-profile-red-button" value="Request" v-on:click="requestUserDeletion()"/>
+        </div>
 		<div class="register-show">
 			<h2>MY PROFILE</h2>
             <div class="row d-flex mt-5">
@@ -91,6 +96,7 @@ export default {
             user: {},
             originalUser: {},
             countries: [],
+            deletionRequest: {},
             isUserInfoChanged: false
         }
     },
@@ -105,6 +111,10 @@ export default {
             UserService.getUser(this.$route.params.id).then(response => {
                 this.user = response.data
                 this.originalUser = this.user
+                for(let i = 0; i < this.user.deletionRequests; i++)
+                    if(this.user.deletionRequests[i].requestApproval == "PENDING")
+                        this.deletionRequest = this.user.deletionRequests[i]
+                console.log(this.deletionRequest)
             })
             .catch(err => {
                 console.error(err);
@@ -139,6 +149,12 @@ export default {
                 || (this.user.newPasswordConfirmation && (!this.user.oldPasswordGuess || !this.user.newPassword)))
                 return false;
             return true
+        },
+        requestUserDeletion() {
+            this.deletionRequest.userId = this.user.id
+            UserService.requestDeletion(this.deletionRequest).then(() => {
+                this.$router.go();
+            })
         }
     }
 }
@@ -368,6 +384,44 @@ export default {
         box-shadow: 0 1px 0 0 rgba(0,95,255,1);
     }
 
+    .deletion-request-side-panel{
+        background-color: rgba(255,255, 255, 1);
+        position:absolute;
+        width: 40%;
+        right:calc(75% + 200px);
+        z-index:0;
+        box-shadow: 0 0 15px 9px #00000096;
+        color:#242424;
+        text-align:left;
+        padding:50px;
+    }
+    .deletion-request-side-panel textarea {
+        border:1px solid rgb(143, 176, 233);
+        border-radius: 10px;
+        resize: none;
+        height: 400px;
+        width: 100%;
+        transition: all .3s;
+    }
+
+    .deletion-request-side-panel textarea:hover {
+        border:1px solid rgba(0,95,255,1);
+        border-radius: 10px;
+        resize: none;
+        height: 400px;
+        width: 100%;
+        transition: all .3s;
+    }
+
+    .deletion-request-side-panel textarea:focus {
+        border:1px solid rgba(0,95,255,1);
+        border-radius: 10px;
+        resize: none;
+        height: 400px;
+        width: 100%;
+        transition: all .3s;
+    }
+
     /* GENDER SELECTION */  
     input[type="radio"] {
         display: none;
@@ -418,4 +472,17 @@ export default {
         padding: 5px 40%;
         border-radius: 10px;
     }
+
+    .user-profile-red-button {
+    max-width: 150px;
+    width: 100%;
+    background: rgb(228, 40, 40);
+    color: #f9f9f9;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    float:right;
+    cursor:pointer;
+}
 </style>

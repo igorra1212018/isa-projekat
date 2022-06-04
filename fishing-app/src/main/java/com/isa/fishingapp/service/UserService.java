@@ -9,26 +9,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.isa.fishingapp.dto.OwnerDTO;
+import com.isa.fishingapp.dto.UserDeletionRequestDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
-import com.isa.fishingapp.event.OnRegistrationCompleteEvent;
 import com.isa.fishingapp.model.Country;
 import com.isa.fishingapp.model.Location;
 import com.isa.fishingapp.model.Role;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.model.UserCreationRequest;
+import com.isa.fishingapp.model.UserDeletionRequest;
 import com.isa.fishingapp.model.VerificationToken;
 import com.isa.fishingapp.model.enums.ERequestApproval;
-import com.isa.fishingapp.model.enums.ERequestType;
 import com.isa.fishingapp.model.enums.ERole;
 import com.isa.fishingapp.repository.CountryRepository;
 import com.isa.fishingapp.repository.RoleRepository;
 import com.isa.fishingapp.repository.TokenRepository;
 import com.isa.fishingapp.repository.UserCreationRequestRepository;
+import com.isa.fishingapp.repository.UserDeletionRequestRepository;
 import com.isa.fishingapp.repository.UserRepository;
 
 @Service
@@ -38,6 +38,8 @@ public class UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private UserCreationRequestRepository userCreationRequestRepository;
+	@Autowired
+	private UserDeletionRequestRepository userDeletionRequestRepository;
 	@Autowired
 	private RoleRepository roleRepository;
 	@Autowired
@@ -151,11 +153,8 @@ public class UserService {
     public void changeActivation(String email) {
     	email = email.replace("%40", "@");
     	email = email.replace("=", "");
-    	System.out.println(email);
-    	System.out.println(userRepository.findByEmail(email).get());
     	User user = userRepository.findByEmail(email).get();
     	user.setActivated(!user.isActivated());
-    	System.out.println(userRepository.findByEmail(email).get());
     	userRepository.save(user);
     }
 
@@ -216,5 +215,21 @@ public class UserService {
 		return new ResponseEntity<>(
 			      "Registration successful!", 
 			      HttpStatus.OK);
+	}
+	
+	public ResponseEntity<?> requestDeletion(UserDeletionRequestDTO deletionRequest) {
+		User user = userRepository.findById(deletionRequest.getUserId()).orElse(null);
+		if(user == null)
+			return ResponseEntity
+					.badRequest()
+					.body("Error: User not found!");
+		UserDeletionRequest deletionRequestObject = new UserDeletionRequest();
+		deletionRequestObject.setRequestApproval(ERequestApproval.PENDING);
+		deletionRequestObject.setRequestDescription(deletionRequest.getDescription());
+		deletionRequestObject.setUser(user);
+		userDeletionRequestRepository.save(deletionRequestObject);
+		return ResponseEntity
+				.ok()
+				.body("Deletion request created!");
 	}
 }

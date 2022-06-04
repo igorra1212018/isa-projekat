@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -60,6 +61,11 @@ public class User {
 	private Set<Role> roles = new HashSet<>();
 
 	boolean activated = false;
+	
+	@OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+	@JsonIgnore
+    private Set<UserDeletionRequest> deletionRequests;
 	
 	public User() { }
 
@@ -192,6 +198,14 @@ public class User {
 
 	public void setLastPenaltyPointDate(LocalDateTime lastPenaltyPointDate) {
 		this.lastPenaltyPointDate = lastPenaltyPointDate;
+	}
+
+	public Set<UserDeletionRequest> getDeletionRequests() {
+		return deletionRequests;
+	}
+
+	public void setDeletionRequests(Set<UserDeletionRequest> deletionRequests) {
+		this.deletionRequests = deletionRequests;
 	}
 
 	@Override

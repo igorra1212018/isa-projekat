@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isa.fishingapp.dto.OwnerDTO;
 import com.isa.fishingapp.dto.UserDTO;
+import com.isa.fishingapp.dto.UserDeletionRequestDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
 import com.isa.fishingapp.event.OnRegistrationCompleteEvent;
 import com.isa.fishingapp.jwt.JwtUtils;
@@ -243,4 +244,10 @@ public class UserController {
 		return userService.registerAdmin(user);
 	}
 	
+	@PostMapping("/requestDeletion")
+	@PreAuthorize("authentication.principal.id == #deletionRequest.userId")
+	public ResponseEntity<?> requestDeletion(@RequestBody UserDeletionRequestDTO deletionRequest)
+	{	
+		return userService.requestDeletion(deletionRequest);
+	}
 }
