@@ -75,8 +75,6 @@ public class UserService {
 	public ResponseEntity<String> updateUser(UserProfileChangeDTO user)
 	{
 		User userToUpdate = findById(user.getId());
-		/*System.out.println("OLD PASS: " + userToUpdate.getPassword());
-		System.out.println("NEW PASS: " + user.getOldPasswordGuess());*/
 		if(userToUpdate == null) {
 			return new ResponseEntity<>(
 				      "Profile not found!", 
