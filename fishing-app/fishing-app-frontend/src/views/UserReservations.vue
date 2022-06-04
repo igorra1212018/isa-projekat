@@ -2,8 +2,8 @@
     <div class="row d-flex" style="margin-top: 40px">
         <div class="col-md-3">
         </div>
-        <div class="col-md-6" v-for="r in reservations" :key="r.id">
-            <div class="row d-flex reservation-panel">
+        <div class="col-md-6">
+            <div class="row d-flex reservation-panel" v-for="r in reservations" :key="r.id">
                 <div class="col-md-3">
                     <img :src="convertImageToBase64(r.reservedEntity.primaryImage.data)" style="width: 100%; height: 100%">
                 </div>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-md-3">
                     <input type="button" class="user-reservations-red-button" value="Cancel" v-if="canCancelReservation(r)" v-on:click="cancel(r.id)"/>
-                    <input type="button" class="user-reservations-blue-button" value="Review" v-if="!r.cancelled" v-on:click="review(r)"/>
+                    <input type="button" class="user-reservations-blue-button" value="Review" v-if="canReviewReservation(r) && canReviewEntity(r.reservedEntity)" v-on:click="review(r)"/>
                 </div>
             </div>
         </div>
@@ -122,7 +122,8 @@ export default {
 .reservation-panel {
     margin: 0 auto;
     padding-left: 0px !important;
-    background-color: white
+    background-color: white;
+    margin: 10px auto;
 }
 .user-reservations-blue-button {
     max-width: 150px;

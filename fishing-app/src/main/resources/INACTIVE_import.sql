@@ -257,8 +257,12 @@ Insert Into country (id, iso, name, short_name, iso3, num_code, phone_code) Valu
 (250, 'sx', 'Sint Maarten', 'Sint Maarten', 'Sxm', '534', '1'),
 (251, 'ss', 'South Sudan', 'South Sudan', 'Ssd', '728', '211');
 
-INSERT INTO public."user" (id, activated, contact_phone, email, first_name, last_name, password, address, city, country_id, latitude, longtitude) VALUES (1, false, '123356', 'fedorbozic@gmail.com', 'Fedor', 'Bozic', '$2a$10$T9yhAUjVKOdGChScnosfyekwsqQtJNqWhPLPABq9tvXJuSeIIxqX6', 'Pariske Komune 9', 'Novi Sad', 1, 0, 0);
-INSERT INTO public."user" (id, activated, contact_phone, email, first_name, last_name, password, address, city, country_id, latitude, longtitude) VALUES (2, false, '123356', 'tatjanapetrov021@gmail.com', 'Tatjana', 'Petrov', '$2a$10$E48nQnNSs1bi2ISwOGgY/eBRtgm5F1sULSfL5l6k/aHFiXqg/qFwO', 'Pariske Komune 9', 'Novi Sad', 5, 0, 0);
+INSERT INTO public.image_tag (id, name) VALUES (1, 'Interior');
+INSERT INTO public.image_tag (id, name) VALUES (2, 'Exterior');
+INSERT INTO public.image_tag (id, name) VALUES (3, 'Balcony');
+
+INSERT INTO public."user" (id, activated, contact_phone, email, first_name, last_name, password, address, city, country_id, latitude, longtitude) VALUES (1, true, '123356', 'fedorbozic@gmail.com', 'Fedor', 'Bozic', '$2a$10$T9yhAUjVKOdGChScnosfyekwsqQtJNqWhPLPABq9tvXJuSeIIxqX6', 'Pariske Komune 9', 'Novi Sad', 1, 0, 0);
+INSERT INTO public."user" (id, activated, contact_phone, email, first_name, last_name, password, address, city, country_id, latitude, longtitude) VALUES (2, true, '123356', 'tatjanapetrov021@gmail.com', 'Tatjana', 'Petrov', '$2a$10$E48nQnNSs1bi2ISwOGgY/eBRtgm5F1sULSfL5l6k/aHFiXqg/qFwO', 'Pariske Komune 9', 'Novi Sad', 5, 0, 0);
 
 INSERT INTO public.user_roles (user_id, role_id) VALUES (1, 1);
 INSERT INTO public.user_roles (user_id, role_id) VALUES (2, 3);
@@ -282,3 +286,11 @@ INSERT INTO public.image (id, data, image_name, reservable_id) VALUES (5, decode
 INSERT INTO public.available_date_range (id, from_date, to_date, reservable_id) VALUES (1, '2022-08-01 22:00:00', '2022-12-01 22:00:00', 1);
 
 INSERT INTO public.action (id, discount, reservable_id, from_date, to_date) VALUES (1, 15, 1, '2022-08-12 22:34:29.21', '2022-08-16 22:34:29.21');
+
+INSERT INTO public.image_tags (image_id, image_tag_id) VALUES (1, 1);
+INSERT INTO public.image_tags (image_id, image_tag_id) VALUES (2, 2);
+INSERT INTO public.image_tags (image_id, image_tag_id) VALUES (2, 3);
+INSERT INTO public.image_tags (image_id, image_tag_id) VALUES (3, 2);
+INSERT INTO public.image_tags (image_id, image_tag_id) VALUES (3, 3);
+INSERT INTO public.image_tags (image_id, image_tag_id) VALUES (4, 1);
+INSERT INTO public.image_tags (image_id, image_tag_id) VALUES (5, 1);
