@@ -58,12 +58,15 @@
                     </div>
                 </div>
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Gallery'">
-                    <div class="row row-cols-md-2">
-                        <div class="col" v-for="l in reservable.images" :key="l.id">
-                            <div class="reservable-image-container">
-                                <img :src="convertImageToBase64(l.data)" style="height: 100%; width: 100%">
-                            </div>
+                    <div style="display:block">
+                        <div v-for="t in imageTags" :key="t.id">
+                            <input type="checkbox" :value="t.id" v-bind:id="t.id" v-model="selectedImageTags">
+                            <label v-bind:for="t.id">{{t.name}}</label>
                         </div>
+                    </div>
+                    <div style="display: block">
+                        <img class="reservable-image" v-for="(image, i) in convertedImages" :src="image" :key="i" @click="index = i">
+                        <vue-gallery-slideshow :images="convertedImages" :index="index" @close="index = null"></vue-gallery-slideshow>
                     </div>
                 </div>
             </div>
@@ -91,6 +94,7 @@
 <script>
 
 import ReservableService from '../services/ReservableService';
+import VueGallerySlideshow from 'vue-gallery-slideshow';
 
 export default {
     name: 'ReservableView',
@@ -106,14 +110,31 @@ export default {
             reservationParameters: {},
             selectedTab: 'Overview',
             attributes: [],
-            subscribed: "NOT_SUBSCRIBER"
+            subscribed: "NOT_SUBSCRIBER",
+            imageTags: [],
+            selectedImageTags: [],
+            categorizedImages: [],
+            convertedImages: [],
+            index: null
         }
+    },
+    components: {
+      VueGallerySlideshow
     },
     mounted: function() {
         this.reservableService = new ReservableService(this.$route.params.reservable_type);
         this.reservableService.getReservable(this.$route.params.id).then(res => {
             this.reservable = res.data
             this.user = localStorage.getItem('user');
+            for(let i = 0; i < this.reservable.images.length; i++) {
+                this.convertedImages.push(this.convertImageToBase64(this.reservable.images[i].data))
+                for(let j = 0; j < this.reservable.images[i].tags.length; j++)
+                    if(this.selectedImageTags.indexOf(this.reservable.images[i].tags[j].id) === -1) {
+                        this.imageTags.push(this.reservable.images[i].tags[j])
+                        this.selectedImageTags.push(this.reservable.images[i].tags[j])
+                    }
+            }
+            console.log(this.convertedImages)
             this.reservableService.isSubscriberOf(JSON.parse(this.user).id, this.reservable.id).then(res2 => {
                 this.subscribed = res2.data
             })
@@ -187,7 +208,7 @@ export default {
                 reviewSum +=  this.reservable.reviews[i].rating
             }
             return reviewSum/this.reservable.reviews.length
-        }
+        },
     }
 }
 
@@ -277,5 +298,15 @@ export default {
     color:#242424;
     text-align:left;
     padding:50px;
+}
+.reservable-image {
+    width: 45%;
+    height: 200px;
+    background-size: cover;
+    cursor: pointer;
+    margin: 5px;
+    border-radius: 3px;
+    border: 1px solid lightgray;
+    object-fit: contain;
 }
 </style>
