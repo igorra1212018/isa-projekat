@@ -1,10 +1,15 @@
 package com.isa.fishingapp.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,5 +58,26 @@ public class ReviewController {
 		return new ResponseEntity<>(
 			      "Review added!", 
 			      HttpStatus.OK);
+	}
+	
+	@GetMapping("/all")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<List<Review>> getAll()
+	{
+		return reviewService.getAll();
+	}
+	
+	@PatchMapping("/{id}/approve")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<String> approveRequest(@PathVariable int id)
+	{
+		return reviewService.approveRequest(id);
+	}
+	
+	@PatchMapping("/{id}/reject")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<String> rejectRequest(@PathVariable int id)
+	{
+		return reviewService.rejectRequest(id);
 	}
 }

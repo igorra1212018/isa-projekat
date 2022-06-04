@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,5 +74,19 @@ public class ComplaintController {
 		return new ResponseEntity<>(
 			      "Complaint added!", 
 			      HttpStatus.OK);
+	}
+	
+	@PatchMapping("/{id}/approve")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<String> approveRequest(@PathVariable int id)
+	{
+		return complaintService.approveRequest(id);
+	}
+	
+	@PatchMapping("/{id}/reject")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<String> rejectRequest(@PathVariable int id, @RequestBody String description)
+	{
+		return complaintService.rejectRequest(id, description);
 	}
 }

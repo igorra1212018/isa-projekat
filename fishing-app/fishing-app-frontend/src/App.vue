@@ -9,6 +9,7 @@
       <a href=/adminReservables v-if="isAdmin">Admin reservables</a>
       <a href=/userViewReservables v-if="!isAdmin && user">User reservables</a>
       <a href=/adminViewUserRequests v-if="isAdmin && isMainAdmin">Requests</a>
+      <a href=/adminViewReviews v-if="isAdmin">Reviews</a>
       <a href=/adminRegisterNewAdmin v-if="isAdmin">Register new admin</a>
       <a href="/" v-if="user" v-on:click="logout()">Logout</a>
       <a href="/login" v-if="!user">Login</a>

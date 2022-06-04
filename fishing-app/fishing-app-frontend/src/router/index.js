@@ -16,6 +16,9 @@ import AdminViewUserRequests from '../views/AdminViewUserRequests.vue'
 import AdminRegisterNewAdmin from '../views/AdminRegisterNewAdmin.vue'
 import UserViewReservables from '../views/UserViewReservables.vue'
 import EditFishingLesson from '../views/EditFishingLesson.vue'
+import AdminViewReviews from '../views/AdminViewReviews.vue'
+import AdminViewComplaints from '../views/AdminViewComplaints.vue'
+import AdminLoyaltyProgram from '../views/AdminLoyaltyProgram.vue'
 
 Vue.use(VueRouter)
 
@@ -120,6 +123,21 @@ const routes = [
     name: 'EditFishingLesson',
     component: EditFishingLesson
   },
+  {
+    path: '/adminViewReviews',
+    name: 'AdminViewReviews',
+    component: AdminViewReviews
+  },
+  {
+    path: '/adminViewComplaints',
+    name: 'AdminViewComplaints',
+    component: AdminViewComplaints
+  },
+  {
+    path: '/adminLoyaltyProgram',
+    name: 'AdminLoyaltyProgram',
+    component: AdminLoyaltyProgram
+  }
 ]
 
 const router = new VueRouter({

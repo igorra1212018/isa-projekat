@@ -62,8 +62,8 @@
                         <span class="keep_hovered">Price for canceling (%)</span>
                     </label>
                 </div>
-            </div>
-			<input type="button" value="Add fishing lesson" v-on:click="addFishingLesson()"/>
+        </div>
+		<input type="button" value="Add fishing lesson" v-on:click="addFishingLesson()"/>
 		
 	</div>
 </template>
