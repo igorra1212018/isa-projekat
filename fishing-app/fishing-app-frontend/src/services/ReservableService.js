@@ -59,6 +59,8 @@ export default class ReservableService{
     deleteReservable(id) {
         return axios.delete(this.CONTROLLER_ENDPOINT + id + '/delete', { headers: authHeader() });
 
+    }
+    
     isSubscriberOf(userId, reservableId){
         return axios.get(this.CONTROLLER_ENDPOINT + 'subscribers?userId=' + userId + '&reservableId=' + reservableId, { headers: authHeader() });
     }

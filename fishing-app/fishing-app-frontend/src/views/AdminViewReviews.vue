@@ -11,7 +11,7 @@
                      <th>Rating</th>
                      <th>Reservable id</th>
                      <th>User id</th>
-					 <th>ACCEPT</th>
+                    <th>ACCEPT</th>
                      <th>REJECT</th>
                   </tr>
                </thead>
@@ -75,7 +75,7 @@ export default {
 			ReviewService.approveRequest(id).then(location.reload());
         },
         rejectRequest(id, description) {
-			ReviewService.rejectRequest(id).then(location.reload());
+			ReviewService.rejectRequest(id, description).then(location.reload());
         }
     }
 }
