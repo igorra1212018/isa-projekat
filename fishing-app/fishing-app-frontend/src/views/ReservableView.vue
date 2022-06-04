@@ -58,16 +58,19 @@
                     </div>
                 </div>
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Gallery'">
-                    <div style="display:block">
+                    <!--<div style="display:block">
                         <div v-for="t in imageTags" :key="t.id">
                             <input type="checkbox" :value="t.id" v-bind:id="t.id" v-model="selectedImageTags">
                             <label v-bind:for="t.id">{{t.name}}</label>
                         </div>
+                    </div>-->
+                    <div style="width: 100%; height: 100%" v-for="(category, j) in categorizedImages" :key="j">
+                        <h2>{{category.categoryName}}</h2>
+                        <div style="display: block">
+                            <img class="reservable-image" v-for="(image, i) in category.images" :src="image" :key="i" @click="index = convertedImages.indexOf(image)">
+                        </div>
                     </div>
-                    <div style="display: block">
-                        <img class="reservable-image" v-for="(image, i) in convertedImages" :src="image" :key="i" @click="index = i">
-                        <vue-gallery-slideshow :images="convertedImages" :index="index" @close="index = null"></vue-gallery-slideshow>
-                    </div>
+                    <vue-gallery-slideshow :images="convertedImages" :index="index" @close="index = null"></vue-gallery-slideshow>
                 </div>
             </div>
         </div>
@@ -128,13 +131,21 @@ export default {
             this.user = localStorage.getItem('user');
             for(let i = 0; i < this.reservable.images.length; i++) {
                 this.convertedImages.push(this.convertImageToBase64(this.reservable.images[i].data))
-                for(let j = 0; j < this.reservable.images[i].tags.length; j++)
+                for(let j = 0; j < this.reservable.images[i].tags.length; j++) {
                     if(this.selectedImageTags.indexOf(this.reservable.images[i].tags[j].id) === -1) {
                         this.imageTags.push(this.reservable.images[i].tags[j])
-                        this.selectedImageTags.push(this.reservable.images[i].tags[j])
+                        this.selectedImageTags.push(this.reservable.images[i].tags[j].id)
+                        this.categorizedImages.push({ 
+                            id: this.reservable.images[i].tags[j].id, 
+                            categoryName: this.reservable.images[i].tags[j].name, 
+                            images: [] })
                     }
+                    for(let z = 0; z < this.categorizedImages.length; z++) 
+                        if(this.categorizedImages[z].id == this.reservable.images[i].tags[j].id)
+                            this.categorizedImages[z].images.push(this.convertImageToBase64(this.reservable.images[i].data))
+                }
             }
-            console.log(this.convertedImages)
+            console.log(this.categorizedImages)
             this.reservableService.isSubscriberOf(JSON.parse(this.user).id, this.reservable.id).then(res2 => {
                 this.subscribed = res2.data
             })
