@@ -3,7 +3,7 @@
         <div class="col-md-4">
         </div>
         <div class="col-md-4">
-            <div class="reservable-white-panel">
+            <div class="reservable-view-white-panel">
                 <div style="width: 100%; height: 400px;" v-if="reservable.primaryImage && reservable.primaryImage.data">
                     <img :src="convertImageToBase64(reservable.primaryImage.data)" style="width: 100%; height: 400px">
                     <input style="position: absolute; right: 36%; bottom: 53%" type="button" class="blue-button" value="Subscribe" v-if="this.user && this.subscribed != 'SUBSCRIBED'" v-on:click="subscribe()"/>
@@ -35,7 +35,7 @@
                     <h1 style="text-align: center">{{reservable.name}}</h1>
                     <p style="text-align: center; font-size: 16px">{{reservable.address.address}} {{reservable.address.city}} {{reservable.address.country.name}}</p>
                     <h4 style="text-align: center">{{averageRating}}</h4>
-                    <p class="reservable-description" style="border-bottom: solid 1px gray;"><em>{{reservable.description}}</em></p>
+                    <p class="reservable-view-description" style="border-bottom: solid 1px gray;"><em>{{reservable.description}}</em></p>
                     <div class="row d-flex row-cols-md-3">
                         <div class="col" v-for="a in reservable.amenities" :key="a.id">
                             <div class="amenity-card">
@@ -75,7 +75,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="reservable-white-panel" v-if="user">
+            <div class="reservable-view-white-panel" v-if="user">
               <div class="reservable-side-panel-parameters">
                 <h2>Reserve</h2>
                 <v-date-picker v-model="range" mode="dateTime" :available-dates="availableReservableReservationDates" :attributes='attributes' style="width: 100%; margin-bottom: 10px" is-range/>
@@ -225,7 +225,7 @@ export default {
 
 </script>
 <style>
-.reservable-white-panel{
+.reservable-view-white-panel{
     background-color: rgba(255,255, 255, 1);
     width:100%;
     margin:auto;
@@ -234,7 +234,7 @@ export default {
     z-index:0;
     box-shadow: 0 0 15px 9px #00000096;
 }
-.reservable-title-card {
+.reservable-view-title-card {
     position: absolute;
     top: 50px;
     background: linear-gradient(to right, rgba(0,95,255,1), rgba(0,136,221,0.5));
@@ -245,7 +245,7 @@ export default {
     padding-right: 100px;
     padding-bottom: 5px;
 }
-.reservable-description {
+.reservable-view-description {
     font-size: 16px;
     text-align: center;
     padding-top: 20px;
