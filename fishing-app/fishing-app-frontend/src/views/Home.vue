@@ -124,7 +124,7 @@
                 <header class="card-header-restaurant">
                 <h2>{{r.name}}</h2>
                 <br />
-                <span>Status</span>   
+                <span v-if="previousFromDate && previousToDate">{{r.price * dateDayDifference(previousFromDate,previousToDate)}}$</span>   
                   <address style="margin-top:10px">
                     <span class="icon-pin" aria-hidden="true"></span>
                     {{getFullAddress(r.address)}} <flag class="small-flag" :iso="r.address.country.iso" />
@@ -201,15 +201,11 @@ export default {
       },
       type: '',
       currentSort:'name_ascending',
+      previousFromDate: null,
+      previousToDate: null,
       totalPages: 1,
       firstPage: false,
       lastPage: false,
-      disabledDates: {
-        "daysOfMonth": [
-          1,
-          6
-        ]
-      }
     }
   },
   mounted: function() {
@@ -251,7 +247,6 @@ export default {
     search() {
         this.searchParameters.sortType = this.currentSort.split("_")[0]
         this.searchParameters.sortDir = this.currentSort.split("_")[1]
-        console.log(this.range.start)
         this.searchParameters.dateRange.fromDate = new Date(this.range.start)
         this.searchParameters.dateRange.fromDate.setMonth(this.searchParameters.dateRange.fromDate.getMonth() - 1)
         this.searchParameters.dateRange.toDate = new Date(this.range.end)
@@ -262,6 +257,9 @@ export default {
           this.totalPages = res.data.totalPages
           this.firstPage = res.data.first
           this.lastPage = res.data.last
+          this.previousFromDate = this.searchParameters.dateRange.fromDate
+          this.previousToDate = this.searchParameters.dateRange.toDate
+          console.log(this.dateDayDifference(this.previousFromDate, this.previousToDate))
           this.$router.push("/home/" + this.type + "/all/0")
         })
     },
@@ -291,6 +289,12 @@ export default {
     },
     goToPage(page) {
       this.$router.push("/home/" + this.$route.params.type + "/all/" + page)
+    },
+    dateDayDifference(fromDate, toDate) {
+      if(fromDate != null && toDate != null) {
+        let diffTime = Math.abs(toDate - fromDate);
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24) + 1); 
+      }
     }
   }
 }
@@ -502,7 +506,7 @@ export default {
       cursor:pointer;
       transition: all .3s;
   }
-  .blue-button:hover {
+  /*.blue-button:hover {
       transform: scale(110%);
       background: rgba(0,95,255,1);
       color: #f9f9f9;
@@ -513,5 +517,5 @@ export default {
       float:right;
       cursor:pointer;
       transition: all .3s;
-  }
+  }*/
 </style>

@@ -1,6 +1,99 @@
 <template>
     <div class="row d-flex" style="margin-top: 40px">
         <div class="col-md-3">
+            <div class="filter-panel-parameters" style="background-color: rgba(255,255, 255, 1);">
+              <h2>Search</h2>
+              <!--<div class="row d-flex mt-5">
+                <div class="col-md-4">
+                    <input type='radio' id='lodgings' checked='checked' name='type' class="blue_option" v-model="type" value="lodging">
+                    <label for='lodgings'><font-awesome-icon icon="fa-solid fa-house" /></label>
+                </div>
+                <div class="col-md-4">
+                    <input type='radio' id='boats' name='type' class="blue_option" v-model="type" value="boat">
+                    <label for='boats'><font-awesome-icon icon="fa-solid fa-ship" size="lg"/></label>
+                </div>
+                <div class="col-md-4">
+                    <input type='radio' id='lessons' name='type' class="blue_option" v-model="type" value="fishinglesson">
+                    <label for='lessons'><font-awesome-icon icon="fa-solid fa-fish-fins" /></label>
+                </div>
+              </div>-->
+              <div class="row d-flex mt-5">
+                  <div class="col-md-8">
+                      <label class="input_label">
+                          <input type="text" name="name" v-model="searchParameters.name">
+                          <span class="keep_hovered">Name</span>
+                      </label>
+                  </div>
+                  <div class="col-md-2">
+                    <input type='radio' id='sort_name_ascending' name='sort' class="blue_option" v-model="currentSort" value="name_ascending">
+                    <label for='sort_name_ascending'><font-awesome-icon icon="fa-solid fa-sort-up" /></label>
+                  </div>
+                  <div class="col-md-2">
+                    <input type='radio' id='sort_name_descending' name='sort' class="blue_option" v-model="currentSort" value="name_descending">
+                    <label for='sort_name_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
+                  </div>
+              </div>
+              <div class="row d-flex mt-5">
+                  <div class="col-md-4">
+                      <label class="input_label">
+                          <input type="number" min="0" name="fromPrice" v-model="searchParameters.fromPrice">
+                          <span class="keep_hovered">Price From</span>
+                      </label>
+                  </div>
+                  <div class="col-md-4">
+                      <label class="input_label">
+                          <input type="number" min="0" name="toPrice" v-model="searchParameters.toPrice">
+                          <span class="keep_hovered">Price To</span>
+                      </label>
+                  </div>
+                  <div class="col-md-2">
+                    <input type='radio' id='sort_price_ascending' name='sort' class="blue_option" v-model="currentSort" value="price_ascending">
+                    <label for='sort_price_ascending'><font-awesome-icon icon="fa-solid fa-sort-up" /></label>
+                  </div>
+                  <div class="col-md-2">
+                    <input type='radio' id='sort_price_descending' name='sort' class="blue_option" v-model="currentSort" value="price_descending">
+                    <label for='sort_price_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
+                  </div>
+              </div>
+              <div class="row d-flex mt-5">
+                  <div class="col-md-4">
+                      <label class="input_label">
+                          <input type="number" min="0" name="fromCapacity" v-model="searchParameters.fromCapacity">
+                          <span class="keep_hovered">Capacity From</span>
+                      </label>
+                  </div>
+                  <div class="col-md-4">
+                      <label class="input_label">
+                          <input type="number" min="0" name="toCapacity" v-model="searchParameters.toCapacity">
+                          <span class="keep_hovered">Capacity To</span>
+                      </label>
+                  </div>
+                  <div class="col-md-2">
+                    <input type='radio' id='sort_capacity_ascending' name='sort' class="blue_option" v-model="currentSort" value="capacity_ascending">
+                    <label for='sort_capacity_ascending'><font-awesome-icon icon="fa-solid fa-sort-up" /></label>
+                  </div>
+                  <div class="col-md-2">
+                    <input type='radio' id='sort_capacity_descending' name='sort' class="blue_option" v-model="currentSort" value="capacity_descending">
+                    <label for='sort_capacity_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
+                  </div>
+              </div>
+              <div class="row d-flex mt-5">
+                  <div class="col-md-6">
+                      <label class="input_label">
+                          <input type="number" min="0" name="fromRating" v-model="searchParameters.fromRating">
+                          <span class="keep_hovered">Rating From</span>
+                      </label>
+                  </div>
+                  <div class="col-md-6">
+                      <label class="input_label">
+                          <input type="number" min="0" name="toRating" v-model="searchParameters.toRating">
+                          <span class="keep_hovered">Rating To</span>
+                      </label>
+                  </div>
+              </div>
+              <v-date-picker v-model="range" :min-date='new Date()' style="width: 100%; margin-bottom: 10px" is-range/>
+              <input type="button" class="blue-button" value="Search" v-on:click="search()"/>
+            </div>
         </div>
         <div class="col-md-6">
             <div class="row d-flex reservation-panel" v-for="r in reservations" :key="r.id">
@@ -58,7 +151,8 @@ export default {
             },
             reservations: [],
             subscriptions: [],
-            lodgingService: {}
+            lodgingService: {},
+            searchParameters: {},
         }
     },
     mounted: function() {

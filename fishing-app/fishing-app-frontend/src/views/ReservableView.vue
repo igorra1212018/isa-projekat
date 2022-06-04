@@ -1,5 +1,5 @@
 <template>
-    <div class="row d-flex" style="margin-top: 40px; bottom: 20px">
+    <div class="row" style="margin-top: 40px; bottom: 20px">
         <div class="col-md-4">
         </div>
         <div class="col-md-4">
