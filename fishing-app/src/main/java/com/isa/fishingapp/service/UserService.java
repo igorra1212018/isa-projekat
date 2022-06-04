@@ -225,11 +225,23 @@ public class UserService {
 					.body("Error: User not found!");
 		UserDeletionRequest deletionRequestObject = new UserDeletionRequest();
 		deletionRequestObject.setRequestApproval(ERequestApproval.PENDING);
-		deletionRequestObject.setRequestDescription(deletionRequest.getDescription());
+		deletionRequestObject.setRequestDescription(deletionRequest.getRequestDescription());
 		deletionRequestObject.setUser(user);
 		userDeletionRequestRepository.save(deletionRequestObject);
 		return ResponseEntity
 				.ok()
 				.body("Deletion request created!");
+	}
+	
+	public ResponseEntity<?> retractDeletion(int requestId) {
+		UserDeletionRequest deletionRequest = userDeletionRequestRepository.findById(requestId).orElse(null);
+		if(deletionRequest == null)
+			return ResponseEntity
+					.badRequest()
+					.body("Error: Request not found!");
+		userDeletionRequestRepository.deleteById(requestId);
+		return ResponseEntity
+				.ok()
+				.body("Deletion request withdrawn!");
 	}
 }

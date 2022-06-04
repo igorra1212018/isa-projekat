@@ -2,7 +2,7 @@ package com.isa.fishingapp.dto;
 
 public class UserDeletionRequestDTO {
 	private Integer userId;
-	private String description;
+	private String requestDescription;
 	
 	public Integer getUserId() {
 		return userId;
@@ -10,10 +10,10 @@ public class UserDeletionRequestDTO {
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
-	public String getDescription() {
-		return description;
+	public String getRequestDescription() {
+		return requestDescription;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setRequestDescription(String requestDescription) {
+		this.requestDescription = requestDescription;
 	}
 }

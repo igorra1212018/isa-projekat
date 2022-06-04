@@ -2,8 +2,9 @@
     <div class="white-panel">
         <div class="deletion-request-side-panel">
 			<h3>REQUEST DELETION</h3>
-            <textarea cols="40" rows="5" v-model="deletionRequest.description"></textarea>
-            <input type="button" class="user-profile-red-button" value="Request" v-on:click="requestUserDeletion()"/>
+            <textarea cols="40" rows="5" v-model="deletionRequest.requestDescription" :disabled="deletionRequest.requestApproval == 'PENDING'"></textarea>
+            <input type="button" class="user-profile-red-button" value="Request" v-if="deletionRequest.requestApproval != 'PENDING'" v-on:click="requestUserDeletion()"/>
+            <input type="button" class="user-profile-red-button" value="Retract" v-if="deletionRequest.requestApproval == 'PENDING'" v-on:click="retractDeletion()"/>
         </div>
 		<div class="register-show">
 			<h2>MY PROFILE</h2>
@@ -111,7 +112,7 @@ export default {
             UserService.getUser(this.$route.params.id).then(response => {
                 this.user = response.data
                 this.originalUser = this.user
-                for(let i = 0; i < this.user.deletionRequests; i++)
+                for(let i = 0; i < this.user.deletionRequests.length; i++)
                     if(this.user.deletionRequests[i].requestApproval == "PENDING")
                         this.deletionRequest = this.user.deletionRequests[i]
                 console.log(this.deletionRequest)
@@ -153,6 +154,11 @@ export default {
         requestUserDeletion() {
             this.deletionRequest.userId = this.user.id
             UserService.requestDeletion(this.deletionRequest).then(() => {
+                this.$router.go();
+            })
+        },
+        retractDeletion() {
+            UserService.retractDeletion(this.deletionRequest.id).then(() => {
                 this.$router.go();
             })
         }

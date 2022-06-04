@@ -86,8 +86,16 @@ class UserService{
 
     requestDeletion(deletionRequest) {
 		return axios.post(USER_API_BASE_URL + 'requestDeletion', deletionRequest, { headers: authHeader() })
-				.then()
-				.catch(err => {
+			.then()
+			.catch(err => {
+                console.error(err);
+            })
+	}
+
+    retractDeletion(deletionRequestId) {
+		return axios.delete(USER_API_BASE_URL + 'requestDeletion/' + deletionRequestId, { headers: authHeader() })
+			.then()
+			.catch(err => {
                 console.error(err);
             })
 	}
