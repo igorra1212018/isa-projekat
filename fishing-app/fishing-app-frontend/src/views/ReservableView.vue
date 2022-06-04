@@ -78,6 +78,7 @@
             <div class="reservable-view-white-panel" v-if="user && availableReservableReservationDates.length > 0">
               <div class="reservable-side-panel-parameters">
                 <h2>Reserve</h2>
+                <h3 v-if="range.start && range.end">{{reservable.price * dateDayDifference(range.start,range.end) + priceFromAmenities()}}$</h3>
                 <v-date-picker v-model="range" mode="dateTime" :available-dates="availableReservableReservationDates" :attributes='attributes' style="width: 100%; margin-bottom: 10px" is-range/>
                 <div v-for="a in reservable.amenities" :key="a.id">
                     <div v-if="a.price > 0">
@@ -205,6 +206,20 @@ export default {
                 this.reservableService.unsubscribeUserToReservable(JSON.parse(this.user).id, this.reservable.id).then(() => {
                     this.$router.go();
                 })
+        },
+        dateDayDifference(fromDate, toDate) {
+          if(fromDate != null && toDate != null) {
+            let diffTime = Math.abs(toDate - fromDate);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24) + 1); 
+          }
+        },
+        priceFromAmenities() {
+            let price = 0;
+            for(let i = 0; i < this.reservable.amenities.length; i++) {
+                if(this.selectedAmenities.includes(this.reservable.amenities[i].id))
+                    price += this.reservable.amenities[i].price
+            }
+            return price
         },
         convertImageToBase64(byteArray) {
             return 'data:image/jpeg;base64,' + byteArray;
