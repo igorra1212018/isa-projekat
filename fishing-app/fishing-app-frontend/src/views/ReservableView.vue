@@ -75,7 +75,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="reservable-view-white-panel" v-if="user">
+            <div class="reservable-view-white-panel" v-if="user && availableReservableReservationDates.length > 0">
               <div class="reservable-side-panel-parameters">
                 <h2>Reserve</h2>
                 <v-date-picker v-model="range" mode="dateTime" :available-dates="availableReservableReservationDates" :attributes='attributes' style="width: 100%; margin-bottom: 10px" is-range/>
