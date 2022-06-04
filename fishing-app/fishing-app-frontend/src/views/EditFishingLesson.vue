@@ -65,6 +65,18 @@
             </div>
 			<input type="button" value="Edit fishing lesson" v-on:click="editFishingLesson()"/>
 		
+        <label for="discount">Discount: </label>
+        <input type="text" id="discount" name="discount" v-model="action.discount">
+        <label for="a">From: </label>
+        <input type="date" id="a" name="a" v-model="action.from">
+        <label for="b">To: </label>
+        <input type="date" id="b" name="b" v-model="action.to">
+        <label for="c">Valid until: </label>
+        <input type="date" id="c" name="c" v-model="action.validUntil">
+        <input type="button" value="Add action" v-on:click="addAction(action)"/>
+		
+
+
 	</div>
 </template>
 
@@ -79,6 +91,7 @@ export default {
             fishingLesson: {
             
             },
+            action: {}
         }
     },
     mounted: function() {
@@ -98,12 +111,16 @@ export default {
                 if(userJSON.id != response.data.owner.id)
                     this.$router.push("/unauthorized")
                 this.fishingLesson = response.data
+                this.action.reservableId = this.fishingLesson.id
             })
             .catch(err => {
                 console.error(err);
                 if(err.response.status == 403)
                     this.$router.push("/unauthorized")
             })
+        },
+        addAction(action) {
+            FishingLessonService.addAction(action);
         }
     }
 }

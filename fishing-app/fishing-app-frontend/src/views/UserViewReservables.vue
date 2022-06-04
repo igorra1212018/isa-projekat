@@ -3,7 +3,7 @@
       <div class="col-md-4">
       </div>
       <div>
-         <div class="reservable-white-panel">
+         <div class="white-panel">
             <input id="input" name="input" v-model="searchParam" rows="4" cols="50" placeholder="search" @change="search">
             <table class="table" v-if="trick2">
                <thead>

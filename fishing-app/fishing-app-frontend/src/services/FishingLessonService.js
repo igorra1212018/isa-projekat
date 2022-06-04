@@ -17,6 +17,10 @@ class FishingLessonService{
 		return axios.put(BASE_URL + 'edit', fishingLesson , { headers: authHeader() });
 	}
 
+	addAction(action) {
+		return axios.post('http://localhost:8080/api/action/add', action, { headers: authHeader() })
+	}
+
 }
 
 export default new FishingLessonService();

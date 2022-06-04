@@ -39,9 +39,9 @@ public class LoyaltyProgramController {
 				HttpStatus.OK);
     }
 	
-	@DeleteMapping("/delete")
+	@DeleteMapping("{id}/delete")
 	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-    public ResponseEntity<String> deleteLevel(int id) {
+    public ResponseEntity<String> deleteLevel(@PathVariable int id) {
 		
 		loyaltyLevelRepository.deleteById(id);
 		
