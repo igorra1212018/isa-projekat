@@ -39,6 +39,10 @@ public class Action {
 		validUntil = dto.getValidUntilDate();
 	}
 	
+	public Action() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Integer getId() {
 		return id;
 	}

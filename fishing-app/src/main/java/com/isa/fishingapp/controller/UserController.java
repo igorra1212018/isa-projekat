@@ -67,7 +67,6 @@ public class UserController {
 	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
 	public List<User> getUsers(Model model)
 	{
-		System.out.println(userService.getAllUsers());
 		return userService.getAllUsers();
 	}
 	
@@ -177,7 +176,6 @@ public class UserController {
 				      "Country not found!", 
 				      HttpStatus.NOT_FOUND);
 		user.setCountry(country);
-		
 		return userService.updateUser(user);
 	}
 	

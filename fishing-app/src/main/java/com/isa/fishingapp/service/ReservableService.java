@@ -73,8 +73,8 @@ public class ReservableService<T extends Reservable> {
 	}
 
 	public List<T> getAllReservablesByUser(int id) {
-
 		return reservableRepository.findByOwnerId(discriminatorString, id);
+	}
 	
 	public boolean isUserSubscribed(Integer userId, Integer reservableId)
 	{

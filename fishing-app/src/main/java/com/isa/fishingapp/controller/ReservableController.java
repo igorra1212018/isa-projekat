@@ -34,11 +34,10 @@ import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.Reservation;
 import com.isa.fishingapp.model.User;
+import com.isa.fishingapp.repository.ActionRepository;
 import com.isa.fishingapp.service.ActionService;
 import com.isa.fishingapp.service.ReservableService;
 import com.isa.fishingapp.service.ReservationService;
-
-import com.isa.fishingapp.service.UserDetailsImpl;
 import com.isa.fishingapp.service.UserDetailsServiceImpl;
 
 import com.isa.fishingapp.service.UserService;
@@ -49,7 +48,6 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	@Autowired
 	ReservationService reservationService;
 	@Autowired
-
 	ActionRepository actionRepository;
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
@@ -206,6 +204,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	public List<T> getAllReservablesByUser(@PathVariable int id)
 	{
 		return reservableService.getAllReservablesByUser(id);
+	}
 
 	@GetMapping("/subscribers")
 	@PreAuthorize("hasRole('CUSTOMER') and #userId == authentication.principal.id")

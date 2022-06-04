@@ -41,7 +41,6 @@ public class LodgingService extends ReservableService<Lodging> {
 				      "Date range is invalid!", 
 				      HttpStatus.BAD_REQUEST);
 		}
-		System.out.println("GOT HERE 1");
 		ReservationLodging reservation;
 		try {
 			reservation = new ReservationLodging(userRepository.getById(reserveLodgingDTO.getUserId()), new DateRange(reserveLodgingDTO.getFromDate(), reserveLodgingDTO.getToDate()), findById(reserveLodgingDTO.getReservableId()));

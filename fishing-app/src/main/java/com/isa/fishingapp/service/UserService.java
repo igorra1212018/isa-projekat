@@ -7,6 +7,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +46,8 @@ public class UserService {
 	private PasswordEncoder encoder;
 	@Autowired
 	CountryRepository countryRepository;
+	@Autowired
+	AuthenticationManager authenticationManager;
 	
 	public User registerUser(User user)
 	{
@@ -70,15 +75,16 @@ public class UserService {
 	public ResponseEntity<String> updateUser(UserProfileChangeDTO user)
 	{
 		User userToUpdate = findById(user.getId());
+		/*System.out.println("OLD PASS: " + userToUpdate.getPassword());
+		System.out.println("NEW PASS: " + user.getOldPasswordGuess());*/
 		if(userToUpdate == null) {
 			return new ResponseEntity<>(
 				      "Profile not found!", 
 				      HttpStatus.NOT_FOUND);
 		}
-		if(user.getNewPassword() != null && !user.getNewPassword().isBlank() && !userToUpdate.getPassword().equals(user.getOldPasswordGuess())) {
-			return new ResponseEntity<>(
-				      "Not Authorized", 
-				      HttpStatus.UNAUTHORIZED);
+		if(user.getNewPassword() != null && !user.getNewPassword().isBlank()) {
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getOldPasswordGuess()));
+			user.setNewPassword(encoder.encode(user.getNewPassword()));
 		}
 		boolean wasUserActivated = userToUpdate.isActivated();
 		String oldPassword = "";
