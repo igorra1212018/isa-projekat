@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,7 +79,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/{userId}")
-	@PostAuthorize("returnObject.body.email == authentication.principal.email")
+	@PreAuthorize("#userId == authentication.principal.id")
     public ResponseEntity<UserDTO> getUserById(@PathVariable int userId) {
 		return Optional
 	            .ofNullable( userService.findById(userId) )
@@ -168,23 +167,22 @@ public class UserController {
 	}
 	
 	@PostMapping("/edit")
+	@PreAuthorize("isAuthenticated() and #user.id == authentication.principal.id")
 	public ResponseEntity<String> editUserProfile(@RequestBody UserProfileChangeDTO user)
 	{
+		//Sanitization to prevent JSON parser attacks on the country database
+		Country country = countryRepository.findById(user.getCountry().getId()).orElse(null);
+		if(country == null)
+			return new ResponseEntity<>(
+				      "Country not found!", 
+				      HttpStatus.NOT_FOUND);
+		user.setCountry(country);
+		
 		return userService.updateUser(user);
-	}
-	
-	@PostMapping("/login")
-	public String login(@ModelAttribute User user)
-	{
-		User loggedUser = userService.authenticate(user.getEmail(), user.getPassword());
-		if(loggedUser != null)
-			return "redirect:/";
-		return "redirect:/register";
 	}
 	
 	@GetMapping("/registration_confirm")
 	public ResponseEntity<String> confirmRegistration(@RequestParam("token") String token) {
-	    System.out.println("GOT HERE");
 		
 	    VerificationToken verificationToken = tokenRepository.findByToken(token).orElse(null);
 	    if (verificationToken == null) {

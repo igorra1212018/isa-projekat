@@ -67,7 +67,9 @@
                 </div>
                 <div class="col-md-4">
                     <label class="input_label">
-                        <input type="text" name="residence-country" v-model="user.country" required="required" @change="userInfoHasChanged()">
+                        <select name="countries" id="countries" v-model="user.country" required="required" @change="userInfoHasChanged()">
+                          <option v-for="c in countries" :key="c.id" :value="c">{{c.name}}</option>
+                        </select>
                         <span class="keep_hovered">Country</span>
                     </label>
                 </div>
@@ -88,6 +90,7 @@ export default {
         return {
             user: {},
             originalUser: {},
+            countries: [],
             isUserInfoChanged: false
         }
     },
@@ -96,6 +99,9 @@ export default {
     },
     methods: {
         loadUserData() {
+            UserService.getCountries().then((response) => {
+                this.countries = response.data;   
+            });
             UserService.getUser(this.$route.params.id).then(response => {
                 this.user = response.data
                 this.originalUser = this.user
@@ -108,8 +114,9 @@ export default {
             this.isUserInfoChanged = false
         },
         updateUser() {
-            UserService.updateUser(this.user);
-            this.loadUserData()
+            UserService.updateUser(this.user).then(() => {
+                this.$router.go();
+            });
         },
         userInfoHasChanged() {
             this.isUserInfoChanged = true

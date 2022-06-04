@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Table(name="reservable_amenity")
 public class ReservableAmenity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String amenityName;
 	private String amenityIcon;

@@ -33,6 +33,8 @@ public class Reservation {
 	@Column(name = "reservation_type", insertable=false, updatable=false, nullable = false)
     private String type;   
 	
+	private float price;
+	
 	@ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id")
     private User user;
@@ -56,60 +58,52 @@ public class Reservation {
 	
 	private boolean cancelled = false;
 
-	public boolean isCancelled() {
-		return cancelled;
-	}
-
-	public void setCancelled(boolean cancelled) {
-		this.cancelled = cancelled;
-	}
-
 	public Integer getId() {
 		return id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public DateRange getDateRange() {
-		return dateRange;
-	}
-
-	public Reservable getReservedEntity() {
-		return reservedEntity;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public void setDateRange(DateRange dateRange) {
-		this.dateRange = dateRange;
-	}
-
-	public void setReservedEntity(Reservable reservedEntity) {
-		this.reservedEntity = reservedEntity;
-	}
-	
-	public Set<ReservableAmenity> getAmenities() {
-		return amenities;
-	}
-
-	public void setAmenities(Set<ReservableAmenity> amenities) {
-		this.amenities = amenities;
-	}
-	
 	public String getType() {
 		return type;
 	}
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public DateRange getDateRange() {
+		return dateRange;
+	}
+
+	public void setDateRange(DateRange dateRange) {
+		this.dateRange = dateRange;
+	}
+
+	public Reservable getReservedEntity() {
+		return reservedEntity;
+	}
+
+	public void setReservedEntity(Reservable reservedEntity) {
+		this.reservedEntity = reservedEntity;
 	}
 
 	public Action getAction() {
@@ -120,12 +114,28 @@ public class Reservation {
 		this.action = action;
 	}
 
+	public Set<ReservableAmenity> getAmenities() {
+		return amenities;
+	}
+
+	public void setAmenities(Set<ReservableAmenity> amenities) {
+		this.amenities = amenities;
+	}
+
 	public Complaint getComplaint() {
 		return complaint;
 	}
 
 	public void setComplaint(Complaint complaint) {
 		this.complaint = complaint;
+	}
+
+	public boolean isCancelled() {
+		return cancelled;
+	}
+
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
 	}
 
 	public Reservation() {

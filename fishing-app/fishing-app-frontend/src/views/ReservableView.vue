@@ -6,6 +6,8 @@
             <div class="reservable-white-panel">
                 <div style="width: 100%; height: 400px;" v-if="reservable.primaryImage && reservable.primaryImage.data">
                     <img :src="convertImageToBase64(reservable.primaryImage.data)" style="width: 100%; height: 400px">
+                    <input style="position: absolute; right: 36%; bottom: 53%" type="button" class="blue-button" value="Subscribe" v-if="this.user && this.subscribed != 'SUBSCRIBED'" v-on:click="subscribe()"/>
+                    <input style="position: absolute; right: 36%; bottom: 53%" type="button" class="blue-button" value="Unsubscribe" v-if="this.user && this.subscribed == 'SUBSCRIBED'" v-on:click="unsubscribe()"/>
                 </div>
                 <div class="pc-tab">
                     <input checked="checked" id="tab1" type="radio" v-model="selectedTab" value="Overview" />
@@ -56,12 +58,15 @@
                     </div>
                 </div>
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Gallery'">
-                    <div class="row row-cols-md-2">
-                        <div class="col" v-for="l in reservable.images" :key="l.id">
-                            <div class="reservable-image-container">
-                                <img :src="convertImageToBase64(l.data)" style="height: 100%; width: 100%">
-                            </div>
+                    <div style="display:block">
+                        <div v-for="t in imageTags" :key="t.id">
+                            <input type="checkbox" :value="t.id" v-bind:id="t.id" v-model="selectedImageTags">
+                            <label v-bind:for="t.id">{{t.name}}</label>
                         </div>
+                    </div>
+                    <div style="display: block">
+                        <img class="reservable-image" v-for="(image, i) in convertedImages" :src="image" :key="i" @click="index = i">
+                        <vue-gallery-slideshow :images="convertedImages" :index="index" @close="index = null"></vue-gallery-slideshow>
                     </div>
                 </div>
             </div>
@@ -89,6 +94,7 @@
 <script>
 
 import ReservableService from '../services/ReservableService';
+import VueGallerySlideshow from 'vue-gallery-slideshow';
 
 export default {
     name: 'ReservableView',
@@ -103,24 +109,44 @@ export default {
             actions: [],
             reservationParameters: {},
             selectedTab: 'Overview',
-            attributes: []
+            attributes: [],
+            subscribed: "NOT_SUBSCRIBER",
+            imageTags: [],
+            selectedImageTags: [],
+            categorizedImages: [],
+            convertedImages: [],
+            index: null
         }
+    },
+    components: {
+      VueGallerySlideshow
     },
     mounted: function() {
         this.reservableService = new ReservableService(this.$route.params.reservable_type);
         this.reservableService.getReservable(this.$route.params.id).then(res => {
-          this.reservable = res.data
+            this.reservable = res.data
+            this.user = localStorage.getItem('user');
+            for(let i = 0; i < this.reservable.images.length; i++) {
+                this.convertedImages.push(this.convertImageToBase64(this.reservable.images[i].data))
+                for(let j = 0; j < this.reservable.images[i].tags.length; j++)
+                    if(this.selectedImageTags.indexOf(this.reservable.images[i].tags[j].id) === -1) {
+                        this.imageTags.push(this.reservable.images[i].tags[j])
+                        this.selectedImageTags.push(this.reservable.images[i].tags[j])
+                    }
+            }
+            console.log(this.convertedImages)
+            this.reservableService.isSubscriberOf(JSON.parse(this.user).id, this.reservable.id).then(res2 => {
+                this.subscribed = res2.data
+            })
         });
-        this.user = localStorage.getItem('user');
         this.reservableService.getAvailableReservablesReservationDates(this.$route.params.id).then(res => {
           res.data.forEach(value => {
               this.availableReservableReservationDates.push({ start: new Date(value.fromDate[0], value.fromDate[1], value.fromDate[2], value.fromDate[3], value.fromDate[4]), end: new Date(value.toDate[0], value.toDate[1], value.toDate[2], value.toDate[3], value.toDate[4]) })
           })
         });
-        this.reservableService.getActionReservationsByReservable(1).then(res => {
+        this.reservableService.getActionReservationsByReservable(this.$route.params.id).then(res => {
             this.actions = res.data
             this.actions.forEach(value => {
-                console.log(value)
                 this.attributes.push({
                     highlight: 'green',
                     dates: {
@@ -140,7 +166,9 @@ export default {
             this.reservationParameters.toDate = this.range.end
             this.reservationParameters.toDate.setMonth(this.reservationParameters.toDate.getMonth() - 1)
             this.reservationParameters.amenities = this.selectedAmenities;
-            this.reservableService.reserveReservable(this.reservationParameters)
+            this.reservableService.reserveReservable(this.reservationParameters).then(() => {
+                this.$router.go();
+            })
         },
         reserveAction(a) {
             this.reservationParameters.reservableId = parseInt(this.$route.params.id)
@@ -151,7 +179,21 @@ export default {
             this.reservationParameters.toDate = new Date(a.dateRange.toDate[0], a.dateRange.toDate[1], a.dateRange.toDate[2], a.dateRange.toDate[3], a.dateRange.toDate[4])
             this.reservationParameters.toDate.setMonth(this.reservationParameters.toDate.getMonth() - 1)
             this.reservationParameters.amenities = this.selectedAmenities;
-            this.reservableService.reserveReservable(this.reservationParameters)
+            this.reservableService.reserveReservable(this.reservationParameters).then(() => {
+                this.$router.go();
+            })
+        },
+        subscribe() {
+            if(this.user && this.reservable)
+                this.reservableService.subscribeUserToReservable(JSON.parse(this.user).id, this.reservable.id).then(() => {
+                    this.$router.go();
+                })
+        },
+        unsubscribe() {
+            if(this.user && this.reservable)
+                this.reservableService.unsubscribeUserToReservable(JSON.parse(this.user).id, this.reservable.id).then(() => {
+                    this.$router.go();
+                })
         },
         convertImageToBase64(byteArray) {
             return 'data:image/jpeg;base64,' + byteArray;
@@ -166,7 +208,7 @@ export default {
                 reviewSum +=  this.reservable.reviews[i].rating
             }
             return reviewSum/this.reservable.reviews.length
-        }
+        },
     }
 }
 
@@ -256,5 +298,15 @@ export default {
     color:#242424;
     text-align:left;
     padding:50px;
+}
+.reservable-image {
+    width: 45%;
+    height: 200px;
+    background-size: cover;
+    cursor: pointer;
+    margin: 5px;
+    border-radius: 3px;
+    border: 1px solid lightgray;
+    object-fit: contain;
 }
 </style>

@@ -1,5 +1,6 @@
 package com.isa.fishingapp.model;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,6 +50,9 @@ public class User {
 	Location residence;
 	String contactPhone;
 	
+	Integer penaltyPoints = 0;
+	LocalDateTime lastPenaltyPointDate;
+	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
 				joinColumns = @JoinColumn(name = "user_id"), 
@@ -78,7 +82,7 @@ public class User {
 			this.password = user.getNewPassword();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
-		//this.residence = new Location(user.getAddress(), user.getCity(), null, 0, 0);
+		this.residence = new Location(user.getAddress(), user.getCity(), user.getCountry(), 0, 0);
 		this.contactPhone = user.getContactPhone();
 	}
 	
@@ -172,6 +176,22 @@ public class User {
 	
 	public void addRole(Role role) {
 		this.roles.add(role);
+	}
+
+	public Integer getPenaltyPoints() {
+		return penaltyPoints;
+	}
+
+	public void setPenaltyPoints(Integer penaltyPoints) {
+		this.penaltyPoints = penaltyPoints;
+	}
+
+	public LocalDateTime getLastPenaltyPointDate() {
+		return lastPenaltyPointDate;
+	}
+
+	public void setLastPenaltyPointDate(LocalDateTime lastPenaltyPointDate) {
+		this.lastPenaltyPointDate = lastPenaltyPointDate;
 	}
 
 	@Override

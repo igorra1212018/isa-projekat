@@ -17,7 +17,7 @@ import com.isa.fishingapp.dto.ActionDTO;
 @Table(name="action")
 public class Action {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	private float discount;

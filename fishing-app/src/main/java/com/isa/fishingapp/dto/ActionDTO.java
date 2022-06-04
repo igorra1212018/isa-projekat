@@ -88,7 +88,4 @@ public class ActionDTO {
 	public void setValidUntil(String validUntil) {
 		this.validUntil = validUntil;
 	}
-	
-
-
 }

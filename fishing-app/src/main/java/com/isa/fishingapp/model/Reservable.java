@@ -1,6 +1,7 @@
 package com.isa.fishingapp.model;
 
 import java.beans.Transient;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -27,7 +30,7 @@ import javax.persistence.Table;
 @Table(name="reservable")
 public abstract class Reservable {
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@Column(name = "reservable_type", insertable=false, updatable=false, nullable = false)
@@ -48,7 +51,7 @@ public abstract class Reservable {
 	protected int capacity;
 	
 	@OneToMany(cascade = CascadeType.DETACH)
-	@JoinColumn(name = "reserable_id")
+	@JoinColumn(name = "reservable_id")
 	private Set<AvailableDateRange> availableDateRanges;
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
@@ -66,6 +69,12 @@ public abstract class Reservable {
 	@OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "reservable_id")
 	private Set<Review> reviews;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(	name = "user_subscriptions", 
+				joinColumns = @JoinColumn(name = "user_id"), 
+				inverseJoinColumns = @JoinColumn(name = "reservable_id"))
+	private Set<User> subscribers = new HashSet<>();
 
 	public String getName() {
 		return name;
@@ -177,6 +186,14 @@ public abstract class Reservable {
 
 	public void setRules(String rules) {
 		this.rules = rules;
+	}
+
+	public Set<User> getSubscribers() {
+		return subscribers;
+	}
+
+	public void setSubscribers(Set<User> subscribers) {
+		this.subscribers = subscribers;
 	}
 
 	@Transient

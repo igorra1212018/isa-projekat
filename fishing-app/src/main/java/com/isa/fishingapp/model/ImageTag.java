@@ -5,38 +5,33 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="amenity")
-public class PresetAmenity {
+@Table(name="image_tag")
+public class ImageTag {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	protected Integer id;
 	
-	private String name;
-	private String amenityIcon;
+	@NotBlank
+	@Size(max = 50)
+	String name;
 
 	public Integer getId() {
 		return id;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getAmenityIcon() {
-		return amenityIcon;
-	}
-
-	public void setAmenityIcon(String amenityIcon) {
-		this.amenityIcon = amenityIcon;
 	}
 }

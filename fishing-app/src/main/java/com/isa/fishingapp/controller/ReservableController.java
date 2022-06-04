@@ -20,19 +20,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+import com.isa.fishingapp.dto.ActionDTO;
 import com.isa.fishingapp.dto.ReservableSearchDTO;
 import com.isa.fishingapp.model.Action;
 import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.Reservation;
-import com.isa.fishingapp.repository.ActionRepository;
+import com.isa.fishingapp.model.User;
+import com.isa.fishingapp.service.ActionService;
 import com.isa.fishingapp.service.ReservableService;
 import com.isa.fishingapp.service.ReservationService;
+
 import com.isa.fishingapp.service.UserDetailsImpl;
 import com.isa.fishingapp.service.UserDetailsServiceImpl;
+
+import com.isa.fishingapp.service.UserService;
 
 public abstract class ReservableController<T extends Reservable, Y extends Reservation> {
 	@Autowired
@@ -40,9 +49,15 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	@Autowired
 	ReservationService reservationService;
 	@Autowired
+
 	ActionRepository actionRepository;
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
+
+
+	UserService userService;
+	@Autowired
+	ActionService actionService;
 
 	
 	@GetMapping("/all")
@@ -74,7 +89,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 					HttpStatus.OK);
 		
 		List<Reservation> foundReservations = reservationService.findByEntityIdAndCancelled(reservableId, false);
-		List<Action> foundActions = actionRepository.findByReservable_IdAndAvailable(reservableId); // Actions are reserved via a separate system
+		List<Action> foundActions = actionService.findByReservable_IdAndAvailable(reservableId); // Actions are reserved via a separate system
 		List<DateRange> occupiedDateRanges = new ArrayList<>();
 		for(Reservation rl : foundReservations)
 			occupiedDateRanges.add(rl.getDateRange());
@@ -107,7 +122,25 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	public ResponseEntity<List<Action>> getAllActionReservations(@PathVariable int reservableId)
 	{
 		return new ResponseEntity<>(
-				reservationService.findByReservable_IdAndAvailable(reservableId), 
+				actionService.findByReservable_IdAndAvailable(reservableId), 
+				HttpStatus.OK);
+	}
+	
+	@PostMapping("/reservations/actions")
+	@PreAuthorize("permitAll")
+	public ResponseEntity<String> addAction(@RequestBody ActionDTO actionDTO) throws Exception
+	{
+		Action action = new Action();
+		action.setDateRange(new DateRange(actionDTO.getFromDate(), actionDTO.getToDate()));
+		action.setDiscount(actionDTO.getDiscount());
+		action.setReservable(reservableService.findById(actionDTO.getReservableId()));
+		if(action.getReservable() == null)
+			return new ResponseEntity<>(
+					"Reservable not found!", 
+					HttpStatus.NOT_FOUND);
+		actionService.save(action);
+		return new ResponseEntity<>(
+				"Action added!", 
 				HttpStatus.OK);
 	}
 	
@@ -128,6 +161,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	public ResponseEntity<Page<T>> getReservables(@RequestBody(required=false) ReservableSearchDTO searchParameters, @PathVariable int page)
 	{
 		Page<T> foundReservables;
+		System.out.println(searchParameters);
 		if(searchParameters != null && searchParameters.getSortType() != null && searchParameters.getSortDir() != null && searchParameters.getSortDir().equals("descending"))
 			foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 1, Sort.by(searchParameters.getSortType()).descending()));
 		else if(searchParameters != null && searchParameters.getSortType() != null && searchParameters.getSortDir() != null)
@@ -139,6 +173,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 					HttpStatus.OK);
 	}
 	
+
 	@DeleteMapping("{reservableId}/delete")
 //	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
 	public ResponseEntity<String> deleteReservable(@PathVariable int reservableId)
@@ -171,5 +206,57 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	public List<T> getAllReservablesByUser(@PathVariable int id)
 	{
 		return reservableService.getAllReservablesByUser(id);
+
+	@GetMapping("/subscribers")
+	@PreAuthorize("hasRole('CUSTOMER') and #userId == authentication.principal.id")
+	public ResponseEntity<?> getAllSubscribedReservables(@RequestParam Integer userId, @RequestParam(required = false, name = "reservableId") Integer reservableId)
+	{
+		if(reservableId != null) {
+			if(reservableService.isUserSubscribed(userId, reservableId))
+				return new ResponseEntity<>(
+						"SUBSCRIBED", 
+						HttpStatus.OK);
+			return new ResponseEntity<>(
+					"NOT_SUBSCRIBED", 
+					HttpStatus.OK);
+		}
+		return new ResponseEntity<>(
+			reservableService.findAllBySubscribedUser(userId), 
+			HttpStatus.OK);
+	}
+	
+	@PutMapping("/subscribers")
+	@PreAuthorize("hasRole('CUSTOMER') and #userId == authentication.principal.id")
+	public ResponseEntity<String> subscribeUserToReservable(@RequestParam Integer userId, @RequestParam Integer reservableId)
+	{
+		User user = userService.findById(userId);
+		T reservable = reservableService.findById(reservableId);
+		if(reservable == null || user == null)
+			return new ResponseEntity<>(
+					"NOT FOUND", 
+					HttpStatus.NOT_FOUND);
+		reservable.getSubscribers().add(user);
+		reservableService.save(reservable);
+		return new ResponseEntity<>(
+				"Successfully subscribed!", 
+				HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/subscribers")
+	@PreAuthorize("hasRole('CUSTOMER') and #userId == authentication.principal.id")
+	public ResponseEntity<String> unsubscribeUserToReservable(@RequestParam Integer userId, @RequestParam Integer reservableId)
+	{
+		User user = userService.findById(userId);
+		T reservable = reservableService.findById(reservableId);
+		if(reservable == null || user == null)
+			return new ResponseEntity<>(
+					"NOT FOUND", 
+					HttpStatus.NOT_FOUND);
+		reservable.getSubscribers().remove(user);
+		reservableService.save(reservable);
+		return new ResponseEntity<>(
+				"Successfully unsubscribed!", 
+				HttpStatus.OK);
+
 	}
 }

@@ -41,15 +41,14 @@ public class ReservableService<T extends Reservable> {
 			return reservableRepository.findAll(pageable);
 		Country country = searchParameters.getLocation().getCountry();
 		Integer countryId = null;
-		System.out.println(searchParameters);
 		if(country != null)
 			countryId = country.getId();
 		if(searchParameters.getDateRange() == null || searchParameters.getDateRange().getFromDate() == null || searchParameters.getDateRange().getToDate() == null) {
 			if(countryId != null && countryId != 0)
-				return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCountryIdAndAddressCityContainingIgnoreCase(discriminatorString, searchParameters.getName(), countryId, searchParameters.getLocation().getCity(), pageable);
-			return reservableRepository.findByReservableTypeAndNameContainingIgnoreCaseAndAddressCityContainingIgnoreCase(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), pageable);
+				return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), searchParameters.getLocation().getCountry().getId() , searchParameters.getFromPrice(), searchParameters.getToPrice(), searchParameters.getFromCapacity(), searchParameters.getToCapacity(), searchParameters.getFromRating(), searchParameters.getToRating(), pageable);
+			return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), searchParameters.getFromPrice(), searchParameters.getToPrice(), searchParameters.getFromCapacity(), searchParameters.getToCapacity(), searchParameters.getFromRating(), searchParameters.getToRating(), pageable);
 		}
-		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), countryId, searchParameters.getDateRange().getFromDate(), searchParameters.getDateRange().getToDate(), pageable);
+		return reservableRepository.findBySearch(discriminatorString, searchParameters.getName(), searchParameters.getLocation().getCity(), countryId, searchParameters.getDateRange().getFromDate(), searchParameters.getDateRange().getToDate(), searchParameters.getFromPrice(), searchParameters.getToPrice(), searchParameters.getFromCapacity(), searchParameters.getToCapacity(), searchParameters.getFromRating(), searchParameters.getToRating(), pageable);
 	}
 	
 	public T findByReservableId(Integer id)
@@ -76,5 +75,19 @@ public class ReservableService<T extends Reservable> {
 	public List<T> getAllReservablesByUser(int id) {
 
 		return reservableRepository.findByOwnerId(discriminatorString, id);
+	
+	public boolean isUserSubscribed(Integer userId, Integer reservableId)
+	{
+		if(reservableRepository.isUserSubscribed(userId, reservableId).orElse(null) != null)
+			return true;
+		return false;
+	}
+	
+	public List<T> findAllBySubscribedUser(Integer userId) {
+		return reservableRepository.findAllBySubscribedUser(userId);
+	}
+
+	public void save(T reservable) {
+		reservableRepository.save(reservable);
 	}
 }

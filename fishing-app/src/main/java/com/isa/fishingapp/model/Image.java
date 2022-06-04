@@ -1,5 +1,8 @@
 package com.isa.fishingapp.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,6 +15,12 @@ public class Image {
     
     private String imageName;
     private byte[] data;
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(	name = "image_tags", 
+				joinColumns = @JoinColumn(name = "image_id"), 
+				inverseJoinColumns = @JoinColumn(name = "image_tag_id"))
+	private Set<ImageTag> tags = new HashSet<>();
     
     public Image() {
     	
@@ -46,4 +55,11 @@ public class Image {
 	public void setData(byte[] data) {
 		this.data = data;
 	}
+	public Set<ImageTag> getTags() {
+		return tags;
+	}
+	public void setTags(Set<ImageTag> tags) {
+		this.tags = tags;
+	}
+	
 }

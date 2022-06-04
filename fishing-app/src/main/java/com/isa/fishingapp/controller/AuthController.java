@@ -1,11 +1,10 @@
 package com.isa.fishingapp.controller;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,14 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.isa.fishingapp.model.enums.ERole;
-import com.isa.fishingapp.model.Role;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.jwt.JwtResponse;
 import com.isa.fishingapp.repository.RoleRepository;
 import com.isa.fishingapp.repository.UserRepository;
 import com.isa.fishingapp.dto.LoginDTO;
-import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.jwt.JwtUtils;
 import com.isa.fishingapp.service.UserDetailsImpl;
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -45,6 +41,12 @@ public class AuthController {
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+		User user = userRepository.findByEmail(loginRequest.getEmail()).orElse(null);
+		if(user == null || !user.isActivated())
+			return new ResponseEntity<>(
+				      "User not authenticated or does not exist!", 
+				      HttpStatus.NOT_FOUND);
+		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
 		

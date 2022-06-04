@@ -58,5 +58,20 @@ export default class ReservableService{
 
     deleteReservable(id) {
         return axios.delete(this.CONTROLLER_ENDPOINT + id + '/delete', { headers: authHeader() });
+
+    isSubscriberOf(userId, reservableId){
+        return axios.get(this.CONTROLLER_ENDPOINT + 'subscribers?userId=' + userId + '&reservableId=' + reservableId, { headers: authHeader() });
+    }
+
+    getAllSubscribedReservables(userId){
+        return axios.get(this.CONTROLLER_ENDPOINT + 'subscribers?userId=' + userId, { headers: authHeader() });
+    }
+
+    subscribeUserToReservable(userId, reservableId) {
+        return axios.put(this.CONTROLLER_ENDPOINT + 'subscribers?userId=' + userId + '&reservableId=' + reservableId, "", { headers: authHeader() });
+    }
+
+    unsubscribeUserToReservable(userId, reservableId) {
+        return axios.delete(this.CONTROLLER_ENDPOINT + 'subscribers?userId=' + userId + '&reservableId=' + reservableId, { headers: authHeader() });
     }
 }
