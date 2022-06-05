@@ -18,19 +18,11 @@
                 </div>
               </div>-->
               <div class="row d-flex mt-5">
-                  <div class="col-md-8">
+                  <div class="col-md-12">
                       <label class="input_label">
                           <input type="text" name="name" v-model="searchParameters.name">
                           <span class="keep_hovered">Name</span>
                       </label>
-                  </div>
-                  <div class="col-md-2">
-                    <input type='radio' id='sort_name_ascending' name='sort' class="blue_option" v-model="currentSort" value="name_ascending">
-                    <label for='sort_name_ascending'><font-awesome-icon icon="fa-solid fa-sort-up" /></label>
-                  </div>
-                  <div class="col-md-2">
-                    <input type='radio' id='sort_name_descending' name='sort' class="blue_option" v-model="currentSort" value="name_descending">
-                    <label for='sort_name_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
                   </div>
               </div>
               <div class="row d-flex mt-5">
@@ -55,53 +47,16 @@
                     <label for='sort_price_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
                   </div>
               </div>
-              <div class="row d-flex mt-5">
-                  <div class="col-md-4">
-                      <label class="input_label">
-                          <input type="number" min="0" name="fromCapacity" v-model="searchParameters.fromCapacity">
-                          <span class="keep_hovered">Capacity From</span>
-                      </label>
-                  </div>
-                  <div class="col-md-4">
-                      <label class="input_label">
-                          <input type="number" min="0" name="toCapacity" v-model="searchParameters.toCapacity">
-                          <span class="keep_hovered">Capacity To</span>
-                      </label>
-                  </div>
-                  <div class="col-md-2">
-                    <input type='radio' id='sort_capacity_ascending' name='sort' class="blue_option" v-model="currentSort" value="capacity_ascending">
-                    <label for='sort_capacity_ascending'><font-awesome-icon icon="fa-solid fa-sort-up" /></label>
-                  </div>
-                  <div class="col-md-2">
-                    <input type='radio' id='sort_capacity_descending' name='sort' class="blue_option" v-model="currentSort" value="capacity_descending">
-                    <label for='sort_capacity_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
-                  </div>
-              </div>
-              <div class="row d-flex mt-5">
-                  <div class="col-md-6">
-                      <label class="input_label">
-                          <input type="number" min="0" name="fromRating" v-model="searchParameters.fromRating">
-                          <span class="keep_hovered">Rating From</span>
-                      </label>
-                  </div>
-                  <div class="col-md-6">
-                      <label class="input_label">
-                          <input type="number" min="0" name="toRating" v-model="searchParameters.toRating">
-                          <span class="keep_hovered">Rating To</span>
-                      </label>
-                  </div>
-              </div>
-              <v-date-picker v-model="range" :min-date='new Date()' style="width: 100%; margin-bottom: 10px" is-range/>
-              <input type="button" class="blue-button" value="Search" v-on:click="search()"/>
+              <v-date-picker v-model="searchParameters.range" style="width: 100%; margin-bottom: 10px" is-range/>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="row d-flex reservation-panel" v-for="r in reservations" :key="r.id">
+            <div class="row d-flex reservation-panel" v-for="r in filteredReservations" :key="r.id">
                 <div class="col-md-3">
                     <img :src="convertImageToBase64(r.reservedEntity.primaryImage.data)" style="width: 100%; height: 100%">
                 </div>
                 <div class="col-md-6">
-                    <h2>{{r.reservedEntity.name}} </h2>
+                    <h2>{{r.reservedEntity.name}} - {{r.price}}$</h2>
                     <em v-if="r.cancelled" style="color: rgb(228, 40, 40)">Cancelled</em>
                     <p>{{new Date(r.dateRange.fromDate[0], r.dateRange.fromDate[1], r.dateRange.fromDate[2])}} - {{new Date(r.dateRange.toDate[0], r.dateRange.toDate[1], r.dateRange.toDate[2])}}</p>
                     <div v-for="a in r.amenities" :key="a.id">
@@ -153,6 +108,7 @@ export default {
             subscriptions: [],
             lodgingService: {},
             searchParameters: {},
+            currentSort: {},
         }
     },
     mounted: function() {
@@ -206,6 +162,49 @@ export default {
                 }
             }
             return true;
+        }
+    },
+    computed: {
+        filteredReservations() {
+            var filteredReservations = this.reservations.slice()
+            var tmpList = []
+            if(this.searchParameters.name) {
+                for (let i = 0; i < filteredReservations.length; i++) {
+                    if (filteredReservations[i].reservedEntity.name.toLowerCase().includes(this.searchParameters.name)) {
+                        tmpList.push(filteredReservations[i])
+                    }
+                }
+                filteredReservations = tmpList.slice()
+            }
+            tmpList = []
+            if(this.searchParameters.fromPrice) {
+                for (let i = 0; i < filteredReservations.length; i++) {
+                    if (filteredReservations[i].price >= this.searchParameters.fromPrice) {
+                        tmpList.push(filteredReservations[i])
+                    }
+                }
+                filteredReservations = tmpList.slice()
+            }
+            tmpList = []
+            if(this.searchParameters.toPrice) {
+                for (let i = 0; i < filteredReservations.length; i++) {
+                    if (filteredReservations[i].price <= this.searchParameters.toPrice) {
+                        tmpList.push(filteredReservations[i])
+                    }
+                }
+                filteredReservations = tmpList.slice()
+            }
+            tmpList = []
+            if(this.searchParameters.range) {
+                for (let i = 0; i < filteredReservations.length; i++) {
+                    if (new Date(filteredReservations[i].dateRange.fromDate[0], filteredReservations[i].dateRange.fromDate[1], filteredReservations[i].dateRange.fromDate[2]) >= this.searchParameters.range.start &&
+                        new Date(filteredReservations[i].dateRange.toDate[0], filteredReservations[i].dateRange.toDate[1], filteredReservations[i].dateRange.toDate[2]) <= this.searchParameters.range.end) {
+                        tmpList.push(filteredReservations[i])
+                    }
+                }
+                filteredReservations = tmpList.slice()
+            }
+            return filteredReservations
         }
     }
 }
