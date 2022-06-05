@@ -159,13 +159,12 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	public ResponseEntity<Page<T>> getReservables(@RequestBody(required=false) ReservableSearchDTO searchParameters, @PathVariable int page)
 	{
 		Page<T> foundReservables;
-		System.out.println(searchParameters);
 		if(searchParameters != null && searchParameters.getSortType() != null && searchParameters.getSortDir() != null && searchParameters.getSortDir().equals("descending"))
-			foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 1, Sort.by(searchParameters.getSortType()).descending()));
+			foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 9, Sort.by(searchParameters.getSortType()).descending()));
 		else if(searchParameters != null && searchParameters.getSortType() != null && searchParameters.getSortDir() != null)
-			foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 1, Sort.by(searchParameters.getSortType()).ascending()));
+			foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 9, Sort.by(searchParameters.getSortType()).ascending()));
 		else
-			foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 1));
+			foundReservables = reservableService.findAll(searchParameters, PageRequest.of(page, 9));
 		return new ResponseEntity<>(
 					foundReservables, 
 					HttpStatus.OK);
