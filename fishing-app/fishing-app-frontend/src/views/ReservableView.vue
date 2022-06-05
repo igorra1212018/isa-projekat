@@ -52,8 +52,16 @@
                 </div>
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Actions'">
                     <div class="row d-flex" v-for="a in actions" :key="a.id">
-                        <p>{{a.discount}}</p>
-                        <p>{{a.dateRange.fromDate}} - {{a.dateRange.toDate}}</p>
+                        <div class="col-md-2">
+                            <h1 style="font-size: 50px; height: 100%">{{a.discount}}%</h1>
+                        </div>
+                        <div class="col-md-2">
+                            <h5><s>{{reservable.price * dateDayDifferenceString(a.dateRange.fromDate,a.dateRange.toDate) + priceFromAmenities()}}$</s></h5>
+                            <h5 style="color: green">{{(reservable.price * dateDayDifferenceString(a.dateRange.fromDate,a.dateRange.toDate) + priceFromAmenities()) * (1 - a.discount*0.01)}}$</h5>
+                        </div>
+                        <div class="col-md-8">
+                            <p>{{convertArrayToDate(a.dateRange.fromDate)}} - {{convertArrayToDate(a.dateRange.toDate)}}</p>
+                        </div>
                         <input type="button" class="blue-button" value="Reserve" v-on:click="reserveAction(a)"/>
                     </div>
                 </div>
@@ -192,7 +200,7 @@ export default {
             this.reservationParameters.toDate = new Date(a.dateRange.toDate[0], a.dateRange.toDate[1], a.dateRange.toDate[2], a.dateRange.toDate[3], a.dateRange.toDate[4])
             this.reservationParameters.toDate.setMonth(this.reservationParameters.toDate.getMonth() - 1)
             this.reservationParameters.amenities = this.selectedAmenities;
-            //this.reservationParameters.price = this.reservable.price * this.dateDayDifference(this.range.start,this.range.end) + this.priceFromAmenities()
+            this.reservationParameters.price = (this.reservable.price * this.dateDayDifference(this.reservationParameters.fromDate,this.reservationParameters.toDate) + this.priceFromAmenities()) * (1 - a.discount*0.01)
             this.reservableService.reserveReservable(this.reservationParameters).then(() => {
                 this.$router.go();
             })
@@ -214,6 +222,17 @@ export default {
             let diffTime = Math.abs(toDate - fromDate);
             return Math.ceil(diffTime / (1000 * 60 * 60 * 24) + 1); 
           }
+        },
+        dateDayDifferenceString(fromDate, toDate) {
+            if(fromDate != null && toDate != null) {
+                fromDate = new Date(fromDate[0], fromDate[1], fromDate[2])
+                toDate = new Date(toDate[0], toDate[1], toDate[2])
+                let diffTime = Math.abs(toDate - fromDate);
+                return Math.ceil(diffTime / (1000 * 60 * 60 * 24) + 1); 
+            }
+        },
+        convertArrayToDate(date) {
+            return new Date(date[0], date[1], date[2])
         },
         priceFromAmenities() {
             let price = 0;
