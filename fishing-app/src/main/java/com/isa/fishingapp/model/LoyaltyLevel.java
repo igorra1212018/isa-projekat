@@ -12,7 +12,7 @@ public class LoyaltyLevel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String levelName;
-	private String levelThreshold;
+	private int levelThreshold;
 	private float userDiscount;
 	private float ownerDiscount;
 	private int userPointsAdd;
@@ -20,7 +20,7 @@ public class LoyaltyLevel {
 	
 	public LoyaltyLevel() {};
 	
-	public LoyaltyLevel(String levelName, String levelThreshold, 
+	public LoyaltyLevel(String levelName, int levelThreshold, 
 			float userDiscount, float ownerDiscount, int userPointsAdd, int ownerPointsAdd) {
 		super();
 		this.levelName = levelName;
@@ -43,10 +43,10 @@ public class LoyaltyLevel {
 	public void setLevelName(String levelName) {
 		this.levelName = levelName;
 	}
-	public String getLevelThreshold() {
+	public int getLevelThreshold() {
 		return levelThreshold;
 	}
-	public void setLevelThreshold(String levelThreshold) {
+	public void setLevelThreshold(int levelThreshold) {
 		this.levelThreshold = levelThreshold;
 	}
 	public int getUserPointsAdd() {

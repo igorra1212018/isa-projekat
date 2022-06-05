@@ -7,9 +7,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.isa.fishingapp.repository.LoyaltyLevelRepository;
 import com.isa.fishingapp.repository.ReservationRepository;
+import com.isa.fishingapp.repository.UserRepository;
 import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
+import com.isa.fishingapp.model.LoyaltyLevel;
 import com.isa.fishingapp.model.Reservation;
 import com.isa.fishingapp.model.User;
 
@@ -19,6 +22,10 @@ public class ReservationService {
 	private ReservationRepository reservationRepository;
 	@Autowired
     private JavaMailSender mailSender;
+	@Autowired
+	private LoyaltyLevelRepository loyaltyLevelRepository;
+	@Autowired
+	private UserRepository userRepository;
 	
 	public ReservationService() {
 	}
@@ -52,6 +59,18 @@ public class ReservationService {
 		Reservation reservationToCancel = reservationRepository.findById(reservationId).orElse(null);
 		if(reservationToCancel != null)
 		{
+			User owner = reservationRepository.getById(reservationId).getReservedEntity().getOwner();
+			int ownerPointsIncrease = loyaltyLevelRepository.findByLevelName(owner.getLoyaltyStatus()).getOwnerPointsAdd();
+			owner.setLoyaltyPoints(owner.getLoyaltyPoints() - ownerPointsIncrease);
+			owner.setLoyaltyStatus(getCurrentLevel(owner.getLoyaltyPoints()).getLevelName());
+			userRepository.save(owner);
+			
+			User user = reservationRepository.getById(reservationId).getUser();
+			int userPointsIncrease = loyaltyLevelRepository.findByLevelName(user.getLoyaltyStatus()).getUserPointsAdd();
+			user.setLoyaltyPoints(user.getLoyaltyPoints() - userPointsIncrease);
+			user.setLoyaltyStatus(getCurrentLevel(user.getLoyaltyPoints()).getLevelName());
+			userRepository.save(user);
+			
 			reservationToCancel.setCancelled(true);
 			reservationRepository.save(reservationToCancel);
 		}
@@ -78,7 +97,75 @@ public class ReservationService {
 
 	public void save(Reservation reservation) {
 		for(AvailableDateRange r : reservation.getReservedEntity().getAvailableDateRanges())
-			if(r.getRange().hasWithinDateRange(reservation.getDateRange()))
+			if(r.getRange().hasWithinDateRange(reservation.getDateRange())) {
+				
+				User owner = reservation.getReservedEntity().getOwner();
+				int ownerPointsIncrease = loyaltyLevelRepository.findByLevelName(owner.getLoyaltyStatus()).getOwnerPointsAdd();
+				owner.setLoyaltyPoints(owner.getLoyaltyPoints() + ownerPointsIncrease);
+				owner.setLoyaltyStatus(getCurrentLevel(owner.getLoyaltyPoints()).getLevelName());
+				userRepository.save(owner);
+				
+				User user = reservation.getUser();
+				int userPointsIncrease = loyaltyLevelRepository.findByLevelName(user.getLoyaltyStatus()).getUserPointsAdd();
+				user.setLoyaltyPoints(user.getLoyaltyPoints() + userPointsIncrease);
+				user.setLoyaltyStatus(getCurrentLevel(user.getLoyaltyPoints()).getLevelName());
+				userRepository.save(user);
+				
 				reservationRepository.save(reservation);
+			}
+	}
+	
+	public LoyaltyLevel getNextLevel(int points) {
+		
+		List<LoyaltyLevel> all = loyaltyLevelRepository.findAll();
+		if(all.size() == 0)
+			return null;
+		
+		LoyaltyLevel current = getCurrentLevel(points);
+		LoyaltyLevel result = getCurrentLevel(points);
+		int minThreshold = getMaxLevel().getLevelThreshold();
+		
+		for (LoyaltyLevel l : all) {
+			if (l.getLevelThreshold() < minThreshold && current.getLevelThreshold() < l.getLevelThreshold() ) {
+				result = l;
+			}
+		}
+		return result;
+	}
+	
+	public LoyaltyLevel getCurrentLevel(int points) {
+		
+		List<LoyaltyLevel> all = loyaltyLevelRepository.findAll();
+		if(all.size() == 0)
+			return null;
+		
+		int max = -1;
+		LoyaltyLevel result = null;
+		
+		for (LoyaltyLevel l : all) {
+			if (l.getLevelThreshold() > points && l.getLevelThreshold() > max ) {
+				max = l.getLevelThreshold();
+				result = l;
+			}
+		}
+		return result;
+	}
+	
+	public LoyaltyLevel getMaxLevel() {
+		
+		List<LoyaltyLevel> all = loyaltyLevelRepository.findAll();
+		if(all.size() == 0)
+			return null;
+		
+		int max = -1;
+		LoyaltyLevel result = null;
+		
+		for (LoyaltyLevel l : all) {
+			if (l.getLevelThreshold() > max) {
+				max = l.getLevelThreshold();
+				result = l;
+			}
+		}
+		return result;
 	}
 }

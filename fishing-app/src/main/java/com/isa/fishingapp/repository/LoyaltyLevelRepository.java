@@ -6,4 +6,6 @@ import com.isa.fishingapp.model.LoyaltyLevel;
 
 public interface LoyaltyLevelRepository extends JpaRepository<LoyaltyLevel, Integer> {
 
+	LoyaltyLevel findByLevelName(String levelName);
+	
 }

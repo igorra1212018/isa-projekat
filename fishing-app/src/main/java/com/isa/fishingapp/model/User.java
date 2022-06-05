@@ -69,6 +69,10 @@ public class User {
     @JoinColumn(name = "user_id")
     private Set<UserDeletionRequest> deletionRequests;
 	
+	private int LoyaltyPoints;
+	
+	private String loyaltyStatus;
+	
 	public User() { }
 
 	public User(UserDTO user) {
@@ -208,6 +212,22 @@ public class User {
 
 	public void setDeletionRequests(Set<UserDeletionRequest> deletionRequests) {
 		this.deletionRequests = deletionRequests;
+	}
+	
+	public int getLoyaltyPoints() {
+		return LoyaltyPoints;
+	}
+
+	public void setLoyaltyPoints(int loyaltyPoints) {
+		LoyaltyPoints = loyaltyPoints;
+	}
+
+	public String getLoyaltyStatus() {
+		return loyaltyStatus;
+	}
+
+	public void setLoyaltyStatus(String loyaltyStatus) {
+		this.loyaltyStatus = loyaltyStatus;
 	}
 
 	@Override
