@@ -5,18 +5,18 @@
             <table class="table">
                <thead>
                   <tr>
-                     <th>Id</th>
-                     <th>Status</th>
-                     <th>Description</th>
-                     <th>Rating</th>
-                     <th>Reservable id</th>
-                     <th>User id</th>
+                    <th>Id</th>
+                    <th>Status</th>
+                    <th>Description</th>
+                    <th>Rating</th>
+                    <th>Reservable id</th>
+                    <th>User id</th>
                     <th>ACCEPT</th>
-                     <th>REJECT</th>
+                    <th>REJECT</th>
                   </tr>
                </thead>
                <tbody>
-                  <tr v-for="r in review" :key="r.id">
+                  <tr v-for="r in reviews" :key="r.id">
                      <td>{{ r.id }}</td>
                      <td>{{ r.approved }}</td>
                      <td>{{ r.description }}</td>
@@ -24,7 +24,7 @@
                      <td>{{ r.reservable.id }}</td>
                      <td>{{ r.user.email }}</td>
                      <td> 
-						<button type="submit" v-on:click="approveRequest(r.id)">
+						<button type="submit" v-if="!r.approved" v-on:click="approveRequest(r.id)">
 							✔
                         </button>	
                      </td>
@@ -52,30 +52,29 @@ export default {
     name: 'AdminViewReviews',
     data(){
         return {
-			requests: [],
+			reviews: [],
 			componentKey: 0
         }
     },
     mounted: function() {
 		ReviewService.getAllUserReviews().then(response => {
-			this.requests = response.data
+			this.reviews = response.data
+            console.log(this.reviews)
 		})
 		.catch(err => {
 			if(err.response.status == 403)
 			this.$router.push("/unauthorized")
 		})
-		;
-		console.log(this.requests);
     },
     methods: {
         convertImageToBase64(byteArray) {
             return 'data:image/jpeg;base64,' + byteArray;
         },
         approveRequest(id) {
-			ReviewService.approveRequest(id).then(location.reload());
+			ReviewService.approveRequest(id).then(() => { this.$router.go() });
         },
         rejectRequest(id, description) {
-			ReviewService.rejectRequest(id, description).then(location.reload());
+			ReviewService.rejectRequest(id, description).then(() => { this.$router.go() });
         }
     }
 }

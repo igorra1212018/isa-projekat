@@ -10,7 +10,11 @@ class ReviewService{
     }
 
     getAllUserReviews() {
-        return axios.get(USER_API_BASE_URL + '/all', { headers: authHeader() });
+        return axios.get(USER_API_BASE_URL + 'all', { headers: authHeader() });
+    }
+
+    getAllUserReviewsByUser(userId) {
+        return axios.get(USER_API_BASE_URL + '?userId=' + userId, { headers: authHeader() });
     }
 
     approveRequest(id){
@@ -18,7 +22,7 @@ class ReviewService{
     }
 
     rejectRequest(id){
-        return axios.patch(USER_API_BASE_URL + id + '/reject', {}, { headers: authHeader() });
+        return axios.delete(USER_API_BASE_URL + id, { headers: authHeader() });
     }
 }
 

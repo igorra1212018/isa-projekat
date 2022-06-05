@@ -24,9 +24,10 @@ public class ReviewService {
 	}
 
 	public ResponseEntity<String> approveRequest(int id) {
-		Review r = reviewRepository.findById(null).orElse(null);
+		Review r = reviewRepository.findById(id).orElse(null);
 		if (r != null){
 			r.setApproved(true);
+			reviewRepository.save(r);
 		}
 		
 		return new ResponseEntity<>(
@@ -34,21 +35,30 @@ public class ReviewService {
 			      HttpStatus.OK);
 	}
 
-	public ResponseEntity<String> rejectRequest(int id) {
-		Review r = reviewRepository.findById(null).orElse(null);
-		if (r != null){
-			r.setApproved(false);
-		}
+	public ResponseEntity<String> deleteReview(int id) {
+		Review r = reviewRepository.findById(id).orElse(null);
+		if (r != null)
+			reviewRepository.deleteById(r.getId());
+		else
+			return new ResponseEntity<>(
+				      "Review not found!", 
+				      HttpStatus.NOT_FOUND);
 		
 		return new ResponseEntity<>(
-			      "Request rejected!", 
+			      "Review rejected!", 
 			      HttpStatus.OK);
 	}
 
-	public ResponseEntity<List<Review>> getAll() {
+	public ResponseEntity<List<Review>> findAll() {
 		
 		return new ResponseEntity<>(
 			      reviewRepository.findAll(), 
+			      HttpStatus.OK);
+	}
+	
+	public ResponseEntity<List<Review>> findByUser_Id(Integer userId) {
+		return new ResponseEntity<>(
+			      reviewRepository.findByUser_Id(userId), 
 			      HttpStatus.OK);
 	}
 }

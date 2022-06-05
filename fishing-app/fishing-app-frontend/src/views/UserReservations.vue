@@ -127,6 +127,7 @@ export default {
                 id: 0
             },
             reservations: [],
+            reviews: [],
             subscriptions: [],
             lodgingService: {},
             searchParameters: {},
@@ -145,6 +146,10 @@ export default {
             });
             this.lodgingService.getAllSubscribedReservables(this.$route.params.id).then(res => {
               this.subscriptions = res.data
+            });
+            ReviewService.getAllUserReviewsByUser(this.$route.params.id).then(res => {
+              this.reviews = res.data
+              console.log(this.reviews)
             });
         },
         convertImageToBase64(byteArray) {
@@ -178,8 +183,9 @@ export default {
         canReviewEntity(reservable) {
             if(reservable.reviews) {
                 for (let i = 0; i < reservable.reviews.length; i++) {
-                    if (reservable.reviews[i].user.id == JSON.parse(this.user).id) {
-                        return false;
+                    for (let j = 0; j < this.reviews.length; j++) {
+                        if(reservable.reviews[i] == this.reviews[j].id)
+                            return false
                     }
                 }
             }

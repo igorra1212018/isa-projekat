@@ -141,7 +141,7 @@
                   Price
                 </li>
                 <li>
-                  <strong>{{r.reviews.length}}</strong>
+                  <strong>{{approvedReviewsCount(r)}}</strong>
                   Reviews
                 </li>
                 <li>
@@ -269,14 +269,29 @@ export default {
     convertImageToBase64(byteArray) {
         return 'data:image/jpeg;base64,' + byteArray;
     },
+    approvedReviewsCount(r) {
+      let approvedReviews = 0
+      for (const element of r.reviews) { 
+          if(element.approved) {
+            approvedReviews += 1
+          }
+      }
+      return approvedReviews
+    },
     averageRating(r) {
         if(!r.reviews || r.reviews.length == 0)
             return "-"
         let reviewSum = 0;
+        let approvedReviews = 0
         for (const element of r.reviews) { 
-            reviewSum +=  element.rating
+            if(element.approved) {
+              reviewSum +=  element.rating
+              approvedReviews += 1
+            }
         }
-        return reviewSum/r.reviews.length
+        if(approvedReviews <= 0)
+          return "-"
+        return reviewSum/approvedReviews
     },
     getPreviousPage() {
       return parseInt(this.$route.params.page) - 1

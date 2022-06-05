@@ -7,12 +7,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isa.fishingapp.dto.ReviewDTO;
@@ -62,22 +64,31 @@ public class ReviewController {
 	
 	@GetMapping("/all")
 	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-	public ResponseEntity<List<Review>> getAll()
+	public ResponseEntity<List<Review>> findAll()
 	{
-		return reviewService.getAll();
+		return reviewService.findAll();
+	}
+	
+	@GetMapping
+	@PreAuthorize("#userId == authentication.principal.id")
+	public ResponseEntity<List<Review>> findAllByUser(@RequestParam(required = false, name = "userId") Integer userId)
+	{
+		return reviewService.findByUser_Id(userId);
 	}
 	
 	@PatchMapping("/{id}/approve")
 	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
 	public ResponseEntity<String> approveRequest(@PathVariable int id)
 	{
+		System.out.println("TEST: " + id);
 		return reviewService.approveRequest(id);
 	}
 	
-	@PatchMapping("/{id}/reject")
+	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-	public ResponseEntity<String> rejectRequest(@PathVariable int id)
+	public ResponseEntity<String> deleteReview(@PathVariable int id)
 	{
-		return reviewService.rejectRequest(id);
+		System.out.println("ABBB");
+		return reviewService.deleteReview(id);
 	}
 }
