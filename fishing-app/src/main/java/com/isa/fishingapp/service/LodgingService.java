@@ -23,7 +23,7 @@ public class LodgingService extends ReservableService<Lodging> {
 	@Autowired
 	private ActionRepository actionRepository;
 	@Autowired
-	private ReservationService reservationsService;
+	private ReservationService reservationService;
 	
 	public LodgingService() {
 		super("LODGING");
@@ -32,7 +32,7 @@ public class LodgingService extends ReservableService<Lodging> {
 	public ResponseEntity<String> reserveLodging(ReserveReservableDTO reserveLodgingDTO)
 	{
 		try {
-			if(!reservationsService.findAllReservationsInInterval(reserveLodgingDTO.getReservableId(), new DateRange(reserveLodgingDTO.getFromDate(), reserveLodgingDTO.getToDate())).isEmpty())
+			if(!reservationService.findAllReservationsInInterval(reserveLodgingDTO.getReservableId(), new DateRange(reserveLodgingDTO.getFromDate(), reserveLodgingDTO.getToDate())).isEmpty())
 				return new ResponseEntity<>(
 					      "Time period is already taken!", 
 					      HttpStatus.BAD_REQUEST);
@@ -59,7 +59,8 @@ public class LodgingService extends ReservableService<Lodging> {
 			}
 			reservation.setAmenities(reservedAmenities);
 			
-			reservationsService.save(reservation);
+			reservationService.save(reservation);
+			reservationService.sendSuccessfulReservationMail(reservation.getUser(), reservation);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

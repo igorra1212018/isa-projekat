@@ -55,6 +55,7 @@ public class BoatService extends ReservableService<Boat> {
 			reservation.setAmenities(reservedAmenities);
 			
 			reservationService.save(reservation);
+			reservationService.sendSuccessfulReservationMail(reservation.getUser(), reservation);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

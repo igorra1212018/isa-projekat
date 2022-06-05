@@ -31,7 +31,12 @@ public class ActionService {
 			for(User user : subscribedUsers) {
 				String recipientAddress = user.getEmail();
 		        String subject = "Action For " + action.getReservable().getName();
-		        String reservableUrl = "http://localhost:8081/reservable/lodging/" + action.getReservable().getId();
+		        String reservableType = "lodging";
+		        if(action.getReservable().getReservableType().equals("BOAT"))
+		        	reservableType = "boat";
+		        if(action.getReservable().getReservableType().equals("FISHING_LESSON"))
+		        	reservableType = "fishing_lesson";
+		        String reservableUrl = "http://localhost:8081/reservable/" + reservableType + "/" + action.getReservable().getId();
 		        String message = "A new discount of " + action.getDiscount() + " is available from " + action.getDateRange().getFromDate() + " to " + action.getDateRange().getToDate() + " at " + action.getReservable().getName() + "\n\nView it here at:\n\n" + reservableUrl;
 		        
 		        SimpleMailMessage email = new SimpleMailMessage();

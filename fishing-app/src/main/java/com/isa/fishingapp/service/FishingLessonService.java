@@ -59,6 +59,7 @@ public class FishingLessonService extends ReservableService<FishingLesson> {
 			reservation.setAmenities(reservedAmenities);
 			
 			reservationService.save(reservation);
+			reservationService.sendSuccessfulReservationMail(reservation.getUser(), reservation);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
