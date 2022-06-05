@@ -12,6 +12,10 @@ class ComplaintService{
     getComplaintsByUserId(userId){
         return axios.get(USER_API_BASE_URL + '?userId=' + userId , { headers: authHeader() });
     }
+
+    addComplaint(complaint){
+        return axios.post(USER_API_BASE_URL, complaint, { headers: authHeader() });
+    }
     
     approveComplaint(id){
         return axios.put(USER_API_BASE_URL + id + '/approve', {}, { headers: authHeader() });

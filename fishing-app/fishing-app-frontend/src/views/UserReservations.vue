@@ -84,20 +84,30 @@
                     <div v-for="a in r.amenities" :key="a.id">
                         <p>{{a.amenityName}}</p>
                     </div>
-                    <div v-if="canReviewReservation(r) && canReviewEntity(r.reservedEntity)">
-                        <textarea cols="40" rows="5" v-model="r.reviewDescription"></textarea>
-                        <select name="rating" id="rating" v-model="r.rating">
-                            <option :value="1">1</option>
-                            <option :value="2">2</option>
-                            <option :value="3">3</option>
-                            <option :value="4">4</option>
-                            <option :value="5">5</option>
-                        </select>
+                    <div v-if="canReviewReservation(r) && canReviewEntity(r.reservedEntity)" style="width: 100%">
+                        <textarea cols="40" rows="5" v-model="r.reviewDescription" style="width: 100%"></textarea>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <input type="button" class="user-reservations-red-button" value="Cancel" v-if="canCancelReservation(r)" v-on:click="cancel(r.id)"/>
-                    <input type="button" class="user-reservations-blue-button" value="Review" v-if="canReviewReservation(r) && canReviewEntity(r.reservedEntity)" v-on:click="review(r)"/>
+                    <div class="row d-flex" v-if="canReviewReservation(r) && canReviewEntity(r.reservedEntity)">
+                        <div class="col-md-9">
+                            <input type="button" class="user-reservations-blue-button" value="Review" style="margin-top: 10px" v-on:click="review(r)"/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="input_label">
+                                <select name="rating" id="rating" v-model="r.rating">
+                                    <option :value="1">1</option>
+                                    <option :value="2">2</option>
+                                    <option :value="3">3</option>
+                                    <option :value="4">4</option>
+                                    <option :value="5">5</option>
+                                </select>
+                                <span class="keep_hovered"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <input type="button" class="user-reservations-red-button" value="Complaint" v-if="canFileComplaint(r)" v-on:click="complaint(r)"/>
                 </div>
             </div>
         </div>
@@ -115,6 +125,7 @@
 </template>
 
 <script>
+import ComplaintService from '../services/ComplaintService';
 
 import ReservableService from '../services/ReservableService';
 import ReviewService from '../services/ReviewService';
@@ -162,12 +173,18 @@ export default {
         },
         review(reservation) {
             let review = {};
-            console.log(reservation)
             review.description = reservation.reviewDescription;
             review.rating = reservation.rating;
             review.reservableId = reservation.reservedEntity.id;
             review.userId = JSON.parse(this.user).id;
             ReviewService.addReview(review);
+        },
+        complaint(reservation) {
+            let complaint = {};
+            complaint.description = reservation.reviewDescription;
+            complaint.reservationId = reservation.id;
+            complaint.userId = JSON.parse(this.user).id;
+            ComplaintService.addComplaint(complaint)
         },
         canCancelReservation(reservation) {
             var tmp = new Date(reservation.dateRange.fromDate[0], reservation.dateRange.fromDate[1], reservation.dateRange.fromDate[2], reservation.dateRange.fromDate[3], reservation.dateRange.fromDate[4])
@@ -190,6 +207,11 @@ export default {
                 }
             }
             return true;
+        },
+        canFileComplaint(reservation) {
+            if(reservation.complaint)
+                return false
+            return this.canReviewReservation(reservation)
         },
         dateDayDifference(fromDate, toDate) {
           if(fromDate != null && toDate != null) {

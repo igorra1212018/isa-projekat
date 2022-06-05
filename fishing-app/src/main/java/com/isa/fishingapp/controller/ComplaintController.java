@@ -50,7 +50,7 @@ public class ComplaintController {
 	}
 	
 	@PostMapping
-	@PreAuthorize("#complaint.userId == authentication.principal.id")
+	@PreAuthorize("#complaintDTO.userId == authentication.principal.id")
 	public ResponseEntity<String> addComplaint(@RequestBody ComplaintDTO complaintDTO)
 	{
 		if(!complaintService.findByUser_IdAndReservation_Id(complaintDTO.getUserId(), complaintDTO.getReservationId()).isEmpty())
