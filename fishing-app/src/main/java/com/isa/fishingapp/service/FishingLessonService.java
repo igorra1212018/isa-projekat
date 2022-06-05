@@ -45,6 +45,7 @@ public class FishingLessonService extends ReservableService<FishingLesson> {
 		ReservationFishingLesson reservation;
 		try {
 			reservation = new ReservationFishingLesson(userRepository.getById(reserveReservableDTO.getUserId()), new DateRange(reserveReservableDTO.getFromDate(), reserveReservableDTO.getToDate()), findById(reserveReservableDTO.getReservableId()));
+			reservation.setPrice(reserveReservableDTO.getPrice());
 			
 			Set<ReservableAmenity> reservedAmenities = new HashSet<ReservableAmenity>();
 			if(reserveReservableDTO.getAmenities() != null && !reserveReservableDTO.getAmenities().isEmpty()) {

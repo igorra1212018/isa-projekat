@@ -44,7 +44,7 @@ public class LodgingService extends ReservableService<Lodging> {
 		ReservationLodging reservation;
 		try {
 			reservation = new ReservationLodging(userRepository.getById(reserveLodgingDTO.getUserId()), new DateRange(reserveLodgingDTO.getFromDate(), reserveLodgingDTO.getToDate()), findById(reserveLodgingDTO.getReservableId()));
-			System.out.println("GOT HERE 2");
+			reservation.setPrice(reserveLodgingDTO.getPrice());
 			if(reserveLodgingDTO.getActionId() != null)
 				reservation.setAction(actionRepository.findById(reserveLodgingDTO.getActionId()).orElse(null));
 			

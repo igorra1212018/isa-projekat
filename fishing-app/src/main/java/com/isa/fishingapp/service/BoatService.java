@@ -41,6 +41,7 @@ public class BoatService extends ReservableService<Boat> {
 		ReservationBoat reservation;
 		try {
 			reservation = new ReservationBoat(userRepository.getById(reserveBoatDTO.getUserId()), new DateRange(reserveBoatDTO.getFromDate(), reserveBoatDTO.getToDate()), findById(reserveBoatDTO.getReservableId()));
+			reservation.setPrice(reserveBoatDTO.getPrice());
 			
 			Set<ReservableAmenity> reservedAmenities = new HashSet<ReservableAmenity>();
 			if(reserveBoatDTO.getAmenities() != null && !reserveBoatDTO.getAmenities().isEmpty()) {

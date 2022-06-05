@@ -178,6 +178,7 @@ export default {
             this.reservationParameters.toDate = this.range.end
             this.reservationParameters.toDate.setMonth(this.reservationParameters.toDate.getMonth() - 1)
             this.reservationParameters.amenities = this.selectedAmenities;
+            this.reservationParameters.price = this.reservable.price * this.dateDayDifference(this.range.start,this.range.end) + this.priceFromAmenities()
             this.reservableService.reserveReservable(this.reservationParameters).then(() => {
                 this.$router.go();
             })
@@ -191,6 +192,7 @@ export default {
             this.reservationParameters.toDate = new Date(a.dateRange.toDate[0], a.dateRange.toDate[1], a.dateRange.toDate[2], a.dateRange.toDate[3], a.dateRange.toDate[4])
             this.reservationParameters.toDate.setMonth(this.reservationParameters.toDate.getMonth() - 1)
             this.reservationParameters.amenities = this.selectedAmenities;
+            //this.reservationParameters.price = this.reservable.price * this.dateDayDifference(this.range.start,this.range.end) + this.priceFromAmenities()
             this.reservableService.reserveReservable(this.reservationParameters).then(() => {
                 this.$router.go();
             })

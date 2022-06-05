@@ -13,6 +13,7 @@ public class ReserveReservableDTO {
 	LocalDateTime toDate;
 	List<Integer> amenities;
 	Integer actionId;
+	Integer price;
 	public ReserveReservableDTO() {
 	}
 	public ReserveReservableDTO(Reservation reservation) {
@@ -56,6 +57,12 @@ public class ReserveReservableDTO {
 	}
 	public void setActionId(Integer actionId) {
 		this.actionId = actionId;
+	}
+	public Integer getPrice() {
+		return price;
+	}
+	public void setPrice(Integer price) {
+		this.price = price;
 	}
 	public static List<ReserveReservableDTO> convertReservationListToDTO(List<Reservation> reservationList) {
 		List<ReserveReservableDTO> output = new ArrayList<>();
