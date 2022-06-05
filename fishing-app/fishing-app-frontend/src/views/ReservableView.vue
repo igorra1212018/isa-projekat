@@ -67,6 +67,17 @@
                         <input type="button" class="blue-button" value="Reserve" v-if="user" v-on:click="reserveAction(a)"/>
                     </div>
                 </div>
+                <div class="reservable-view-content-area" v-if="selectedTab == 'Reviews'">
+                    <div class="width: 100%" v-for="r in reservable.reviews" :key="r.id" style="border-bottom: 1px solid gray">
+                        <h2 style="text-align:left;">{{r.user.firstName}} {{r.user.lastName}}</h2>
+                        <div>
+                            <font-awesome-icon icon="fa-solid fa-star" style="color: rgba(0,95,255,1)" size="2x" v-for="index in r.rating" :key="index"/>
+                        </div>
+                        <p style="width: 100%; font-size: 16px">
+                            {{r.description}}
+                        </p>
+                    </div>
+                </div>
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Gallery'">
                     <div style="width: 100%; height: 100%" v-for="(category, j) in categorizedImages" :key="j">
                         <h2>{{category.categoryName}}</h2>
