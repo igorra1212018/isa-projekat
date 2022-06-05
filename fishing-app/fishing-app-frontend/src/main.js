@@ -15,6 +15,7 @@ library.add(fas)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(FlagIcon);
 Vue.use(VCalendar);
+Vue.use(require('vue-moment'));
 
 
 Vue.config.productionTip = false

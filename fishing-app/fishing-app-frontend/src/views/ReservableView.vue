@@ -53,25 +53,21 @@
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Actions'">
                     <div class="row d-flex" v-for="a in actions" :key="a.id">
                         <div class="col-md-2">
-                            <h1 style="font-size: 50px; height: 100%">{{a.discount}}%</h1>
+                            <h1 style="font-size: 50px; height: 100%">-{{a.discount}}%</h1>
+                        </div>
+                        <div class="col-md-1">
                         </div>
                         <div class="col-md-2">
                             <h5><s>{{reservable.price * dateDayDifferenceString(a.dateRange.fromDate,a.dateRange.toDate) + priceFromAmenities()}}$</s></h5>
                             <h5 style="color: green">{{(reservable.price * dateDayDifferenceString(a.dateRange.fromDate,a.dateRange.toDate) + priceFromAmenities()) * (1 - a.discount*0.01)}}$</h5>
                         </div>
-                        <div class="col-md-8">
-                            <p>{{convertArrayToDate(a.dateRange.fromDate)}} - {{convertArrayToDate(a.dateRange.toDate)}}</p>
+                        <div class="col-md-7">
+                            <p><strong>{{ convertArrayToDate(a.dateRange.fromDate) | moment("dddd, MMMM Do YYYY") }} - {{ convertArrayToDate(a.dateRange.toDate) | moment("dddd, MMMM Do YYYY") }}</strong></p>
                         </div>
-                        <input type="button" class="blue-button" value="Reserve" v-on:click="reserveAction(a)"/>
+                        <input type="button" class="blue-button" value="Reserve" v-if="user" v-on:click="reserveAction(a)"/>
                     </div>
                 </div>
                 <div class="reservable-view-content-area" v-if="selectedTab == 'Gallery'">
-                    <!--<div style="display:block">
-                        <div v-for="t in imageTags" :key="t.id">
-                            <input type="checkbox" :value="t.id" v-bind:id="t.id" v-model="selectedImageTags">
-                            <label v-bind:for="t.id">{{t.name}}</label>
-                        </div>
-                    </div>-->
                     <div style="width: 100%; height: 100%" v-for="(category, j) in categorizedImages" :key="j">
                         <h2>{{category.categoryName}}</h2>
                         <div style="display: block">
