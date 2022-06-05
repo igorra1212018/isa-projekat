@@ -47,6 +47,28 @@
                     <label for='sort_price_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
                   </div>
               </div>
+              <div class="row d-flex mt-5">
+                  <div class="col-md-4">
+                      <label class="input_label">
+                          <input type="number" min="0" name="fromLength" v-model="searchParameters.fromLength">
+                          <span class="keep_hovered">Length From</span>
+                      </label>
+                  </div>
+                  <div class="col-md-4">
+                      <label class="input_label">
+                          <input type="number" min="0" name="toLength" v-model="searchParameters.toLength">
+                          <span class="keep_hovered">Length To</span>
+                      </label>
+                  </div>
+                  <div class="col-md-2">
+                    <input type='radio' id='sort_length_ascending' name='sort' class="blue_option" v-model="currentSort" value="length_ascending">
+                    <label for='sort_length_ascending'><font-awesome-icon icon="fa-solid fa-sort-up" /></label>
+                  </div>
+                  <div class="col-md-2">
+                    <input type='radio' id='sort_length_descending' name='sort' class="blue_option" v-model="currentSort" value="length_descending">
+                    <label for='sort_length_descending'><font-awesome-icon icon="fa-solid fa-sort-down" /></label>
+                  </div>
+              </div>
               <v-date-picker v-model="searchParameters.range" style="width: 100%; margin-bottom: 10px" is-range/>
             </div>
         </div>
@@ -162,6 +184,12 @@ export default {
                 }
             }
             return true;
+        },
+        dateDayDifference(fromDate, toDate) {
+          if(fromDate != null && toDate != null) {
+            let diffTime = Math.abs(toDate - fromDate);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24) + 1); 
+          }
         }
     },
     computed: {
@@ -204,6 +232,44 @@ export default {
                 }
                 filteredReservations = tmpList.slice()
             }
+            tmpList = []
+            if(this.searchParameters.fromLength) {
+                for (let i = 0; i < filteredReservations.length; i++) {
+                    if (this.dateDayDifference(new Date(filteredReservations[i].dateRange.fromDate[0], filteredReservations[i].dateRange.fromDate[1], filteredReservations[i].dateRange.fromDate[2]), 
+                        new Date(filteredReservations[i].dateRange.toDate[0], filteredReservations[i].dateRange.toDate[1], filteredReservations[i].dateRange.toDate[2]) ) >= this.searchParameters.fromLength ) {
+                        tmpList.push(filteredReservations[i])
+                    }
+                }
+                filteredReservations = tmpList.slice()
+            }
+            tmpList = []
+            if(this.searchParameters.toLength) {
+                for (let i = 0; i < filteredReservations.length; i++) {
+                    if (this.dateDayDifference(new Date(filteredReservations[i].dateRange.fromDate[0], filteredReservations[i].dateRange.fromDate[1], filteredReservations[i].dateRange.fromDate[2]), 
+                        new Date(filteredReservations[i].dateRange.toDate[0], filteredReservations[i].dateRange.toDate[1], filteredReservations[i].dateRange.toDate[2]) ) <= this.searchParameters.toLength ) {
+                        tmpList.push(filteredReservations[i])
+                    }
+                }
+                filteredReservations = tmpList.slice()
+            }
+            if(this.currentSort == "price_ascending") {
+                filteredReservations.sort(function(a, b){return a.price - b.price});
+            }
+            if(this.currentSort == "price_descending") {
+                filteredReservations.sort(function(a, b){return a.price - b.price}).reverse();
+            }
+            /*if(this.currentSort == "length_ascending") {
+                filteredReservations.sort(function(a, b){return this.dateDayDifference(new Date(a.dateRange.fromDate[0], a.dateRange.fromDate[1], a.dateRange.fromDate[2]), 
+                        new Date(b.dateRange.toDate[0], b.dateRange.toDate[1], b.dateRange.toDate[2]) )
+                        - this.dateDayDifference(new Date(b.dateRange.fromDate[0], b.dateRange.fromDate[1], b.dateRange.fromDate[2]), 
+                        new Date(b.dateRange.toDate[0], b.dateRange.toDate[1], b.dateRange.toDate[2]))});
+            }
+            if(this.currentSort == "length_descending") {
+                filteredReservations.sort(function(a, b){return this.dateDayDifference(new Date(a.dateRange.fromDate[0], a.dateRange.fromDate[1], a.dateRange.fromDate[2]), 
+                        new Date(b.dateRange.toDate[0], b.dateRange.toDate[1], b.dateRange.toDate[2]) )
+                        - this.dateDayDifference(new Date(b.dateRange.fromDate[0], b.dateRange.fromDate[1], b.dateRange.fromDate[2]), 
+                        new Date(b.dateRange.toDate[0], b.dateRange.toDate[1], b.dateRange.toDate[2]))}).reverse();
+            }*/
             return filteredReservations
         }
     }
