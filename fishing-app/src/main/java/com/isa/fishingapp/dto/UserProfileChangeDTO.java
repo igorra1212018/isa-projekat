@@ -1,6 +1,6 @@
 package com.isa.fishingapp.dto;
 
-import com.isa.fishingapp.model.Country;
+import com.isa.fishingapp.model.Location;
 
 public class UserProfileChangeDTO {
 	Integer id;
@@ -9,9 +9,7 @@ public class UserProfileChangeDTO {
 	String newPassword;
 	String firstName;
 	String lastName;
-	String address;
-	String city;
-	Country country;
+	Location residence;
 	String contactPhone;
 	
 	public UserProfileChangeDTO() {
@@ -65,28 +63,12 @@ public class UserProfileChangeDTO {
 		this.lastName = lastName;
 	}
 
-	public String getAddress() {
-		return address;
+	public Location getResidence() {
+		return residence;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public Country getCountry() {
-		return country;
-	}
-
-	public void setCountry(Country country) {
-		this.country = country;
+	public void setResidence(Location residence) {
+		this.residence = residence;
 	}
 
 	public String getContactPhone() {
@@ -96,6 +78,5 @@ public class UserProfileChangeDTO {
 	public void setContactPhone(String contactPhone) {
 		this.contactPhone = contactPhone;
 	}
-	
 	
 }

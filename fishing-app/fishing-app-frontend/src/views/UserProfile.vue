@@ -1,5 +1,5 @@
 <template>
-    <div class="white-panel">
+    <div class="profile-panel">
         <div class="deletion-request-side-panel">
 			<h3>REQUEST DELETION</h3>
             <textarea cols="40" rows="5" v-model="deletionRequest.requestDescription" :disabled="deletionRequest.requestApproval == 'PENDING'"></textarea>
@@ -61,23 +61,28 @@
             <div class="row d-flex mt-4">
                 <div class="col-md-4">
                     <label class="input_label">
-                        <input type="text" name="residence-address" v-model="user.address" required="required" @change="userInfoHasChanged()">
+                        <input type="text" name="residence-address" v-model="user.residence.address" required="required" @change="userInfoHasChanged()">
                         <span class="keep_hovered">Address</span>
                     </label>
                 </div>
                 <div class="col-md-4">
                     <label class="input_label">
-                        <input type="text" name="residence-city" v-model="user.city" required="required" @change="userInfoHasChanged()">
+                        <input type="text" name="residence-city" v-model="user.residence.city" required="required" @change="userInfoHasChanged()">
                         <span class="keep_hovered">City</span>
                     </label>
                 </div>
                 <div class="col-md-4">
                     <label class="input_label">
-                        <select name="countries" id="countries" v-model="user.country" required="required" @change="userInfoHasChanged()">
+                        <select name="countries" id="countries" v-model="user.residence.country" required="required" @change="userInfoHasChanged()">
                           <option v-for="c in countries" :key="c.id" :value="c">{{c.name}}</option>
                         </select>
                         <span class="keep_hovered">Country</span>
                     </label>
+                </div>
+            </div>
+            <div class="row d-flex mt-1">
+                <div class="col-md-6">
+                    <p style="text-align: left; font-size: 16px">Penalty Points: {{getUserPenaltyPoints()}}</p>
                 </div>
             </div>
 			<input type="button" value="Update" v-if="isUserInfoChanged" :disabled="!isAllInputValid()" v-on:click="updateUser()"/>
@@ -161,6 +166,16 @@ export default {
             UserService.retractDeletion(this.deletionRequest.id).then(() => {
                 this.$router.go();
             })
+        },
+        getUserPenaltyPoints() {
+            if(this.user.lastPenaltyPointDate) {
+                var lastPenaltyPointDateConverted = new Date(this.user.lastPenaltyPointDate[0], this.user.lastPenaltyPointDate[1], this.user.lastPenaltyPointDate[2])
+                var currentDate = new Date()
+                if((lastPenaltyPointDateConverted.getFullYear() * 12 + lastPenaltyPointDateConverted.getMonth() - 1) < (currentDate.getFullYear() * 12 + currentDate.getMonth()))
+                    return 0
+                return this.user.penaltyPoints
+            }
+            return 0
         }
     }
 }
@@ -180,13 +195,14 @@ export default {
         background: rgb(9,53,121);
         background: linear-gradient(90deg, rgba(9,53,121,1) 0%, rgba(9,51,121,1) 35%, rgba(0,95,255,1) 100%);
     }
-    .white-panel{
+    .profile-panel{
         background-color: rgba(255,255, 255, 1);
         position: relative;
         top: 20%;
         right:0;left:0;
         width:40%;
         margin:auto;
+        margin-top: 20px;
         text-align:center;
         transition:.3s ease-in-out;
         z-index:0;

@@ -3,7 +3,6 @@ package com.isa.fishingapp.model;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.isa.fishingapp.model.enums.ERequestApproval;
 
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;

@@ -26,12 +26,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.isa.fishingapp.dto.UserDTO;
 import com.isa.fishingapp.dto.UserProfileChangeDTO;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name="\"user\"")
 @AttributeOverride( name = "address", column = @Column(name = "residence_address"))
 @AttributeOverride( name = "city", column = @Column(name = "residence_city"))
 @AttributeOverride( name = "country", column = @Column(name = "residence_country"))
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Integer.class)
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,7 +67,6 @@ public class User {
 	
 	@OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-	@JsonIgnore
     private Set<UserDeletionRequest> deletionRequests;
 	
 	public User() { }
@@ -88,7 +90,7 @@ public class User {
 			this.password = user.getNewPassword();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
-		this.residence = new Location(user.getAddress(), user.getCity(), user.getCountry(), 0, 0);
+		this.residence = user.getResidence();
 		this.contactPhone = user.getContactPhone();
 	}
 	

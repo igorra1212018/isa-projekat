@@ -86,14 +86,16 @@ public class UserService {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getOldPasswordGuess()));
 			user.setNewPassword(encoder.encode(user.getNewPassword()));
 		}
-		boolean wasUserActivated = userToUpdate.isActivated();
 		String oldPassword = "";
 		if(user.getNewPassword() == null || user.getNewPassword().isBlank())
 			oldPassword = userToUpdate.getPassword();
-		userToUpdate = new User(user);
+		userToUpdate.setResidence(user.getResidence());
+		userToUpdate.setEmail(user.getEmail());
+		userToUpdate.setFirstName(user.getFirstName());
+		userToUpdate.setLastName(user.getLastName());
+		userToUpdate.setContactPhone(user.getContactPhone());
 		if(!oldPassword.isBlank())
 			userToUpdate.setPassword(oldPassword);
-		userToUpdate.setActivated(wasUserActivated);
 		userRepository.save(userToUpdate);
 		return new ResponseEntity<>(
 			      "Profile edit successful!", 

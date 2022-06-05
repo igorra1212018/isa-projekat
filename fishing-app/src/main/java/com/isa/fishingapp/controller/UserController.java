@@ -81,10 +81,10 @@ public class UserController {
 	
 	@GetMapping("/{userId}")
 	@PreAuthorize("#userId == authentication.principal.id")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable int userId) {
+    public ResponseEntity<User> getUserById(@PathVariable int userId) {
 		return Optional
 	            .ofNullable( userService.findById(userId) )
-	            .map( user -> ResponseEntity.ok().body(new UserDTO(user)) )
+	            .map( user -> ResponseEntity.ok().body(user) )
 	            .orElseGet( () -> ResponseEntity.notFound().build() );
     }
 	
@@ -172,12 +172,12 @@ public class UserController {
 	public ResponseEntity<String> editUserProfile(@RequestBody UserProfileChangeDTO user)
 	{
 		//Sanitization to prevent JSON parser attacks on the country database
-		Country country = countryRepository.findById(user.getCountry().getId()).orElse(null);
+		Country country = countryRepository.findById(user.getResidence().getCountry().getId()).orElse(null);
 		if(country == null)
 			return new ResponseEntity<>(
 				      "Country not found!", 
 				      HttpStatus.NOT_FOUND);
-		user.setCountry(country);
+		user.setResidence(new Location(user.getResidence().getAddress(), user.getResidence().getCity(), country, 0.0, 0.0));
 		return userService.updateUser(user);
 	}
 	
