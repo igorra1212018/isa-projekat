@@ -2,11 +2,15 @@ package com.isa.fishingapp.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.isa.fishingapp.model.enums.ERequestApproval;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name="complaint")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Integer.class)
 public class Complaint {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +60,6 @@ public class Complaint {
 		this.user = user;
 	}
 
-	@JsonIgnore
 	public Reservation getReservation() {
 		return reservation;
 	}

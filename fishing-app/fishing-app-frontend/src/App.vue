@@ -4,10 +4,11 @@
       <a href="/" style="float:left">Homepage</a>
       <a :href="getUserReservationsHref" v-if="user">Reservations</a>
       <a :href="getUserProfileHref" v-if="user">Profile</a>
+      <a href=/complaints v-if="isCustomer">Complaints</a>
       <a href=/addFishingLesson v-if="isInstructor">Add fishing lesson</a>
       <a href=/adminViewUsers v-if="isAdmin">Users</a>
       <a href=/adminReservables v-if="isAdmin">Admin reservables</a>
-      <a href=/userViewReservables v-if="!isAdmin && user">User reservables</a>
+      <a href=/userViewReservables v-if="!isAdmin && !isCustomer && user">User reservables</a>
       <a href=/adminViewUserRequests v-if="isAdmin && isMainAdmin">Requests</a>
       <a href=/adminViewReviews v-if="isAdmin">Reviews</a>
       <a href=/adminRegisterNewAdmin v-if="isAdmin">Register new admin</a>
@@ -26,6 +27,7 @@ export default {
           user: {},
           isAdmin: 0,
           isMainAdmin: 0,
+          isCustomer: 0,
           isInstructor: 0
       }
   },
@@ -47,6 +49,7 @@ export default {
           this.isAdmin = 0;
           this.isMainAdmin = 0;
           this.isInstructor = 0;
+          this.isCustomer = 0
       },
       setupData() {
         this.user = localStorage.getItem('user')
@@ -54,6 +57,7 @@ export default {
         console.log(this.user)
         this.isAdmin = userJSON.roles.indexOf('ROLE_ADMINISTRATOR') >= 0
         this.isMainAdmin = userJSON.email == 'admin@gmail.com'
+        this.isCustomer = userJSON.roles.indexOf('ROLE_CUSTOMER') >= 0
         this.isInstructor = userJSON.roles.indexOf('ROLE_FISHING_INSTRUCTOR') >= 0
         console.log('hola')
         console.log(this.isInstructor)
