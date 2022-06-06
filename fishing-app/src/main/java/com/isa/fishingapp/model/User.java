@@ -69,7 +69,7 @@ public class User {
     @JoinColumn(name = "user_id")
     private Set<UserDeletionRequest> deletionRequests;
 	
-	private int LoyaltyPoints;
+	private int loyaltyPoints;
 	
 	private String loyaltyStatus;
 	
@@ -215,11 +215,11 @@ public class User {
 	}
 	
 	public int getLoyaltyPoints() {
-		return LoyaltyPoints;
+		return loyaltyPoints;
 	}
 
 	public void setLoyaltyPoints(int loyaltyPoints) {
-		LoyaltyPoints = loyaltyPoints;
+		this.loyaltyPoints = loyaltyPoints;
 	}
 
 	public String getLoyaltyStatus() {

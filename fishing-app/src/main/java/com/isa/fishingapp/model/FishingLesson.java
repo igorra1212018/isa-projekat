@@ -18,7 +18,7 @@ public class FishingLesson extends Reservable {
 	public FishingLesson(FishingLessonDTO fishingLessonDTO) {
 		this.name = fishingLessonDTO.getName();
 		this.description = fishingLessonDTO.getDescription();
-		this.biography = fishingLessonDTO.getBiography();
+		this.setBiography(fishingLessonDTO.getBiography());
 		this.capacity = Integer.parseInt(fishingLessonDTO.getCapacity());
 		this.rules = fishingLessonDTO.getRules();
 		this.price = Integer.parseInt(fishingLessonDTO.getPrice());
@@ -41,5 +41,13 @@ public class FishingLesson extends Reservable {
 
 	public void setAvailableEquipment(String availableEquipment) {
 		this.availableEquipment = availableEquipment;
+	}
+
+	public String getBiography() {
+		return biography;
+	}
+
+	public void setBiography(String biography) {
+		this.biography = biography;
 	}
 }

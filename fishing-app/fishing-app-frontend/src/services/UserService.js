@@ -98,6 +98,30 @@ class UserService{
 			.catch(err => {
                 console.error(err);
             })
+    }
+    
+    approveDeletionRequest(id) {
+		return axios.post(USER_API_BASE_URL + id + '/approveDeletionRequest', {}, { headers: authHeader() })
+				.then()
+				.catch(err => {
+                console.error(err);
+            })
+    }
+    
+    rejectDeletionRequest(id, description) {
+		return axios.post(USER_API_BASE_URL + id + '/rejectDeletionRequest', description, { headers: authHeader() })
+				.then()
+				.catch(err => {
+                console.error(err);
+            })
+	}
+
+    getAllUserDeletionRequests() {
+		return axios.get(USER_API_BASE_URL + 'getAllUserDeletionRequests', { headers: authHeader() })
+				.then()
+				.catch(err => {
+                console.error(err);
+            })
 	}
 }
 

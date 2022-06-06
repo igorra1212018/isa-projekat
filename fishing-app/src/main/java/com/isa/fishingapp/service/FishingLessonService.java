@@ -3,15 +3,18 @@ package com.isa.fishingapp.service;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.isa.fishingapp.dto.EditFishingLessonDTO;
 import com.isa.fishingapp.dto.FishingLessonDTO;
 import com.isa.fishingapp.dto.ReserveReservableDTO;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.FishingLesson;
+import com.isa.fishingapp.model.Image;
 import com.isa.fishingapp.model.Lodging;
 import com.isa.fishingapp.model.ReservableAmenity;
 import com.isa.fishingapp.model.ReservationFishingLesson;
@@ -75,6 +78,27 @@ public class FishingLessonService extends ReservableService<FishingLesson> {
 		reservableRepository.save(lesson);
 		System.out.println(lesson);
 		System.out.println("------------TU SAM ----------------");
+		return new ResponseEntity<>(
+			      "Fishing lesson added successfully!", 
+			      HttpStatus.OK);
+	}
+
+	public ResponseEntity<String> edit(EditFishingLessonDTO f) {
+		
+		System.out.println(f.getId());
+		FishingLesson fl = (FishingLesson) Hibernate.unproxy(reservableRepository.getById(f.getId())) ;
+		fl.setName(f.getName());
+		fl.setDescription(f.getDescription());
+		fl.setBiography(f.getBiography());
+		fl.setCapacity(Integer.parseInt(f.getCapacity()));
+		fl.setRules(f.getRules());
+		fl.setPrice(Integer.parseInt(f.getPrice()));
+		fl.setCancelCondition(f.getCancelCondition());
+		fl.setAvailableEquipment(f.getAvailableEquipment());
+		System.out.println(f.getImage().getBytes());
+		fl.setPrimaryImage(new Image("slika", f.getImage().getBytes()));
+		reservableRepository.save(fl);
+		
 		return new ResponseEntity<>(
 			      "Fishing lesson added successfully!", 
 			      HttpStatus.OK);

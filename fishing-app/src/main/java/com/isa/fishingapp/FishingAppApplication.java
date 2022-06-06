@@ -20,6 +20,7 @@ public class FishingAppApplication {
 	@Bean
 	CommandLineRunner runner (UserRepository userRepository, RoleRepository roleRepository) {
 		return args -> {
+//			userRepository.deleteAll();
 //			User admin = new User("admin@gmail.com", "$2a$10$P1CfLeK3z/.xsUXuzPyXde4XySiuLuh70INu3bEh/3lFA4a7u/zbe", "Admin", "Adminovic", "123456789", true);
 //			//Add ADMINISTRATOR role
 //			admin.addRole(roleRepository.getById(5));

@@ -35,6 +35,7 @@ import com.isa.fishingapp.model.Country;
 import com.isa.fishingapp.model.Location;
 import com.isa.fishingapp.model.User;
 import com.isa.fishingapp.model.UserCreationRequest;
+import com.isa.fishingapp.model.UserDeletionRequest;
 import com.isa.fishingapp.model.VerificationToken;
 import com.isa.fishingapp.model.enums.ERequestType;
 import com.isa.fishingapp.model.enums.ERole;
@@ -257,5 +258,26 @@ public class UserController {
 	public ResponseEntity<?> retractDeletion(@PathVariable int requestId)
 	{	
 		return userService.retractDeletion(requestId);
+	}
+	
+	@PostMapping("/{id}/approveDeletionRequest")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<String> approveDeletionRequest(@PathVariable int id)
+	{
+		return userService.approveDeletionRequest(id);
+	}
+	
+	@PostMapping("/{id}/rejectDeletionRequest")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public ResponseEntity<String> rejectDeletionRequest(@PathVariable int id, @RequestBody String description)
+	{
+		return userService.rejectDeletionRequest(id, description);
+	}
+	
+	@GetMapping("/getAllUserDeletionsRequests")
+	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+	public List<UserDeletionRequest> getAllUserDeletionRequests(){
+
+		return userService.getAllUserDeletionRequests();
 	}
 }

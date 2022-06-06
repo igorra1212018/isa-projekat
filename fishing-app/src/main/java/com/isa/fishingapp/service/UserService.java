@@ -186,7 +186,7 @@ public class UserService {
 		userCreationRequestRepository.save(request);
 		
 		return new ResponseEntity<>(
-			      "Request approved!", 
+			      "Request rejected!", 
 			      HttpStatus.OK);
 	}
 
@@ -245,5 +245,35 @@ public class UserService {
 		return ResponseEntity
 				.ok()
 				.body("Deletion request withdrawn!");
+	}
+
+	public ResponseEntity<String> approveDeletionRequest(int id) {
+		UserDeletionRequest request = userDeletionRequestRepository.getById(id);
+		request.setRequestApproval(ERequestApproval.APPROVED);
+		request.getUser().setActivated(false);
+		userDeletionRequestRepository.save(request);
+		
+		return new ResponseEntity<>(
+			      "Request approved!", 
+			      HttpStatus.OK);
+	}
+
+	public ResponseEntity<String> rejectDeletionRequest(int id, String description) {
+		
+		description.substring(0, description.length() - 1);
+		System.out.println(description);
+		UserDeletionRequest request = userDeletionRequestRepository.getById(id);
+		request.setRejectionResponse(description);
+		request.setRequestApproval(ERequestApproval.REJECTED);
+		userDeletionRequestRepository.save(request);
+		
+		return new ResponseEntity<>(
+			      "Request rejected!", 
+			      HttpStatus.OK);
+	}
+
+	public List<UserDeletionRequest> getAllUserDeletionRequests() {
+		
+		return userDeletionRequestRepository.findAll();
 	}
 }

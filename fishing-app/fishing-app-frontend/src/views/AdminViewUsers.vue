@@ -2,23 +2,25 @@
    <div class="row d-flex" style="margin-top: 40px; bottom: 20px">
       <div class="col-md-4">
       </div>
-      <div class="col-md-4">
+      <div class="col-md-5">
          <div class="reservable-white-panel">
             <table class="table">
                <thead>
                   <tr>
-                     <th>Email</th>
-                     <th>First name</th>
-                     <th>Last name</th>
-                     <th>Address</th>
-                     <th>City</th>
-                     <th>Conutry</th>
-                     <th>Activated</th>
-                     <th>Activate/Deactivate</th>
+                    <th>Roles</th>
+                    <th>Email</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Conutry</th>
+                    <th>Activated</th>
+                    <th>Activate/Deactivate</th>
                   </tr>
                </thead>
                <tbody>
                   <tr v-for="user in users" :key="user.id">
+                      <td>{{ user.roles }}</td>
                      <td>{{ user.email }}</td>
                      <td>{{ user.firstName }}</td>
                      <td>{{ user.lastName }}</td>
@@ -69,18 +71,14 @@ export default {
             return 'data:image/jpeg;base64,' + byteArray;
         },
         changeActivation(email) {
-			//darko
-			console.log(email);
-			this.users = [];
-			UserService.changeActivation(email).then();
-			this.getUsers().then();
+			UserService.changeActivation(email).then(window.location.reload());
 			this.$forceUpdate();
-			this.componentKey += 1;
-			window.location.reload();
+            this.componentKey += 1;
+			
         },
         getUsers(){
 			UserService.getUsers().then(response => {
-				this.users = response.data
+                this.users = response.data
 			})
 			.catch(err => {
 				if(err.response.status == 403)

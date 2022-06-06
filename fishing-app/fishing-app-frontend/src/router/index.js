@@ -19,6 +19,7 @@ import EditFishingLesson from '../views/EditFishingLesson.vue'
 import AdminViewReviews from '../views/AdminViewReviews.vue'
 import AdminViewComplaints from '../views/AdminViewComplaints.vue'
 import AdminLoyaltyProgram from '../views/AdminLoyaltyProgram.vue'
+import AdminViewUserDeletionRequests from '../views/AdminViewUserDeletionRequests.vue'
 
 Vue.use(VueRouter)
 
@@ -137,6 +138,11 @@ const routes = [
     path: '/adminLoyaltyProgram',
     name: 'AdminLoyaltyProgram',
     component: AdminLoyaltyProgram
+  },
+  {
+    path: '/adminViewUserDeletionRequests',
+    name: 'AdminViewUserDeletionRequests',
+    component: AdminViewUserDeletionRequests
   }
 ]
 

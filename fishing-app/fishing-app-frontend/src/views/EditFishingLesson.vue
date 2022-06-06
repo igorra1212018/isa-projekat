@@ -61,10 +61,15 @@
                         <input type="text" name="cancelCondition" v-model="fishingLesson.cancelCondition">
                         <span class="keep_hovered">Price for canceling (%)</span>
                     </label>
+                    <label class="input_label">
+                        <input id="inputFileToLoad" type="file" @change="encodeImageFileAsURL()" />
+                        <span class="keep_hovered">Add image</span>
+                    </label>
+                    
                 </div>
             </div>
 			<input type="button" value="Edit fishing lesson" v-on:click="editFishingLesson()"/>
-		
+
         <label for="discount">Discount: </label>
         <input type="text" id="discount" name="discount" v-model="action.discount">
         <label for="a">From: </label>
@@ -88,8 +93,8 @@ export default {
     name: 'EditFishingLesson',
     data(){
         return {
-            fishingLesson: {
-            
+            fishingLesson:{
+                image: {}
             },
             action: {}
         }
@@ -98,8 +103,24 @@ export default {
         this.loadFishingLessonData()
     },
     methods: {
+        encodeImageFileAsURL() {
+            console.log("ide gas")
+            console.log(this.fishingLesson)
+            let fl = this.fishingLesson
+            var filesSelected = document.getElementById("inputFileToLoad").files;
+            var file = filesSelected[0];
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                console.log('RESULT', reader.result)
+                console.log("ide gas")
+                fl.image = reader.result 
+            }
+            this.fishingLesson = fl
+            reader.readAsDataURL(file);
+        },
         editFishingLesson() {
-			FishingLessonService.editFishingLesson(this.fishingLesson);
+            FishingLessonService.editFishingLesson(this.fishingLesson);
+            console.log(this.fishingLesson)
         },
         loadFishingLessonData() {
 
@@ -110,7 +131,23 @@ export default {
             FishingLessonService.getFishingLesson(this.$route.params.id).then(response => {
                 if(userJSON.id != response.data.owner.id)
                     this.$router.push("/unauthorized")
+                    
+                let fl = response.data
+                
+
+                console.log(this.fishingLesson)
                 this.fishingLesson = response.data
+                console.log(this.fishingLesson)
+                this.fishingLesson = {}
+                this.fishingLesson.id = fl.id
+                this.fishingLesson.name = fl.name
+                this.fishingLesson.description = fl.description
+                this.fishingLesson.biography = fl.biography
+                this.fishingLesson.capacity = fl.capacity
+                this.fishingLesson.rules = fl.rules
+                this.fishingLesson.price = fl.price
+                this.fishingLesson.cancelCondition = fl.cancelCondition
+                this.fishingLesson.availableEquipment = fl.availableEquipment
                 this.action.reservableId = this.fishingLesson.id
             })
             .catch(err => {
@@ -122,6 +159,7 @@ export default {
         addAction(action) {
             FishingLessonService.addAction(action);
         }
+     
     }
 }
 
