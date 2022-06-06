@@ -14,6 +14,7 @@ import com.isa.fishingapp.service.FishingLessonService;
 import com.isa.fishingapp.service.ReservationService;
 import com.isa.fishingapp.dto.EditFishingLessonDTO;
 import com.isa.fishingapp.dto.FishingLessonDTO;
+import com.isa.fishingapp.dto.ReservationDTO;
 import com.isa.fishingapp.dto.ReserveReservableDTO;
 import com.isa.fishingapp.model.FishingLesson;
 import com.isa.fishingapp.model.ReservationFishingLesson;
@@ -47,5 +48,11 @@ public class FishingLessonController extends ReservableController<FishingLesson,
 	public ResponseEntity<String> editFishingLesson(@RequestBody EditFishingLessonDTO fishingLesson)
 	{
 		return fishingLessonService.edit(fishingLesson);
+	}
+	
+	@PostMapping("/reservation")
+	public ResponseEntity<String> fishingLessonReservation(@RequestBody ReservationDTO reservationDTO) throws NumberFormatException, Exception
+	{
+		return fishingLessonService.reservation(reservationDTO);
 	}
 }

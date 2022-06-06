@@ -9,7 +9,6 @@
                <thead>
                   <tr>
                      <th>Reservable type</th>
-                     <th>OwneR</th>
                      <th>Name</th>
                      <th>Rules</th>
                      <th>Address</th>
@@ -23,7 +22,6 @@
                <tbody>
                   <tr v-for="r in lodgingReservables2" :key="r.id">
                      <td>{{ r.reservableType }}</td>
-                     <td>{{ r.owner.email }}</td>
                      <td>{{ r.name }}</td>
                      <td>{{ r.rules }}</td>
                      <td>{{ r.address.city }}</td>
@@ -44,7 +42,7 @@
                   
                   <tr v-for="r in boatReservables2" :key="r.id">
                      <td>{{ r.reservableType }}</td>
-                     <td>{{ r.owner.email }}</td>
+
                      <td>{{ r.name }}</td>
                      <td>{{ r.rules }}</td>
                      <td>{{ r.address.city }}</td>
@@ -65,7 +63,6 @@
                   
                   <tr v-for="r in fishingLessonReservables2" :key="r.id" >
                      <td>{{ r.reservableType }}</td>
-                     <td>{{ r.owner.email }}</td>
                      <td>{{ r.name }}</td>
                      <td>{{ r.rules }}</td>
                      <td>{{ r.address.city }}</td>
@@ -89,7 +86,6 @@
                <thead>
                   <tr>
                      <th>Reservable type</th>
-                     <th>Owner</th>
                      <th>Name</th>
                      <th>Rules</th>
                      <th>Address</th>
@@ -103,7 +99,6 @@
                <tbody>
                   <tr v-for="r in lodgingReservables" :key="r.id">
                      <td>{{ r.reservableType }}</td>
-                     <td>{{ r.owner.email }}</td>
                      <td>{{ r.name }}</td>
                      <td>{{ r.rules }}</td>
                      <td>{{ r.address.city }}</td>
@@ -124,7 +119,6 @@
                   
                   <tr v-for="r in boatReservables" :key="r.id">
                      <td>{{ r.reservableType }}</td>
-                     <td>{{ r.owner.email }}</td>
                      <td>{{ r.name }}</td>
                      <td>{{ r.rules }}</td>
                      <td>{{ r.address.city }}</td>
@@ -145,7 +139,6 @@
                   
                   <tr v-for="r in fishingLessonReservables" :key="r.id" >
                      <td>{{ r.reservableType }}</td>
-                     <td>{{ r.owner.email }}</td>
                      <td>{{ r.name }}</td>
                      <td>{{ r.rules }}</td>
                      <td>{{ r.address.city }}</td>

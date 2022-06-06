@@ -21,6 +21,10 @@ class FishingLessonService{
 		return axios.post('http://localhost:8080/api/action/add', action, { headers: authHeader() })
 	}
 
+	reserve(reservation) {
+		return axios.post(BASE_URL + 'reservation', reservation , { headers: authHeader() });
+	}
+
 }
 
 export default new FishingLessonService();

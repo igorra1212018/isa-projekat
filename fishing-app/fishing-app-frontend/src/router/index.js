@@ -20,6 +20,7 @@ import AdminViewReviews from '../views/AdminViewReviews.vue'
 import AdminViewComplaints from '../views/AdminViewComplaints.vue'
 import AdminLoyaltyProgram from '../views/AdminLoyaltyProgram.vue'
 import AdminViewUserDeletionRequests from '../views/AdminViewUserDeletionRequests.vue'
+import Graphics from '../views/Graphics.vue'
 
 Vue.use(VueRouter)
 
@@ -143,6 +144,11 @@ const routes = [
     path: '/adminViewUserDeletionRequests',
     name: 'AdminViewUserDeletionRequests',
     component: AdminViewUserDeletionRequests
+  },
+  {
+    path: '/graphics',
+    name: 'Graphics',
+    component: Graphics
   }
 ]
 

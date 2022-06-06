@@ -84,6 +84,8 @@ public class User {
 		this.lastName = user.getLastName();
 		//this.residence = new Location(user.getAddress(), user.getCity(), user.getCountry(), 0, 0);
 		this.contactPhone = user.getContactPhone();
+		this.loyaltyPoints = 0;
+		this.loyaltyStatus = "";
 	}
 	
 	public User(UserProfileChangeDTO user) {
@@ -96,6 +98,8 @@ public class User {
 		this.lastName = user.getLastName();
 		this.residence = user.getResidence();
 		this.contactPhone = user.getContactPhone();
+		this.loyaltyPoints = 0;
+		this.loyaltyStatus = "";
 	}
 	
 	
@@ -111,6 +115,8 @@ public class User {
 		this.contactPhone = contactPhone;
 		this.roles = new HashSet<Role>();
 		this.activated = activated;
+		this.loyaltyPoints = 0;
+		this.loyaltyStatus = "";
 	}
 
 	public Integer getId() {

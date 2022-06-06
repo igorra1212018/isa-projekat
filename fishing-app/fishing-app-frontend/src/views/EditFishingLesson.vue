@@ -80,7 +80,15 @@
         <input type="date" id="c" name="c" v-model="action.validUntil">
         <input type="button" value="Add action" v-on:click="addAction(action)"/>
 		
-
+        <div>
+        <label for="email">User email: </label>
+        <input type="text" id="email" name="email" v-model="reservation.userEmail">
+        <label for="from">From: </label>
+        <input type="date" id="from" name="from" v-model="reservation.from">
+        <label for="to">To: </label>
+        <input type="date" id="to" name="to" v-model="reservation.to">
+        <input type="button" value="Reserve!" v-on:click="reserve(reservation)"/>
+        </div>
 
 	</div>
 </template>
@@ -96,7 +104,10 @@ export default {
             fishingLesson:{
                 image: {}
             },
-            action: {}
+            action: {},
+            reservation: {
+                
+            }
         }
     },
     mounted: function() {
@@ -134,7 +145,7 @@ export default {
                     
                 let fl = response.data
                 
-
+                
                 console.log(this.fishingLesson)
                 this.fishingLesson = response.data
                 console.log(this.fishingLesson)
@@ -149,6 +160,8 @@ export default {
                 this.fishingLesson.cancelCondition = fl.cancelCondition
                 this.fishingLesson.availableEquipment = fl.availableEquipment
                 this.action.reservableId = this.fishingLesson.id
+                this.reservation.price = this.fishingLesson.price
+                this.reservation.reservableId = this.fishingLesson.id
             })
             .catch(err => {
                 console.error(err);
@@ -158,6 +171,9 @@ export default {
         },
         addAction(action) {
             FishingLessonService.addAction(action);
+        },
+        reserve(reservation) {
+            FishingLessonService.reserve(reservation)
         }
      
     }

@@ -1,5 +1,7 @@
 package com.isa.fishingapp.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.isa.fishingapp.dto.EditFishingLessonDTO;
 import com.isa.fishingapp.dto.FishingLessonDTO;
+import com.isa.fishingapp.dto.ReservationDTO;
 import com.isa.fishingapp.dto.ReserveReservableDTO;
 import com.isa.fishingapp.model.DateRange;
 import com.isa.fishingapp.model.FishingLesson;
@@ -101,6 +104,26 @@ public class FishingLessonService extends ReservableService<FishingLesson> {
 		
 		return new ResponseEntity<>(
 			      "Fishing lesson added successfully!", 
+			      HttpStatus.OK);
+	}
+
+	public ResponseEntity<String> reservation(ReservationDTO reservationDTO) throws NumberFormatException, Exception {
+		
+		System.out.println(reservationDTO);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+		ReservationFishingLesson reservation = new ReservationFishingLesson(userRepository.findByEmail(reservationDTO.getUserEmail()).get(), new DateRange(LocalDate.parse(reservationDTO.getFrom(), formatter).atStartOfDay(), LocalDate.parse(reservationDTO.getTo(), formatter).atStartOfDay()), findById(Integer.parseInt(reservationDTO.getReservableId())));
+		
+		reservation.setPrice(reservationDTO.getPrice());
+		System.out.println(reservation.getPrice());
+		System.out.println(reservation);
+		reservationService.save(reservation);
+		
+		
+		//sertifikati
+		//reservationService.sendSuccessfulReservationMail(reservation.getUser(), reservation);
+		
+		return new ResponseEntity<>(
+			      "Reservation succesful!", 
 			      HttpStatus.OK);
 	}
 }

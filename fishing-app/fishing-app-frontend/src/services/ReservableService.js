@@ -60,7 +60,7 @@ export default class ReservableService{
         return axios.delete(this.CONTROLLER_ENDPOINT + id + '/delete', { headers: authHeader() });
 
     }
-    
+
     isSubscriberOf(userId, reservableId){
         return axios.get(this.CONTROLLER_ENDPOINT + 'subscribers?userId=' + userId + '&reservableId=' + reservableId, { headers: authHeader() });
     }
@@ -75,5 +75,9 @@ export default class ReservableService{
 
     unsubscribeUserToReservable(userId, reservableId) {
         return axios.delete(this.CONTROLLER_ENDPOINT + 'subscribers?userId=' + userId + '&reservableId=' + reservableId, { headers: authHeader() });
+    }
+
+    getReservationsByOwnerId(ownerId){
+        return axios.get(this.CONTROLLER_ENDPOINT + 'ownerReservations/' + ownerId, { headers: authHeader() });
     }
 }

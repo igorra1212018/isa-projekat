@@ -14,6 +14,7 @@
       <a href=/adminViewComplaints v-if="isAdmin">Complaints</a>
       <a href=/adminViewReviews v-if="isAdmin">Reviews</a>
       <a href=/adminRegisterNewAdmin v-if="isAdmin">Register new admin</a>
+      <a href=/graphics v-if="isInstructor">Graphics</a>
       <a href="/" v-if="user" v-on:click="logout()">Logout</a>
       <a href="/login" v-if="!user">Login</a>
     </nav>

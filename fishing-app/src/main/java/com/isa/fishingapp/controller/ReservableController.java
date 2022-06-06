@@ -115,6 +115,15 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 				HttpStatus.OK);
 	}
 	
+	@GetMapping("/ownerReservations/{ownerId}")
+	public ResponseEntity<List<Reservation>> getAllOwnerReservations(@PathVariable int ownerId)
+	{
+		return new ResponseEntity<>(
+				reservationService.findByOwnerId(ownerId), 
+				HttpStatus.OK);
+	}
+	
+	
 	@GetMapping("/reservations/actions/{reservableId}")
 	@PreAuthorize("permitAll")
 	public ResponseEntity<List<Action>> getAllActionReservations(@PathVariable int reservableId)

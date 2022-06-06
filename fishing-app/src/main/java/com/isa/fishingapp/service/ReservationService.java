@@ -1,5 +1,6 @@
 package com.isa.fishingapp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +9,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.isa.fishingapp.repository.LoyaltyLevelRepository;
+import com.isa.fishingapp.repository.ReservableRepository;
 import com.isa.fishingapp.repository.ReservationRepository;
 import com.isa.fishingapp.repository.UserRepository;
 import com.isa.fishingapp.model.AvailableDateRange;
 import com.isa.fishingapp.model.DateRange;
+import com.isa.fishingapp.model.FishingLesson;
 import com.isa.fishingapp.model.LoyaltyLevel;
+import com.isa.fishingapp.model.Reservable;
 import com.isa.fishingapp.model.Reservation;
 import com.isa.fishingapp.model.User;
 
@@ -26,6 +30,8 @@ public class ReservationService {
 	private LoyaltyLevelRepository loyaltyLevelRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private ReservableRepository<FishingLesson> reservableRepository;
 	
 	public ReservationService() {
 	}
@@ -96,23 +102,33 @@ public class ReservationService {
 	}
 
 	public void save(Reservation reservation) {
-		for(AvailableDateRange r : reservation.getReservedEntity().getAvailableDateRanges())
-			if(r.getRange().hasWithinDateRange(reservation.getDateRange())) {
-				
+//		for(AvailableDateRange r : reservation.getReservedEntity().getAvailableDateRanges())
+//		{
+//			if(r.getRange().hasWithinDateRange(reservation.getDateRange())) {
+				System.out.println("AJDEEEEEEEEE-------");
+				System.out.println(reservation);
 				User owner = reservation.getReservedEntity().getOwner();
-				int ownerPointsIncrease = loyaltyLevelRepository.findByLevelName(owner.getLoyaltyStatus()).getOwnerPointsAdd();
-				owner.setLoyaltyPoints(owner.getLoyaltyPoints() + ownerPointsIncrease);
-				owner.setLoyaltyStatus(getCurrentLevel(owner.getLoyaltyPoints()).getLevelName());
-				userRepository.save(owner);
+				
+				
+				if(!(owner.getLoyaltyStatus() == null || owner.getLoyaltyStatus().equals(""))) {
+					int ownerPointsIncrease = loyaltyLevelRepository.findByLevelName(owner.getLoyaltyStatus()).getOwnerPointsAdd();
+					owner.setLoyaltyPoints(owner.getLoyaltyPoints() + ownerPointsIncrease);
+					owner.setLoyaltyStatus(getCurrentLevel(owner.getLoyaltyPoints()).getLevelName());
+					userRepository.save(owner);
+				}
+				
 				
 				User user = reservation.getUser();
-				int userPointsIncrease = loyaltyLevelRepository.findByLevelName(user.getLoyaltyStatus()).getUserPointsAdd();
-				user.setLoyaltyPoints(user.getLoyaltyPoints() + userPointsIncrease);
-				user.setLoyaltyStatus(getCurrentLevel(user.getLoyaltyPoints()).getLevelName());
-				userRepository.save(user);
+				if(!(user.getLoyaltyStatus() == null || user.getLoyaltyStatus().equals(""))) {
+					int userPointsIncrease = loyaltyLevelRepository.findByLevelName(user.getLoyaltyStatus()).getUserPointsAdd();
+					user.setLoyaltyPoints(user.getLoyaltyPoints() + userPointsIncrease);
+					user.setLoyaltyStatus(getCurrentLevel(user.getLoyaltyPoints()).getLevelName());
+					userRepository.save(user);
+				}
 				
 				reservationRepository.save(reservation);
-			}
+//			}
+//		}
 	}
 	
 	public LoyaltyLevel getNextLevel(int points) {
@@ -166,6 +182,34 @@ public class ReservationService {
 				result = l;
 			}
 		}
+		return result;
+	}
+
+	public List<Reservation> findByOwnerId(int ownerId) {
+		
+		List<Reservation> result = new ArrayList<Reservation>();
+		
+		List<FishingLesson> all = reservableRepository.findAll();
+		List<FishingLesson> filtered = new ArrayList<FishingLesson>();
+		
+		int i = 0;
+		for(Reservable r : all) {
+			if(r.getDiscriminatorValue().equals("FISHING_LESSON"))
+				filtered.add(all.get(i));
+			i++;
+		}
+		
+		List<FishingLesson> filtered2 = new ArrayList<FishingLesson>();
+		
+		for(FishingLesson fl : filtered) {
+			if(fl.getOwner().getId().equals(ownerId))
+				filtered2.add(fl);
+		}
+		
+		for(FishingLesson fl : filtered2) {
+			result.addAll(reservationRepository.findByReservedEntity_Id(fl.getId()));
+		}
+		
 		return result;
 	}
 }
