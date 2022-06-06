@@ -2,7 +2,7 @@
    <div class="row d-flex" style="margin-top: 40px; bottom: 20px">
       <div class="col-md-4">
       </div>
-      <div class="col-md-4">
+      <div class>
          <div class="reservable-white-panel">
             <table class="table">
                <thead>
@@ -21,10 +21,10 @@
                <tbody>
                   <tr v-for="r in lodgingReservables" :key="r.id">
                      <td>{{ r.reservableType }}</td>
-                     <td>{{ r.owner }}</td>
+                     <td>{{ r.owner.email }}</td>
                      <td>{{ r.name }}</td>
                      <td>{{ r.rules }}</td>
-                     <td>{{ r.address }}</td>
+                     <td>{{ r.address.address }}</td>
                      <td>{{ r.price }}</td>
                      <td>{{ r.capacity }}</td>
                      <td>{{ r.availableDataRanges }}</td>
@@ -37,10 +37,10 @@
                   
                   <tr v-for="r in boatReservables" :key="r.id">
                      <td>{{ r.reservableType }}</td>
-                     <td>{{ r.owner }}</td>
+                     <td>{{ r.owner.email }}</td>
                      <td>{{ r.name }}</td>
                      <td>{{ r.rules }}</td>
-                     <td>{{ r.address }}</td>
+                     <td>{{ r.address.address }}</td>
                      <td>{{ r.price }}</td>
                      <td>{{ r.capacity }}</td>
                      <td>{{ r.availableDataRanges }}</td>
@@ -53,10 +53,10 @@
                   
                   <tr v-for="r in fishingLessonReservables" :key="r.id">
                      <td>{{ r.reservableType }}</td>
-                     <td>{{ r.owner }}</td>
+                     <td>{{ r.owner.email }}</td>
                      <td>{{ r.name }}</td>
                      <td>{{ r.rules }}</td>
-                     <td>{{ r.address }}</td>
+                     <td>{{ r.address.address }}</td>
                      <td>{{ r.price }}</td>
                      <td>{{ r.capacity }}</td>
                      <td>{{ r.availableDataRanges }}</td>
@@ -109,16 +109,15 @@ export default {
 		});
 		
 		new ReservableService('lodging').getAllReservables().then(response => {
-			this.lodgingReservables = response.data
+            this.lodgingReservables = response.data
+            this.lodgingReservables = JSON.parse(JSON.stringify(this.lodgingReservables))
+            console.log(this.lodgingReservables)
 			
 		})
 		.catch(err => {
 			if(err.response.status == 403)
 			this.$router.push("/unauthorized")
 		});
-		
-		
-		console.log(this.reservables)
     },
     methods: {
         convertImageToBase64(byteArray) {
