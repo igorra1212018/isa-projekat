@@ -73,10 +73,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="row d-flex reservation-panel" v-for="r in filteredReservations" :key="r.id">
-                <div class="col-md-3">
-                    <img :src="convertImageToBase64(r.reservedEntity.primaryImage.data)" style="width: 100%; height: 100%">
-                </div>
+            <div class="row d-flex reservation-panel" v-for="r in reservations" :key="r.id">
                 <div class="col-md-6">
                     <h2>{{r.reservedEntity.name}} - {{r.price}}$</h2>
                     <em v-if="r.cancelled" style="color: rgb(228, 40, 40)">Cancelled</em>
@@ -154,6 +151,8 @@ export default {
             this.lodgingService = new ReservableService('lodging')
             this.lodgingService.getReservationsByUser(this.$route.params.id).then(res => {
               this.reservations = res.data
+              console.log("TESTTESTSET")
+              console.log(this.reservations)
             });
             this.lodgingService.getAllSubscribedReservables(this.$route.params.id).then(res => {
               this.subscriptions = res.data

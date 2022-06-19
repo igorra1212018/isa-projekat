@@ -52,7 +52,7 @@ public abstract class ReservableController<T extends Reservable, Y extends Reser
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
 
-
+	@Autowired
 	UserService userService;
 	@Autowired
 	ActionService actionService;

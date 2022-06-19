@@ -274,7 +274,7 @@ public class UserController {
 		return userService.rejectDeletionRequest(id, description);
 	}
 	
-	@GetMapping("/getAllUserDeletionsRequests")
+	@GetMapping("/getAllUserDeletionRequests")
 	@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
 	public List<UserDeletionRequest> getAllUserDeletionRequests(){
 
